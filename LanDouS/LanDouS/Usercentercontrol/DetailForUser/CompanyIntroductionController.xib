@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CompanyIntroductionController">
+            <connections>
+                <outlet property="ScrollView" destination="YEB-4z-K3C" id="g2j-w4-Lhj"/>
+                <outlet property="introLab" destination="ZZp-aQ-h5g" id="M49-bn-8IY"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="YEB-4z-K3C">
+                    <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZZp-aQ-h5g">
+                            <rect key="frame" x="8" y="18" width="3073" height="350"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                            <string key="text">公司介绍：中扬科技作为专业的移动互联网运营服务商，本着“诚信至上，服务第一”的经营宗旨，为个人精英和企业提供移动互联网推广、APP手机客户端开发、微信营销等高端移动电子商务解决方案。中扬科技，历经多年发展，已经拥有多位国内顶级app项目开发人员，实力雄厚的移动互联网营销团队, 为中小企业提供面对面“顾问式”服务，获得了超过数万家中小企业客户认可，并与众多国内知名的企业达成长期战略合作伙伴关系。</string>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="120.png" id="9Uj-Zr-jVA">
+                            <rect key="frame" x="110" y="376" width="99" height="99"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
+                    </subviews>
+                </scrollView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <point key="canvasLocation" x="187" y="258"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="120.png" width="120" height="120"/>
+    </resources>
+</document>

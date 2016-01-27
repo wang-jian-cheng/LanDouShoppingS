@@ -1,0 +1,36 @@
+//
+//  Local.m
+//  iPensee
+//
+//  Created by user on 12-5-16.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
+//
+
+#import "Local.h"
+#import "Consdef.h"
+
+@implementation Local 
+
+id local(NSString *key)
+{
+    NSString *strLanguage = [[NSUserDefaults standardUserDefaults] objectForKey:kSystemLanguage];
+    if (![strLanguage length])
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:kEnglish forKey:kSystemLanguage];
+        strLanguage = kEnglish;
+    }
+    NSString *plistPath = [NSBundle pathForResource:strLanguage ofType:@"plist" inDirectory:[[NSBundle mainBundle] resourcePath]];
+    NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
+    
+    return [dict objectForKey:key];
+}
+
+
+id localUI(NSString *key)
+{
+    NSDictionary *dict = local(UI);
+    
+    return [dict objectForKey:key];
+}
+
+@end

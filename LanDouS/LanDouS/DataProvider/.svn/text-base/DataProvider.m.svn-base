@@ -1,0 +1,1244 @@
+//
+//  DataProvider.m
+//  BestOne
+//
+//  Created by hank on 13-10-19.
+//  Copyright (c) 2013年 hank. All rights reserved.
+//
+
+#import "DataProvider.h"
+#import "ASIHTTPRequest.h"
+#import "ASIFormDataRequest.h"
+#import "Toolkit.h"
+
+
+#define kPerPage 20
+
+#define BASE_URL @"http://aiwoba.haoapp123.com:6060/app/localuser/aiwoba/api.php?"
+
+@implementation DataProvider
+
+-(void)getversion
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.haoapp123.com/app/localuser/appkeys/api.php?m=version&a=getappstatus&name=aiwoba"]];
+    [self requestData:url];
+}
+
+-(void)getpushlistandlon:(NSString *)lon andlat:(NSString *)lat
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=getPushList&longitude=%@&latitude=%@", BASE_URL,lon,lat]];
+    [self requestData:url];
+    
+}
+
+- (void)userlogin:(NSString *)phone andPassword:(NSString *)password andlon:(NSString *)lon andlat:(NSString *)lat//登录
+{
+    NSUserDefaults *userinfo=[NSUserDefaults standardUserDefaults];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=login&login_name=%@&login_password=%@&longitude=%@&latitude=%@&apple_token=%@", BASE_URL,phone,password,lon,lat,[userinfo objectForKey:@"pushtoken"]]];
+    [self requestData:url];
+}
+- (void)userlogin:(NSString *)tokenID andtype:(NSString *)type andlon:(NSString *)lon andlat:(NSString *)lat;//qq登陆，新浪登陆
+{
+     NSUserDefaults *userinfo=[NSUserDefaults standardUserDefaults];
+    NSURL *url;
+    if ([type isEqualToString:@"qq"]) {
+         url= [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=login&qq_token=%@&longitude=%@&latitude=%@&apple_token=%@", BASE_URL,tokenID,lon,lat,[userinfo objectForKey:@"pushtoken"]]];
+    }
+    else if([type isEqualToString:@"weibo"])
+    {
+         url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=login&weibo_token=%@&longitude=%@&latitude=%@&apple_token=%@", BASE_URL,tokenID,lon,lat,[userinfo objectForKey:@"pushtoken"]]];
+    }
+    [self requestData:url];
+}
+
+
+
+
+-(void)userregister:(NSString *)phone andPassword:(NSString *)password
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=register&phone=%@&password=%@", BASE_URL,phone,password]];
+    [self requestData:url];
+}
+
+- (void)changeuserinfo:(NSDictionary *)infoDict;
+{
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=edit",BASE_URL]]];
+    [request setRequestMethod:@"POST"];
+    
+    NSUserDefaults *userinfo=[NSUserDefaults standardUserDefaults];
+    NSDictionary *disc=[[NSDictionary alloc]init];
+    disc =[userinfo dictionaryForKey:@"userinfo"];
+    
+    if ([infoDict objectForKey:@"arrayimage"]!=nil) {
+         NSData *data = nil;
+        NSArray *imageArray = [infoDict objectForKey:@"arrayimage"];
+        for (int i = 0; i < imageArray.count; i++)
+        {
+            data = UIImageJPEGRepresentation([imageArray objectAtIndex:i],0.1);
+            [request addData:data withFileName:[NSString stringWithFormat:@"image%d.png", i] andContentType:@"image/png" forKey:[NSString stringWithFormat:@"pic%d", i]];
+        }
+        
+        [request setPostValue:[NSString stringWithFormat:@"%d", (int)imageArray.count] forKey:@"pic_num"];
+    }
+    
+    
+    if ([infoDict objectForKey:@"userimage"]!=nil) {
+        NSData *data = nil;
+        
+        data = UIImagePNGRepresentation( [infoDict objectForKey:@"userimage"] );
+        [request addData:data withFileName:@"photoimage.png" andContentType:@"image/png" forKey:@"photo"];
+    }
+    
+    
+    if ([infoDict objectForKey:@"password"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"password"] forKey:@"password"];
+    }
+    
+    if ([infoDict objectForKey:@"areas"]!=nil) {
+        if ([[[infoDict objectForKey:@"areas"] objectForKey:@"district"]isEqualToString:@""]) {
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"province"] forKey:@"province"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"province"] forKey:@"city"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"city"] forKey:@"district"];
+        }
+        else
+        {
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"province"] forKey:@"province"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"city"] forKey:@"city"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"district"] forKey:@"district"];
+        }
+        
+        
+    }
+    if ([infoDict objectForKey:@"tgtareas"]!=nil) {
+        if ([[[infoDict objectForKey:@"tgtareas"] objectForKey:@"district"]isEqualToString:@""]) {
+            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"province"] forKey:@"tgt_province"];
+            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"province"] forKey:@"tgt_city"];
+            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"city"] forKey:@"tgt_district"];
+        }
+        else
+        {
+            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"province"] forKey:@"tgt_province"];
+            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"city"] forKey:@"tgt_city"];
+            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"district"] forKey:@"tgt_district"];
+        }
+        
+        
+    }
+    if ([infoDict objectForKey:@"tgtbirthplace"]!=nil) {
+        [request setPostValue:[NSString stringWithFormat:@"%@%@%@",[[infoDict objectForKey:@"tgtbirthplace"] objectForKey:@"province"],[[infoDict objectForKey:@"tgtbirthplace"] objectForKey:@"city"],[[infoDict objectForKey:@"tgtbirthplace"] objectForKey:@"district"]] forKey:@"tgt_birthplace"];
+    }
+    if ([infoDict objectForKey:@"tgt_identity"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"tgt_identity"] forKey:@"tgt_identity"];
+    }
+    if ([infoDict objectForKey:@"tgt_house"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"tgt_house"] forKey:@"tgt_house"];
+    }
+    if ([infoDict objectForKey:@"tgt_married"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"tgt_married"] forKey:@"tgt_married"];
+    }
+    if ([infoDict objectForKey:@"tgt_education"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"tgt_education"] forKey:@"tgt_education"];
+    }
+    if ([infoDict objectForKey:@"tgt_salary"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"tgt_salary"] forKey:@"tgt_salary"];
+    }
+    if ([infoDict objectForKey:@"tgtage"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"tgtage"] objectForKey:@"tgt_min_age"] forKey:@"tgt_min_age"];
+        [request setPostValue:[[infoDict objectForKey:@"tgtage"] objectForKey:@"tgt_max_age"] forKey:@"tgt_max_age"];
+    }
+    if ([infoDict objectForKey:@"tgtheight"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"tgtheight"] objectForKey:@"tgt_min_height"] forKey:@"tgt_min_height"];
+        [request setPostValue:[[infoDict objectForKey:@"tgtheight"] objectForKey:@"tgt_max_height"] forKey:@"tgt_max_height"];
+    }
+    
+    
+    
+    
+    if ([infoDict objectForKey:@"birthplace"]!=nil) {
+        [request setPostValue:[NSString stringWithFormat:@"%@%@%@",[[infoDict objectForKey:@"birthplace"] objectForKey:@"province"],[[infoDict objectForKey:@"birthplace"] objectForKey:@"city"],[[infoDict objectForKey:@"birthplace"] objectForKey:@"district"]] forKey:@"birthplace"];
+    }
+    
+    if ([infoDict objectForKey:@"career"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"career"] objectForKey:@"id"] forKey:@"career"];
+    }
+    if ([infoDict objectForKey:@"nickname"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"nickname"] forKey:@"nickname"];
+    }
+    [request setPostValue:[disc objectForKey:@"username"] forKey:@"login_name"];
+    [request setPostValue:[disc objectForKey:@"password"] forKey:@"login_password"];
+    
+    
+    
+    if ([infoDict objectForKey:@"married"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"married"] forKey:@"married"];
+    }
+    if ([infoDict objectForKey:@"salary"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"salary"] forKey:@"salary"];
+    }
+    if ([infoDict objectForKey:@"sex"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"sex"] forKey:@"sex"];
+    }
+    if ([infoDict objectForKey:@"birthday"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"birthday"] forKey:@"birthday"];
+    }
+    if ([infoDict objectForKey:@"height"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"height"] forKey:@"height"];
+    }
+    if ([infoDict objectForKey:@"house_situation"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"house_situation"] forKey:@"house_situation"];
+    }
+    if ([infoDict objectForKey:@"race"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"race"] forKey:@"race"];
+    }
+    if ([infoDict objectForKey:@"marriage_status"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"marriage_status"] forKey:@"marriage_status"];
+    }
+    if ([infoDict objectForKey:@"blood_type"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"blood_type"] forKey:@"blood_type"];
+    }
+    if ([infoDict objectForKey:@"education"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"education"] forKey:@"education"];
+    }
+    if ([infoDict objectForKey:@"graduated_from"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"graduated_from"] forKey:@"graduated_from"];
+    }
+    if ([infoDict objectForKey:@"desc"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"desc"] forKey:@"desc"];
+    }
+    [request buildRequestHeaders];
+    __block ASIFormDataRequest *resultRequst = request;
+    
+    [request setCompletionBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+        self.finishBlock(self.resultDict);
+    }];
+    [request setFailedBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+    }];
+    [request startAsynchronous];
+}
+
+-(void)postDate:(NSDictionary *)infoDict;
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=addDate&purpose=%@&time=%@&who_pay=%@&way=%@&desc=%@", BASE_URL,[infoDict objectForKey:@"purpose"],[infoDict objectForKey:@"time"],[infoDict objectForKey:@"who_pay"],[infoDict objectForKey:@"way"],[infoDict objectForKey:@"desc"]];
+     urlStr=[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL *url = [NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)searchuserDate:(NSString *)username;
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getDates&username=%@", BASE_URL,username];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)DatelistPage:(int)page andPer_page:(int)per_page andsex:(int)sex
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getDates&page=%d&per_page=%d&sex=%d", BASE_URL,page,per_page,sex];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)Datedel
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=delDate", BASE_URL];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)addInterestDate:(NSString *)date_id
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=addInterestDate&date_id=%@", BASE_URL,date_id];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)delInterestDate:(NSString *)date_id
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=delInterestDate&date_id=%@", BASE_URL,date_id];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)getInterestDates:(int)page andPer_page:(int)per_page;//查询已报名约会
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getInterestDates&page=%d&per_page=%d",BASE_URL,page,per_page];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)getDateInteresters:(int)date_id//查询报名者
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getDateInteresters&date_id=%d",BASE_URL,date_id];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+
+
+-(void)Authentication:(NSDictionary *)infoDict;
+{
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=addAuthentication",BASE_URL]]];
+    [request setRequestMethod:@"POST"];
+    
+    NSData *data1 = nil;
+    data1 = UIImageJPEGRepresentation([infoDict objectForKey:@"pic1"],0.1);
+    [request addData:data1 withFileName:[NSString stringWithFormat:@"image1.png"] andContentType:@"image/png" forKey:[NSString stringWithFormat:@"pic1"]];
+    
+    NSData *data2=nil;
+    data2 = UIImageJPEGRepresentation([infoDict objectForKey:@"pic2"],0.1);
+    [request addData:data2 withFileName:@"image2.png" andContentType:@"image/png" forKey:@"pic2"];
+    
+    
+    
+    //if ([infoDict objectForKey:@"nickname"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"type"] forKey:@"type"];
+    //}
+    
+    
+    
+    
+    
+    
+    [request buildRequestHeaders];
+    __block ASIFormDataRequest *resultRequst = request;
+    
+    [request setCompletionBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+        self.finishBlock(self.resultDict);
+    }];
+    [request setFailedBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+    }];
+    [request startAsynchronous];
+}
+
+-(void)Authvideo:(NSDictionary *)infoDict
+{
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=addAuthentication",BASE_URL]]];
+    [request setRequestMethod:@"POST"];
+    
+    
+    
+    
+    
+    //if ([infoDict objectForKey:@"nickname"]!=nil) {
+    [request setPostValue:[infoDict objectForKey:@"type"] forKey:@"type"];
+    //}
+    [request addData:[infoDict objectForKey:@"video"] withFileName:@"video.mov" andContentType:@"video/mov" forKey:@"video"];
+    
+    
+    
+    
+    
+    
+    [request buildRequestHeaders];
+    __block ASIFormDataRequest *resultRequst = request;
+    
+    [request setCompletionBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+        self.finishBlock(self.resultDict);
+    }];
+    [request setFailedBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+    }];
+    [request startAsynchronous];
+}
+
+
+-(void)searchuserInfo:(NSDictionary *)infoDict
+{
+    if ([[infoDict objectForKey:@"orderby"]isEqualToString:@"distance"]) {
+        NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=search&longitude=%@&latitude=%@&page=%@&per_page=%@",BASE_URL,[infoDict objectForKey:@"Longtitude"],[infoDict objectForKey:@"Latitude"],[infoDict objectForKey:@"page"],[infoDict objectForKey:@"perpage"]];
+        
+        NSURL *url =[NSURL URLWithString:urlStr];
+        [self requestData:url];
+    }
+    else{
+        NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=search&orderby=%@&page=%@&per_page=%@",BASE_URL,[infoDict objectForKey:@"orderby"],[infoDict objectForKey:@"page"],[infoDict objectForKey:@"perpage"]];
+        
+        NSURL *url =[NSURL URLWithString:urlStr];
+        [self requestData:url];
+    }
+    
+}
+-(void)searchuserInfoCondition:(NSDictionary *)infoDict
+{
+    
+    NSString *strurl;
+    if ([[infoDict objectForKey:@"orderby"]isEqualToString:@"distance"]) {
+        strurl=[NSString stringWithFormat:@"%@m=user&a=search&longitude=%@&latitude=%@&page=%@&per_page=%@",BASE_URL,[infoDict objectForKey:@"Longtitude"],[infoDict objectForKey:@"Latitude"],[infoDict objectForKey:@"page"],[infoDict objectForKey:@"perpage"]];
+    }
+    else{
+        strurl=[NSString stringWithFormat:@"%@m=user&a=search&orderby=%@&longitude=%@&latitude=%@&page=%@&per_page=%@",BASE_URL,[infoDict objectForKey:@"orderby"],[infoDict objectForKey:@"Longtitude"],[infoDict objectForKey:@"Latitude"],[infoDict objectForKey:@"page"],[infoDict objectForKey:@"perpage"]];
+    }
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:strurl]];
+    [request setRequestMethod:@"POST"];
+    
+    NSUserDefaults *userinfo=[NSUserDefaults standardUserDefaults];
+    NSDictionary *disc=[[NSDictionary alloc]init];
+    disc =[userinfo dictionaryForKey:@"userinfo"];
+    
+    
+//    if ([infoDict objectForKey:@"Longtitude"]) {
+//        [request setValue:[infoDict objectForKey:@"Longtitude"] forKey:@"longitude"];
+//    }
+//    if ([infoDict objectForKey:@"Latitude"]) {
+//        [request setValue:[infoDict objectForKey:@"Latitude"] forKey:@"latitude"];
+//    }
+    
+    if ([infoDict objectForKey:@"havephoto"]!=nil) {//fix me 还要改关键字
+        [request setPostValue:[infoDict objectForKey:@"havephoto"] forKey:@"havephoto"];
+        
+    }
+    if ([infoDict objectForKey:@"nickname"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"nickname"] forKey:@"search_text"];//fix me nickname search fail
+    }
+    
+    
+    
+    if ([infoDict objectForKey:@"areas"]!=nil) {
+        if ([[[infoDict objectForKey:@"areas"] objectForKey:@"district"]isEqualToString:@""]) {
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"province"] forKey:@"province"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"province"] forKey:@"city"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"city"] forKey:@"district"];
+        }
+        else
+        {
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"province"] forKey:@"province"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"city"] forKey:@"city"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"district"] forKey:@"district"];
+        }
+        
+        
+    }
+//    if ([infoDict objectForKey:@"tgtareas"]!=nil) {
+//        if ([[[infoDict objectForKey:@"tgtareas"] objectForKey:@"district"]isEqualToString:@""]) {
+//            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"province"] forKey:@"tgt_province"];
+//            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"province"] forKey:@"tgt_city"];
+//            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"city"] forKey:@"tgt_district"];
+//        }
+//        else
+//        {
+//            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"province"] forKey:@"tgt_province"];
+//            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"city"] forKey:@"tgt_city"];
+//            [request setPostValue:[[infoDict objectForKey:@"tgtareas"] objectForKey:@"district"] forKey:@"tgt_district"];
+//        }
+//        
+//        
+//    }
+    
+    if ([infoDict objectForKey:@"tgt_identity"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"tgt_identity"] forKey:@"tgt_identity"];
+    }
+    
+    
+    if ([infoDict objectForKey:@"tgt_education"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"tgt_education"] forKey:@"tgt_education"];
+    }
+    if ([infoDict objectForKey:@"tgt_salary"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"tgt_salary"] forKey:@"tgt_salary"];
+    }
+    if ([infoDict objectForKey:@"tgtage"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"tgtage"] objectForKey:@"tgt_min_age"] forKey:@"tgt_min_age"];
+        [request setPostValue:[[infoDict objectForKey:@"tgtage"] objectForKey:@"tgt_max_age"] forKey:@"tgt_max_age"];
+    }
+    if ([infoDict objectForKey:@"tgtheight"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"tgtheight"] objectForKey:@"tgt_min_height"] forKey:@"tgt_min_height"];
+        [request setPostValue:[[infoDict objectForKey:@"tgtheight"] objectForKey:@"tgt_max_height"] forKey:@"tgt_max_height"];
+    }
+    
+    
+    
+    
+    if ([infoDict objectForKey:@"birthplace"]!=nil) {
+        [request setPostValue:[NSString stringWithFormat:@"%@%@%@",[[infoDict objectForKey:@"birthplace"] objectForKey:@"province"],[[infoDict objectForKey:@"birthplace"] objectForKey:@"city"],[[infoDict objectForKey:@"birthplace"] objectForKey:@"district"]] forKey:@"birthplace"];
+    }
+    
+    
+//    if ([infoDict objectForKey:@"nickname"]!=nil) {
+//        [request setPostValue:[infoDict objectForKey:@"nickname"] forKey:@"nickname"];
+//    }
+//    [request setPostValue:[disc objectForKey:@"username"] forKey:@"login_name"];
+//    [request setPostValue:[disc objectForKey:@"password"] forKey:@"login_password"];
+//    
+    
+    
+    if ([infoDict objectForKey:@"married"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"married"] forKey:@"married"];
+    }
+    
+    if ([infoDict objectForKey:@"sex"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"sex"] forKey:@"sex"];
+    }
+    
+    
+    if ([infoDict objectForKey:@"house_situation"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"house_situation"] forKey:@"house_situation"];
+    }
+    
+    
+    
+    
+    
+    
+    [request buildRequestHeaders];
+    __block ASIFormDataRequest *resultRequst = request;
+    
+    [request setCompletionBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+        self.finishBlock(self.resultDict);
+    }];
+    [request setFailedBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+    }];
+    [request startAsynchronous];
+}
+
+ 
+
+
+
+-(void)searchuserInfoDetail:(NSString *)username;
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=searchDetail&username=%@",BASE_URL,username];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)addViewedUser:(NSString *)tgt_username
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=addViewedUser&tgt_username=%@",BASE_URL,tgt_username];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)getViewedUsers:(int)page andPer_page:(int)per_page
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getViewers&page=%d&per_page=%d",BASE_URL,page,per_page];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+
+
+
+-(void)addinterest:(NSString *)tgt_username
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=addInterest&tgt_username=%@",BASE_URL,tgt_username];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)delinterest:(NSString *)tgt_username
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=delInterest&tgt_username=%@",BASE_URL,tgt_username];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)getinterest:(int)page andper_page:(int)perpage
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getInterests&page=%d&per_page=%d",BASE_URL,page,perpage];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)getfans:(int)page andper_page:(int)perpage
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getFans&page=%d&per_page=%d",BASE_URL,page,perpage];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+
+
+
+-(void)addbindType:(NSString *)type andaccount:(NSString *)account andverification_code:(NSString *)code andtoken:(NSString *)token
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=addBind&type=%@&account=%@&verification_code=%@&token=%@",BASE_URL,type,account,code,token];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)sendverificationcodeType:(NSString *)type andaccount:(NSString *)account
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=sendVerificationCode&type=%@&account=%@",BASE_URL,type,account];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)postRecommend:(NSDictionary *)infoDict//推荐别人
+{
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=addRecommend",BASE_URL]]];
+    [request setRequestMethod:@"POST"];
+    
+    NSUserDefaults *userinfo=[NSUserDefaults standardUserDefaults];
+    NSDictionary *disc=[[NSDictionary alloc]init];
+    disc =[userinfo dictionaryForKey:@"userinfo"];
+    
+    if ([infoDict objectForKey:@"pics"]!=nil) {
+        NSData *data = nil;
+        NSArray *imageArray = [infoDict objectForKey:@"pics"];
+        for (int i = 0; i < imageArray.count; i++)
+        {
+            data = UIImageJPEGRepresentation([imageArray objectAtIndex:i],0.1);
+            [request addData:data withFileName:[NSString stringWithFormat:@"image%d.png", i] andContentType:@"image/png" forKey:[NSString stringWithFormat:@"pic%d", i]];
+        }
+        
+        [request setPostValue:[NSString stringWithFormat:@"%d", (int)imageArray.count] forKey:@"pic_num"];
+    }
+    
+    
+    if ([infoDict objectForKey:@"username"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"username"] forKey:@"username"];
+    }
+    
+    
+    if ([infoDict objectForKey:@"nickname"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"nickname"] forKey:@"nickname"];
+    }
+    if ([infoDict objectForKey:@"age"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"age"] forKey:@"age"];
+    }
+    
+     
+    
+    if ([[infoDict objectForKey:@"connection"] objectForKey:@"qq"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"connection"] objectForKey:@"qq"] forKey:@"qq"];
+    }
+    if ([[infoDict objectForKey:@"connection"] objectForKey:@"phone"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"connection"] objectForKey:@"phone"] forKey:@"phone"];
+    }
+    if ([[infoDict objectForKey:@"connection"] objectForKey:@"weixin"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"connection"] objectForKey:@"weixin"] forKey:@"weixin"];
+    }
+    if ([[infoDict objectForKey:@"connection"] objectForKey:@"weibo"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"connection"] objectForKey:@"weibo"] forKey:@"weibo"];
+    }
+    
+    
+    
+    
+    if ([[infoDict objectForKey:@"dataildata"] objectForKey:@"car_situation"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"dataildata"] objectForKey:@"car_situation"] forKey:@"car_situation"];
+    }
+    if ([[infoDict objectForKey:@"dataildata"] objectForKey:@"salary"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"dataildata"] objectForKey:@"salary"] forKey:@"salary"];
+    }
+    if ([infoDict objectForKey:@"sex"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"sex"] forKey:@"sex"];
+    }
+    
+    if ([[infoDict objectForKey:@"dataildata"] objectForKey:@"height"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"dataildata"] objectForKey:@"height"] forKey:@"height"];
+    }
+    if ([[infoDict objectForKey:@"dataildata"]objectForKey:@"house_situation"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"dataildata"]objectForKey:@"house_situation"] forKey:@"house_situation"];
+    }
+    
+    if ([[infoDict objectForKey:@"dataildata"] objectForKey:@"career"]!=nil) {
+        [request setPostValue:[[[infoDict objectForKey:@"dataildata"] objectForKey:@"career"]objectForKey:@"id"] forKey:@"career"];
+    }
+    if ([[infoDict objectForKey:@"dataildata"] objectForKey:@"blood_type"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"dataildata"] objectForKey:@"blood_type"] forKey:@"blood_type"];
+    }
+    if ([[infoDict objectForKey:@"dataildata"] objectForKey:@"education"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"dataildata"] objectForKey:@"education"] forKey:@"education"];
+    }
+    if ([[infoDict objectForKey:@"dataildata"] objectForKey:@"birthplace"]!=nil) {
+        [request setPostValue:[NSString stringWithFormat:@"%@%@%@",[[[infoDict objectForKey:@"dataildata"]objectForKey:@"birthplace"] objectForKey:@"province"],[[[infoDict objectForKey:@"dataildata"]objectForKey:@"birthplace"] objectForKey:@"city"],[[[infoDict objectForKey:@"dataildata"]objectForKey:@"birthplace"] objectForKey:@"district"]] forKey:@"birthplace"];
+        
+        
+        
+    }
+    if ([[infoDict objectForKey:@"dataildata"] objectForKey:@"animal_sign"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"dataildata"] objectForKey:@"animal_sign"] forKey:@"animal_sign"];
+    }
+    if ([[infoDict objectForKey:@"dataildata"] objectForKey:@"constellation"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"dataildata"] objectForKey:@"constellation"] forKey:@"constellation"];
+    }
+    if ([[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"]count]>0) {
+        if ([[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"]count]==1) {
+             [request setPostValue:[NSString stringWithFormat:@"%d",[[[[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"] objectAtIndex:0] objectForKey:@"buttontag"] intValue]-100] forKey:@"label"];
+        }
+        else if ([[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"]count]==2)
+        {
+            [request setPostValue:[NSString stringWithFormat:@"%d,%d",[[[[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"] objectAtIndex:0] objectForKey:@"buttontag"] intValue]-100,[[[[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"] objectAtIndex:1] objectForKey:@"buttontag"] intValue]-100] forKey:@"label"];
+        }
+        else if ([[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"]count]==3)
+        {
+            [request setPostValue:[NSString stringWithFormat:@"%d,%d,%d",[[[[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"] objectAtIndex:0] objectForKey:@"buttontag"] intValue]-100,[[[[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"] objectAtIndex:1] objectForKey:@"buttontag"] intValue]-100,[[[[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"] objectAtIndex:2] objectForKey:@"buttontag"] intValue]-100] forKey:@"label"];
+        }
+        else if ([[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"]count]==4)
+        {
+            [request setPostValue:[NSString stringWithFormat:@"%d,%d,%d,%d",[[[[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"] objectAtIndex:0] objectForKey:@"buttontag"] intValue]-100,[[[[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"] objectAtIndex:1] objectForKey:@"buttontag"] intValue]-100,[[[[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"] objectAtIndex:2] objectForKey:@"buttontag"] intValue]-100,[[[[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"labels"] objectAtIndex:3] objectForKey:@"buttontag"] intValue]-100] forKey:@"label"];
+        }
+        
+        
+        
+        
+        
+        
+    }
+    if ([[infoDict objectForKey:@"descAndlabel"]objectForKey:@"desc"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"descAndlabel"]objectForKey:@"desc"] forKey:@"desc"];
+    }
+    
+    
+    
+    [request buildRequestHeaders];
+    __block ASIFormDataRequest *resultRequst = request;
+    
+    [request setCompletionBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+        self.finishBlock(self.resultDict);
+    }];
+    [request setFailedBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+    }];
+    [request startAsynchronous];
+}
+
+
+-(void)getLabels
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getLabels",BASE_URL];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)getRecommends:(int)page andperpage:(int)per_page andsex:(int)sex//查询推荐
+{
+    if (sex==10) {
+        NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getRecommends&page=%d&per_page=%d",BASE_URL,page,per_page];
+        
+        NSURL *url =[NSURL URLWithString:urlStr];
+        [self requestData:url];
+    }
+    else{
+        NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getRecommends&page=%d&per_page=%d&sex=%d",BASE_URL,page,per_page,sex];
+        
+        NSURL *url =[NSURL URLWithString:urlStr];
+        [self requestData:url];
+    }
+}
+
+-(void)getRecommends:(int)page andperpage:(int)per_page andfromusername:(NSString *)username//查询指定推荐
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getRecommends&page=%d&per_page=%d&from_username=%@",BASE_URL,page,per_page,username];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)getRecommends:(NSDictionary *)infoDict;
+{
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=getRecommends",BASE_URL]]];
+    [request setRequestMethod:@"POST"];
+    
+    if ([infoDict objectForKey:@"areas"]!=nil) {
+        if ([[[infoDict objectForKey:@"areas"] objectForKey:@"district"]isEqualToString:@""]) {
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"province"] forKey:@"province"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"province"] forKey:@"city"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"city"] forKey:@"district"];
+        }
+        else
+        {
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"province"] forKey:@"province"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"city"] forKey:@"city"];
+            [request setPostValue:[[infoDict objectForKey:@"areas"] objectForKey:@"district"] forKey:@"district"];
+        }
+        
+        
+    }
+    if ([infoDict objectForKey:@"tgtage"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"tgtage"] objectForKey:@"tgt_min_age"] forKey:@"tgt_min_age"];
+        [request setPostValue:[[infoDict objectForKey:@"tgtage"] objectForKey:@"tgt_max_age"] forKey:@"tgt_max_age"];
+    }
+    if ([infoDict objectForKey:@"tgtheight"]!=nil) {
+        [request setPostValue:[[infoDict objectForKey:@"tgtheight"] objectForKey:@"tgt_min_height"] forKey:@"tgt_min_height"];
+        [request setPostValue:[[infoDict objectForKey:@"tgtheight"] objectForKey:@"tgt_max_height"] forKey:@"tgt_max_height"];
+    }
+    if ([infoDict objectForKey:@"birthplace"]!=nil) {
+        [request setPostValue:[NSString stringWithFormat:@"%@%@%@",[[infoDict objectForKey:@"birthplace"] objectForKey:@"province"],[[infoDict objectForKey:@"birthplace"] objectForKey:@"city"],[[infoDict objectForKey:@"birthplace"] objectForKey:@"district"]] forKey:@"birthplace"];
+    }
+    if ([infoDict objectForKey:@"from_type"]==nil||[[infoDict objectForKey:@"from_type"]isEqualToString:@""]) {
+        
+    }
+    else{
+        [request setPostValue:[infoDict objectForKey:@"from_type"] forKey:@"from_type"];
+    }
+    if ([infoDict objectForKey:@"sex"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"sex"] forKey:@"sex"];
+    }
+    
+    [request buildRequestHeaders];
+    __block ASIFormDataRequest *resultRequst = request;
+    
+    [request setCompletionBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+        self.finishBlock(self.resultDict);
+    }];
+    [request setFailedBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+    }];
+    [request startAsynchronous];
+    
+}
+
+
+-(void)addInterestRecommend:(int)recid;
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=addInterestRecommend&recommend_id=%d",BASE_URL,recid];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)getrecommendDetail:(int)recid
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getRecommendDetail&id=%d",BASE_URL,recid];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)addRecommendReply:(int)recid andreplyto:(NSString *)username anddesc:(NSString *)desc
+{
+    NSString *urlStr;
+    desc=[desc stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    if (username==nil) {
+         urlStr=[NSString stringWithFormat:@"%@m=user&a=addRecommendReply&recommend_id=%d&desc=%@",BASE_URL,recid,desc];
+        
+        
+    }
+    else{
+        urlStr=[NSString stringWithFormat:@"%@m=user&a=addRecommendReply&recommend_id=%d&reply_to=%@&desc=%@",BASE_URL,recid,username,desc];
+   }
+        NSURL *url =[NSURL URLWithString:urlStr];
+        [self requestData:url];
+    
+}
+-(void)getRecommendReplies:(int)page andperpage:(int)per_page andrecid:(int)recid//查询推荐留言
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getRecommendReplies&page=%d&per_page=%d&recommend_id=%d",BASE_URL,page,per_page,recid];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+
+
+-(void)getCareers
+{
+    
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getCareers",BASE_URL];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+
+-(void)getscores:(int)type//分享领取积分
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getScores&subtype=%d",BASE_URL,type];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)getCompletePoints;//完成资料获取点数
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getCompletePoints",BASE_URL];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)getAuthPoints;//完成资料获取点数
+{
+    
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getAuthPoints",BASE_URL];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)scoresToPoints:(int)scores;//积分换点数
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=scoresToPoints&scores=%d",BASE_URL,scores];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)upgradeVipsubtype:(int)subtype andpaid_other:(int)paid_other andother_method:(int)other_method
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=upgradeVip&subtype=%d&paid_other=%d&other_method=%d",BASE_URL,subtype,paid_other,other_method];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)buyPointssubtype:(int)subtype andpoints:(int)points andpaid_other:(int)paid_other andother_method:(int)other_method
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=buyPoints&subtype=%d&points=%d&paid_other=%d&other_method=%d",BASE_URL,subtype,points,paid_other,other_method];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)buyChat:(NSString *)tgt_username;
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=buyChat&tgt_username=%@",BASE_URL,tgt_username];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)isChatBuyed:(NSString *)tgt_username;
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=isChatBuyed&tgt_username=%@",BASE_URL,tgt_username];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)buyMatch:(NSString *)tgt_username;
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=buyMatch&tgt_username=%@",BASE_URL,tgt_username];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)isMatchBuyed:(NSString *)tgt_username;
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=isMatchBuyed&tgt_username=%@",BASE_URL,tgt_username];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)getCustomerCarer
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getCustomerCarer",BASE_URL ];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+-(void)getMatchMaker;
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getMatchMaker",BASE_URL ];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+-(void)getmassages:(int)type;
+{
+    NSString *urlStr=[NSString stringWithFormat:@"%@m=user&a=getMessages&type=%d",BASE_URL,type ];
+    
+    NSURL *url =[NSURL URLWithString:urlStr];
+    [self requestData:url];
+}
+
+//以上是爱我吧接口
+
+
+
+
+
+
+
+- (void)getProductClass;////大类列表
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=product&a=productOneLevelTypeList&parent_id=0", BASE_URL]];
+    [self requestData:url];
+}
+
+-(void)getProductClassDetail:(NSString *)parent_id;//子类列表
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=product&a=productOneLevelTypeList&parent_id=%@", BASE_URL,parent_id]];
+    [self requestData:url];
+}
+
+
+
+
+-(void)getProductList:(NSDictionary *)infoDict;//产品列表
+{
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@m=product&a=getProductList",BASE_URL]]];
+    [request setRequestMethod:@"POST"];
+    
+    [request setPostValue:[infoDict objectForKey:@"page"] forKey:@"page"];
+    [request setPostValue:[infoDict objectForKey:@"per_page"] forKey:@"per_page"];
+    if ([infoDict objectForKey:@"protype_id"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"protype_id"] forKey:@"protype_id"];
+    }
+    if ([infoDict objectForKey:@"name"]!=nil) {
+        [request setPostValue:[infoDict objectForKey:@"name"] forKey:@"name"];
+    }
+    //[request setPostValue:[infoDict objectForKey:@"username"] forKey:@"username"];
+    
+    [request buildRequestHeaders];
+    __block ASIFormDataRequest *resultRequst = request;
+    
+    [request setCompletionBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        NSString *str=[[NSString alloc]initWithData:dataResult encoding:NSUTF8StringEncoding];
+        str = [str stringByReplacingOccurrencesOfString:@" " withString:@""];
+                
+        NSData* aData = [str dataUsingEncoding: NSUTF8StringEncoding];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:aData options:kNilOptions error:&error];
+        self.finishBlock(self.resultDict);
+    }];
+    [request setFailedBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+    }];
+    [request startAsynchronous];
+}
+
+
+-(void)getInfolist:(NSString *)type_id andpage:(NSString *)page andper_page:(NSString *)per_page andusername:(NSString *)username;//据信息类型获取信息列表  Type_id:必选   企业文化：1  行业信息：2   促销信息：3
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=product&a=getInfoList&type_id=%@&username=%@&page=%@&per_page=%@", BASE_URL,type_id,username,page,per_page]];
+    [self requestData:url];
+    
+    
+//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+//    __block ASIHTTPRequest *resultRequst = request;
+//    [request setCompletionBlock:^{
+//        
+//        
+//        
+//        
+//        
+//        SBJsonParser * parser = [[SBJsonParser alloc] init];
+//         NSError * error = nil;
+//        
+//        NSData *dataResult = [resultRequst responseData];
+//        NSString *str=[[NSString alloc]initWithData:dataResult encoding:NSUTF8StringEncoding];
+//        if (dataResult)
+//            
+//            
+//         self.resultDict = [parser objectWithString:str error:&error ];
+//            
+////            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+//        self.finishBlock(self.resultDict);
+//    }];
+//    [request setFailedBlock:^{
+//        NSError *error = nil;
+//        NSData *dataResult = [resultRequst responseData];
+//        if (dataResult)
+//            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+//    }];
+//    [request startAsynchronous];
+    
+    
+}
+
+-(void)getInfoDetail:(NSString *)info_id;//4.	根据信息id获取信息详情
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=product&a=getInfoDetail&info_id=%@", BASE_URL,info_id]];
+    [self requestData:url];
+}
+
+
+
+
+
+
+
+
+
+
+
+//////////////////jiujiu
+
+
+
+
+
+
+
+- (void)getuserlist:(NSString *)username
+{
+    NSString *stringurl=[NSString stringWithFormat:@"%@m=user&a=getUserInfoList&usernames=%@",BASE_URL,username];
+    NSURL *url = [NSURL URLWithString:stringurl];
+    [self requestData:url];
+    
+}
+- (void)getqunpeoplelist:(NSString *)qunname
+{
+    
+    NSString *stringurl=[NSString stringWithFormat:@"%@m=group&a=groupUsers&groupname=%@",BASE_URL,qunname];
+    NSURL *url = [NSURL URLWithString:stringurl];
+    [self requestData:url];
+    
+}
+
+
+-(void)getallgroup:(NSString *)username
+{
+    NSString *strurl=[NSString stringWithFormat:@"%@m=group&a=userGroups&username=%@",BASE_URL,username];
+    NSURL *url = [NSURL URLWithString:strurl];
+    [self requestData:url];
+}
+
+
+
+
+
+
+
+
+
+
+
+-(void)getPersonalSpacelist:(int)userid  andparent_id:(int)parent_id andfirstrow:(int)firstrow andrownum:(int)rownum
+{
+    NSString *stringurl=[NSString stringWithFormat:@"%@m=user&a=commentList&user_id=%d&&parent_id=%d&firstrow=%d&rownum=%d",BASE_URL,userid,parent_id,firstrow,rownum];
+    NSURL *url = [NSURL URLWithString:stringurl];
+    [self requestData:url];
+}
+
+- (void)postcomment:(NSDictionary *)dictInfo
+{
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=newComment",BASE_URL]]];
+    [request setRequestMethod:@"POST"];
+    if ([dictInfo objectForKey:@"pics"]!=nil) {
+        NSData *data = nil;
+        NSArray *imageArray = [dictInfo objectForKey:@"pics"];
+        for (int i = 0; i < imageArray.count; i++)
+        {
+            data = UIImagePNGRepresentation([imageArray objectAtIndex:i]);
+            [request addData:data withFileName:[NSString stringWithFormat:@"image%d.png", i] andContentType:@"image/png" forKey:[NSString stringWithFormat:@"pic%d", i + 1]];
+        }
+        
+        [request setPostValue:[NSString stringWithFormat:@"%d", (int)imageArray.count] forKey:@"picnums"];
+    }
+
+    
+    [request setPostValue:[dictInfo objectForKey:@"disc"]  forKey:@"disc"];
+    
+    [request setPostValue:[dictInfo objectForKey:@"parent_id"] forKey:@"parent_id"];
+     [request setPostValue:[dictInfo objectForKey:@"user_id"] forKey:@"user_id"];
+    
+    [request setPostValue:[dictInfo objectForKey:@"commuser_id"] forKey:@"commuser_id"];
+    
+    
+    
+    
+    [request buildRequestHeaders];
+    __block ASIFormDataRequest *resultRequst = request;
+    
+    [request setCompletionBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+        self.finishBlock(self.resultDict);
+    }];
+    [request setFailedBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+    }];
+    [request startAsynchronous];
+}
+
+
+
+
+
+
+
+
+
+
+- (void)requestData:(NSURL *)url
+{
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request setUseCookiePersistence:YES];
+    __block ASIHTTPRequest *resultRequst = request;
+    [request setCompletionBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        NSString *str=[[NSString alloc]initWithData:dataResult encoding:NSUTF8StringEncoding];
+        str = [str stringByReplacingOccurrencesOfString:@" " withString:@""];
+        NSLog(@"%@",str);
+        
+        NSData* aData = [str dataUsingEncoding: NSUTF8StringEncoding];
+        
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:aData options:kNilOptions error:&error];
+        self.finishBlock(self.resultDict);
+    }];
+    [request setFailedBlock:^{
+        NSError *error = nil;
+        NSData *dataResult = [resultRequst responseData];
+        if (dataResult)
+            self.resultDict = [NSJSONSerialization JSONObjectWithData:dataResult options:kNilOptions error:&error];
+        
+        self.failedBlock(@"fail");
+    }];
+    [request startAsynchronous];
+}
+
+
+- (void)dealloc
+{
+    self.resultDict = nil;
+    self.finishBlock = nil;
+    self.failedBlock = nil;
+}
+
+@end

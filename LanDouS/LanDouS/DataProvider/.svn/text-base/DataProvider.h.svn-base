@@ -1,0 +1,136 @@
+//
+//  DataProvider.h
+//  BestOne
+//
+//  Created by hank on 13-10-19.
+//  Copyright (c) 2013年 hank. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@class DataProvider;
+
+typedef void(^dataProviderFinishBlock)(NSDictionary *);
+typedef void(^dataProviderFailedBlock)(NSString *);
+
+@interface DataProvider : NSObject
+
+-(void)getversion;
+-(void)getpushlistandlon:(NSString *)lon andlat:(NSString *)lat;
+- (void)userlogin:(NSString *)phone andPassword:(NSString *)password andlon:(NSString *)lon andlat:(NSString *)lat;
+- (void)userlogin:(NSString *)tokenID andtype:(NSString *)type andlon:(NSString *)lon andlat:(NSString *)lat;
+- (void)changeuserinfo:(NSDictionary *)infoDict;
+
+-(void)userregister:(NSString *)phone andPassword:(NSString *)password;
+
+-(void)postDate:(NSDictionary *)infoDict;
+-(void)searchuserDate:(NSString *)username;
+-(void)DatelistPage:(int)page andPer_page:(int)per_page andsex:(int)sex;
+-(void)addInterestDate:(NSString *)date_id;
+-(void)delInterestDate:(NSString *)date_id;
+-(void)getInterestDates:(int)page andPer_page:(int)per_page;
+-(void)getDateInteresters:(int)date_id;
+
+-(void)searchuserInfo:(NSDictionary *)infoDict;//首页右上角安距离，登陆注册搜索
+
+-(void)searchuserInfoCondition:(NSDictionary *)infoDict;//首页左上角搜索条件搜索
+
+-(void)searchuserInfoDetail:(NSString *)str_username;
+
+-(void)addViewedUser:(NSString *)tgt_username;
+
+-(void)getViewedUsers:(int)page andPer_page:(int)per_page;
+
+-(void)addinterest:(NSString *)tgt_username;
+-(void)delinterest:(NSString *)tgt_username;
+-(void)getinterest:(int)page andper_page:(int)perpage;
+-(void)getfans:(int)page andper_page:(int)perpage;
+
+-(void)Datedel;
+
+-(void)Authentication:(NSDictionary *)infoDict;
+-(void)Authvideo:(NSDictionary *)infoDict;
+
+-(void)addbindType:(NSString *)type andaccount:(NSString *)account andverification_code:(NSString *)code andtoken:(NSString *)token;
+-(void)sendverificationcodeType:(NSString *)type andaccount:(NSString *)account;
+
+-(void)postRecommend:(NSDictionary *)infoDict;
+-(void)getLabels;
+
+
+-(void)getRecommends:(int)page andperpage:(int)per_page andsex:(int)sex;
+-(void)getRecommends:(int)page andperpage:(int)per_page andfromusername:(NSString *)username;
+-(void)getRecommends:(NSDictionary *)infoDict;
+
+-(void)addInterestRecommend:(int)recid;
+-(void)getrecommendDetail:(int)recid;
+-(void)addRecommendReply:(int)recid andreplyto:(NSString *)username anddesc:(NSString *)desc;
+-(void)getRecommendReplies:(int)page andperpage:(int)per_page andrecid:(int)recid;
+-(void)getCareers;
+
+-(void)getscores:(int)type;//分享领取积分
+-(void)getCompletePoints;//完成资料获取点数
+
+-(void)getAuthPoints;//完成资料获取点数
+
+-(void)scoresToPoints:(int)scores;//积分换点数
+
+-(void)upgradeVipsubtype:(int)subtype andpaid_other:(int)paid_other andother_method:(int)other_method;
+-(void)buyPointssubtype:(int)subtype andpoints:(int)points andpaid_other:(int)paid_other andother_method:(int)other_method;
+-(void)buyChat:(NSString *)tgt_username;
+-(void)isChatBuyed:(NSString *)tgt_username;
+-(void)buyMatch:(NSString *)tgt_username;
+-(void)isMatchBuyed:(NSString *)tgt_username;
+-(void)getCustomerCarer;
+-(void)getMatchMaker;
+
+-(void)getmassages:(int)type;
+
+//以上是爱我吧接口
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- (void)getProductClass;//大类
+
+-(void)getProductClassDetail:(NSString *)parent_id;//子类
+
+-(void)getProductList:(NSDictionary *)infoDict;//产品列表
+
+-(void)getInfolist:(NSString *)type_id andpage:(NSString *)page andper_page:(NSString *)per_page andusername:(NSString *)username;
+
+-(void)getInfoDetail:(NSString *)info_id;
+
+
+
+
+
+
+- (void)getuserlist:(NSString *)username;
+
+- (void)getqunpeoplelist:(NSString *)qunname;
+-(void)getallgroup:(NSString *)username;
+
+-(void)getPersonalSpacelist:(int)userid  andparent_id:(int)parent_id andfirstrow:(int)firstrow andrownum:(int)rownum;
+
+- (void)postcomment:(NSDictionary *)dictInfo;
+
+
+@property(nonatomic, strong)dataProviderFinishBlock finishBlock;
+@property(nonatomic, strong)dataProviderFailedBlock failedBlock;
+@property(nonatomic, strong)NSDictionary *resultDict;
+@end

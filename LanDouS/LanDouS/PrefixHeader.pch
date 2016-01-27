@@ -1,0 +1,85 @@
+//
+//  PrefixHeader.pch
+//  LanDouS
+//
+//  Created by Mao-MacPro on 14/12/23.
+//  Copyright (c) 2014年 Mao-MacPro. All rights reserved.
+//
+ //http://api.landous.com/api.php?
+#import "Enum.h"
+#import "CommenDef.h"
+ 
+#import "Toolkit.h"
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#ifndef LanDouS_PrefixHeader_pch
+#define LanDouS_PrefixHeader_pch
+
+#define  LANDOU     0
+#if LANDOU
+#define USER_IMAGE_URL @"http://img.landous.com/shop/avatar/"
+#define SHOP_IMG_URL @"http://img.landous.com/shop/store/"
+#define GOODS_IMG_URL @"http://img.landous.com/shop/store/goods"
+#define LUNBO_IMAGE_URL @"http://img.landous.com/cms/special/"
+#else
+//#define USER_IMAGE_URL @"http://103.56.17.40/shop/avatar/"
+//#define SHOP_IMG_URL @"http://103.56.17.40/shop/store/"
+//#define GOODS_IMG_URL @"http://103.56.17.40/data/upload/shop/store/goods/"
+//#define LUNBO_IMAGE_URL @"http://103.56.17.40/cms/special/"
+
+//http://115.28.67.86/zysc/data/upload/shop/store_joinin/04872761827698144.jpg
+
+#define USER_IMAGE_URL @"http://115.28.67.86/zysc/shop/avatar/"
+#define SHOP_IMG_URL @"http://115.28.67.86/zysc/shop/store/"
+#define GOODS_IMG_URL @"http://115.28.67.86/zysc/data/upload/shop/store/goods/"
+#define LUNBO_IMAGE_URL @"http://115.28.67.86/zysc/data/upload/shop/store_joinin/"
+
+#endif
+//#define SCORE_GOODS_URL @"http://img.landous.com/shop/pointprod/"
+#define SCORE_GOODS_URL @"http://www.itcan.cn:9000/data/upload/shop/pointprod/"
+
+
+#define navi_bar_bg_color [UIColor colorWithRed:175/255.0 green:208/255.0 blue:65/255.0 alpha:1.0]
+//[UIColor colorWithRed:0.51 green:0.57 blue:0.29 alpha:1]
+
+
+#define Nopermissiontodothis @"Nopermissiontodothis!"
+////合作身份者id，以2088开头的16位纯数字
+//#define PartnerID @"2088111293014620"
+////收款支付宝账号
+//#define SellerID  @"gazecloud@qq.com"
+////Veg_all@126.com
+////安全校验码（MD5）密钥，以数字和字母组成的32位字符
+//#define MD5_KEY @"6c6w1rnz4j8jml6ha9pwufif1iiz2fzy"
+//
+////商户私钥，自助生成
+//#define PartnerPrivKey @"MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAM4bYoENrB7PwBGNGUjEcgHk3cTZg6Pee1D5dV0iyVQHcxGsSVzBtm/wd8YeW7z6i+tON31U+SzLhfhz3HNyMZrXWNYq2fZw7wq+pzHeSIa5b3cKINv6NvTg1kUFW8JW5FLlJZqnC55+VSZx8xSNEedZ4PnZs/EETxfvK1dJzicTAgMBAAECgYA3Yn5+5XiqMvOPA9aWikuEnMbHXhgU0fVbVh2msHFfhjzys9Rm+5sVy420DHZkewNccQFSSaJH2k0e7auAzl/rm1JcWgv3jVcjqadOaLLz5i+MCJOSSNBgG9AgJ5NvXVgQEo5XsfPA99P1cGKjKgkEKt6gUkM43pszn1GbveDvcQJBAPYHBsTm/QGOkUiyXvIQNufhhBySlFn5w1XrnRCHt2zwE5UtIkSvmSBAbfEwrx4TcDuS2hm+nG/IyfBhIbJp/3sCQQDWdhy5zgdbP5uQ6/hpdccDySNJ5YO6bIojmm4qAh+wh3rqwylnYeyEMkTvD2qc/73W59B0n3oHQlgEjrYKzNdJAkEA0NM3+KuDdu3W/ViBZH9Ey19Mrp/wEcsA9Q3vHBfGJk5EoOtVWe2eUJS/fOhwy1t+eOJ2A0IaMHvChCk9291CvwJBAL3ysxKmtsFNHz5GoijWFkT2G3lR/VBa3icWmsg+RU8XT/kqjjtw8glMdN3AK8+Oe9giTfFdZrmTO14eAIKkV3ECQHivG93bIxrIkXCUXuLj/PymBtgSbQj3vXJ2pfZnxmzwJvwPSNFwNhZlaaqa248+RxPVD60nGuWD6uqxzcPIE0c="
+//
+//
+////支付宝公钥
+//#define AlipayPubKey   @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOG2KBDawez8ARjRlIxHIB5N3E2YOj3ntQ+XVdIslUB3MRrElcwbZv8HfGHlu8+ovrTjd9VPksy4X4c9xzcjGa11jWKtn2cO8Kvqcx3kiGuW93CiDb+jb04NZFBVvCVuRS5SWapwueflUmcfMUjRHnWeD52bPxBE8X7ytXSc4nEwIDAQAB"
+//
+
+
+
+
+
+
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+//合作身份者id，以2088开头的16位纯数字
+#define PartnerID @"2088612357321655"
+//收款支付宝账号
+#define SellerID  @"lanchongkeji@163.com"
+//Veg_all@126.com
+//安全校验码（MD5）密钥，以数字和字母组成的32位字符
+#define MD5_KEY @"3hgw2pbdgyn56wd1ztescgo7pftggdh1"
+
+//商户私钥，自助生成
+#define PartnerPrivKey @"MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAM5J7a7qkuyyPcd+5N5NptO/dJeTzqtGmSHg8CTAX256DhkDFMu/AYT6BzjYLq1A31kF0tax14ARHoEZC3fo3KWh/Q/9zOqsVX5yn9wFiXIfs6eytaLWIFxsDmdyTsdatLKDBtCNJGcmjfTwewP/XDic4eBU6lf1MR8wwU4wetqvAgMBAAECgYBVBY1L0Wx617+0sG0d3n1KupcQPiAo4XEN0IrJauwqOW4ECwwQKYozx2UgnaEnURx8sXTDfgrmwqeC59KdOkFt2F7NUN7zjZmmSkeU1sLFBOeUd7BJCrC3VW9BR4hXEmEGpNr2aPeWsAsKCBrJBdsQvgJzWT9ymRcizRJdbRj78QJBAP4/1fn792uDYAP4FLzD1hK27VyC6K5xfkp5rMVfYxhFAHXQg6BynAy1PWk+1dxyOUjEiUjoLpTwdFZumzYaA7kCQQDPtY1/M+vFJ6VdpO8djsPBbQsrNcM3QdFmu8x1Im6wBABH8G3QBlPY+Y5gBLdKWX70GFKuOrThpzAWVXFjdlWnAkBUHmS6P74diSrURVj/F0AVkwY3TGyVgqFJHLan2qZbmkDLugBCroiov7IgxxRUyknfpH7Ta1Y2GtQy4Idjv/mpAkEAyP/r2bio47Ul9aTyMCxDix62vC3ep85tkXkStheH/ZUhoHwuCCzXXxTAjnKB3NUWYahX+nqdJ/DeO/6bJ6EP6QJBALP/P7UuEPbDjexfOIOqStJ5OBw/GpL1lKH5uJ2lfVkXQe/aWADlfHk9PPQB/7koejR3y/BtPcI+A1EEHE16gnI="
+
+
+//支付宝公钥
+#define AlipayPubKey   @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB"
+#endif

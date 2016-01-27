@@ -1,0 +1,18 @@
+//
+//  Local.h
+//  iPensee
+//
+//  Created by user on 12-5-16.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface Local : NSObject 
+
+id local(NSString *key);
+
+id localUI(NSString *key);
+
+
+@end
