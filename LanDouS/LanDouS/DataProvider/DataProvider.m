@@ -19,7 +19,7 @@
 #if LANDOU
 #define BASE_URL @"http://api.landous.com/api.php?"
 #else
-#define BASE_URL @"http://115.28.67.86/zysc/appif/api.php?"
+#define BASE_URL @"http://115.28.67.86/zysc_fei_dfy/appif/api.php?"
 //@"http://103.56.17.40/appif/api.php?"
 //@"http://192.168.199.174/appif/api.php?"
 #endif
@@ -126,9 +126,17 @@
 
 -(void)getGoodsDetail:(NSString *)goodsId
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=getGoodsDetail&goods_id=%@", BASE_URL,goodsId]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=goods_detailOp&goods_id=%@", BASE_URL,goodsId]];
     [self requestData:url];
 }
+
+-(void)getGoodsSpec:(NSString *)goodsId{
+    if (goodsId) {
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=getGoodsDetail_origi&goods_id=%@", BASE_URL,goodsId]];
+        [self requestData:url];
+    }
+}
+
 -(void)getGoodsComments:(NSString *)goodsId andPage:(int)page andPerpage:(int)perpage
 {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=getGoodsComments&goods_id=%@&page=%d&per_page=%d", BASE_URL,goodsId,page,perpage]];

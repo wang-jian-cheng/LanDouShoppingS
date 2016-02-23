@@ -559,8 +559,8 @@
     else{
         [btncollect setSelected:NO];
     }
-    if ([[dicGoodsDetail objectForKey:@"images"]isKindOfClass:[NSArray class]]) {
-        NSArray *imagearray=[[NSArray alloc]initWithArray:[dicGoodsDetail objectForKey:@"images"]];
+    NSArray *imagearray=[[NSArray alloc]initWithArray:[dicGoodsDetail objectForKey:@"images"]];
+    if (imagearray.count > 0) {
         pageCol.numberOfPages=imagearray.count;
         
         scrollTop.pagingEnabled=YES;

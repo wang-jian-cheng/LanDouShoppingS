@@ -25,6 +25,7 @@ typedef void(^dataProviderFailedBlock)(NSString *);
 -(void)getGoodsClass:(NSString *)parent_id;
 -(void)getGoodsList:(NSDictionary *)infoDict andPage:(int)page andPerPage:(int)perpage;
 -(void)getGoodsDetail:(NSString *)goodsId;
+-(void)getGoodsSpec:(NSString *)goodsId;
 -(void)getGoodsComments:(NSString *)goodsId andPage:(int)page andPerpage:(int)perpage;
 -(void)getStoreList:(NSString *)searchText andPage:(int)page andPerpage:(int)perpage;
 -(void)getStoreGoodsClass:(NSString *)store_id andParentID:(NSString *)parent_id;
