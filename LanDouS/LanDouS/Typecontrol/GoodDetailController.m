@@ -21,7 +21,8 @@
 #import "SureCartController.h"
 @interface GoodDetailController ()
 @property (weak, nonatomic) IBOutlet UIButton *joinCartBtn;
-
+@property (nonatomic) NSMutableDictionary *dictStandard;
+@property (nonatomic) NSMutableArray *standardBtnArr;
 @end
 
 @implementation GoodDetailController
@@ -35,6 +36,9 @@
     [self addRightButton:@"sharebgbai@2x.png"];
     page=1;
     perpage=20;
+    
+    standardIdStr = @"000|000";
+    
     
     _joinCartBtn.backgroundColor = navi_bar_bg_color;
     
@@ -346,6 +350,7 @@
     
     [dataProvider delFavoriteGoods:goodsID];
 }
+
 -(void)getGoodsDetail:(NSString *)goodsID
 {
     [SVProgressHUD show];
@@ -354,12 +359,23 @@
         [SVProgressHUD dismiss];
         DLog(@"^^^^%@", resultDict );
         if ([[resultDict objectForKey:@"result"]intValue]==1) {
-            dicGoodsDetail=[NSMutableDictionary dictionaryWithDictionary:[resultDict objectForKey:@"data"]];
+            dicGoodsDetail=[NSMutableDictionary dictionaryWithDictionary:[resultDict objectForKey:@"data"][@"goods_info"]];
+            
+            goodImgUrl =resultDict[@"data"][@"goods_image"];
+            specListGoodsDict = resultDict[@"data"][@"spec_list_goods"];
+            
+//            if(![resultDict[@"data"][@"spec_name"] isEqual:[NSNull null]])
+//            {
+//                [self.dictStandard setObject:resultDict[@"data"][@"spec_name"] forKey:@"spec_name"];
+//            }
+//            if(![resultDict[@"data"][@"spec_value"] isEqual:[NSNull null]])
+//            {
+//               [self.dictStandard setObject:resultDict[@"data"][@"spec_value"] forKey:@"spec_value"];
+//            }
+//            
+            
             if ([[resultDict objectForKey:@"recommends"] isKindOfClass:[NSArray class]]) {
                 arrayRecommends=[NSMutableArray arrayWithArray:[resultDict objectForKey:@"recommends"]];
-                
-                
-                
             }
             [self initGoodsDetailView];
             [self initPicDetailView];
@@ -607,7 +623,7 @@
      imageweb.scalesPageToFit=YES ;
     //imageweb.backgroundColor=[UIColor blueColor];
     imageweb.delegate=self;
-    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"http://wap.landous.com/tmpl/product_info.html?goods_id=%@",goodsId]];
+    NSURL *url=[NSURL URLWithString:@""/*goodImgUrl[@"0"]*/];
     NSURLRequest *urlrequest=[NSURLRequest requestWithURL:url];
     [imageweb loadRequest:urlrequest];
     [self.view addSubview:imageweb];
@@ -652,6 +668,256 @@
     
     [self getmoreGoodsComments:goodsId];
 }
+
+-(void)getGoodsStandards:(NSString *)goodsID
+{
+    
+//    standardsView.delegate = self;
+    
+    [SVProgressHUD show];
+    DataProvider *dataProvider = [[DataProvider alloc] init];
+    [dataProvider setFinishBlock:^(NSDictionary *resultDict){
+        [SVProgressHUD dismiss];
+        DLog(@"^^^^%@", resultDict );
+        if ([[resultDict objectForKey:@"result"]intValue]==1) {
+            
+            
+            
+//            standardsView.delegate = self;
+//            [standardsView show];
+            
+          
+        }
+        else{
+            
+        }
+        
+        
+        
+    }];
+    
+    [dataProvider setFailedBlock:^(NSString *strError){
+        [SVProgressHUD dismiss];
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"检查网络！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        
+    }];
+    
+    [dataProvider getGoodsSpec:goodsID];
+}
+
+-(NSMutableDictionary *)dictStandard
+{
+    if(_dictStandard ==nil)
+    {
+        _dictStandard = [NSMutableDictionary dictionary];
+    }
+    
+    return _dictStandard;
+}
+
+
+-(CGFloat)WidthWithString:(NSString*)string fontSize:(CGFloat)fontSize height:(CGFloat)height
+{
+    NSDictionary *attrs = @{NSFontAttributeName:[UIFont systemFontOfSize:fontSize]};
+    return  [string boundingRectWithSize:CGSizeMake(0, height) options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attrs context:nil].size.width;
+}
+
+-(NSMutableArray *)standardBtnArr
+{
+    if(_standardBtnArr == nil)
+    {
+        _standardBtnArr = [NSMutableArray array];
+    }
+    
+    return _standardBtnArr;
+}
+
+#pragma mark - standardsView delegate
+
+-(void)standardBtnClick:(UIButton *)sender
+{
+    sender.backgroundColor = [UIColor orangeColor];
+    
+    NSArray *tempArr = self.standardBtnArr[(sender.tag & 0x0000ffff)/100 ];
+    
+    for (UIButton *tempBtn in tempArr) {
+        if(tempBtn.tag == sender.tag)
+        {
+            continue;
+        }
+        
+        tempBtn.backgroundColor = [UIColor whiteColor];
+    }
+    NSString *tagStr = [NSString stringWithFormat:@"%ld",(sender.tag & 0xffff0000)>>16];
+    
+    if((sender.tag & 0x0000ffff)/100  == 0)
+    {
+        standardIdStr = [NSString stringWithFormat:@"%@|%@",tagStr,[standardIdStr substringFromIndex:4]];
+    }
+    else
+    {
+        standardIdStr = [NSString stringWithFormat:@"%@|%@",[standardIdStr substringToIndex:3],tagStr];
+    }
+    DLog(@"standardIdStr = %@",standardIdStr);
+    NSDictionary *specInfo = specListGoodsDict[standardIdStr];
+    if(![specInfo isEqual:[NSNull null]])
+    {
+        DLog(@"price:%@",specInfo[@"goods_price"]);
+        DLog(@"storage:%@",specInfo[@"goods_storage"]);
+    }
+}
+
+-(CGFloat)StandTableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    @try {
+        CGFloat totalHeight = 0;
+        
+        CGFloat oneLineBtnWidtnLimit = 300;//每行btn占的最长长度，超出则换行
+        CGFloat btnGap = 10;//btn的x间距
+        CGFloat btnGapY = 10;
+        NSInteger BtnlineNum = 0;
+        CGFloat BtnHeight = 30;
+        CGFloat minBtnLength =  50;//每个btn的最小长度
+        CGFloat maxBtnLength = oneLineBtnWidtnLimit - btnGap*2;//每个btn的最大长度
+        CGFloat Btnx ;//每个btn的起始位置
+        Btnx += btnGap;
+        
+        NSString *strID = [NSString stringWithFormat:@"%@",dicGoodsDetail[@"spec_name"][indexPath.row][@"id"]];
+        NSArray *specArr = [dicGoodsDetail[@"spec_value"] objectForKey:strID];
+        
+        for (int i = 0; i < specArr.count; i++) {
+            NSString *str = specArr[i][@"name"];
+            CGFloat btnWidth = [self WidthWithString:str fontSize:14 height:BtnHeight];
+            btnWidth += 20;//让文字两端留出间距
+            
+            if(btnWidth<minBtnLength)
+                btnWidth = minBtnLength;
+            
+            if(btnWidth>maxBtnLength)
+                btnWidth = maxBtnLength;
+            
+            
+            if(Btnx + btnWidth > oneLineBtnWidtnLimit)
+            {
+                BtnlineNum ++;//长度超出换到下一行
+                Btnx = btnGap;
+            }
+            
+            
+            
+            Btnx =Btnx + btnWidth + btnGap;
+            
+        }
+        totalHeight = 30 + (1+BtnlineNum)*(BtnHeight+btnGapY) + btnGapY;
+        
+        return totalHeight;
+    }
+    @catch (NSException *exception) {
+        return 0;
+    }
+    @finally {
+        
+    }
+}
+
+-(void)StandTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath andCell:(UITableViewCell *)cell
+{
+
+    
+    @try {
+        
+        {
+            UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, SCREEN_WIDTH, 30)];
+            titleLab.text = dicGoodsDetail[@"spec_name"][indexPath.row ][@"name"];
+            titleLab.textColor = [UIColor blackColor];
+            titleLab.font = [UIFont systemFontOfSize:16];
+            [cell.contentView addSubview:titleLab];
+            
+            CGFloat oneLineBtnWidtnLimit = 300;//每行btn占的最长长度，超出则换行
+            CGFloat btnGap = 10;//btn的x间距
+            CGFloat btnGapY = 10;
+            NSInteger BtnlineNum = 0;
+            CGFloat BtnHeight = 30;
+            CGFloat minBtnLength =  50;//每个btn的最小长度
+            CGFloat maxBtnLength = oneLineBtnWidtnLimit - btnGap*2;//每个btn的最大长度
+            CGFloat Btnx ;//每个btn的起始位置
+            Btnx += btnGap;
+            
+            NSString *strID = [NSString stringWithFormat:@"%@",dicGoodsDetail[@"spec_name"][indexPath.row][@"id"]];
+            NSArray *specArr = [dicGoodsDetail[@"spec_value"] objectForKey:strID];
+            
+            NSMutableArray *tempArr = [NSMutableArray array];
+            
+            for (int i = 0; i < specArr.count; i++) {
+                NSString *str = specArr[i][@"name"];
+                CGFloat btnWidth = [self WidthWithString:str fontSize:14 height:BtnHeight];
+                btnWidth += 20;//让文字两端留出间距
+                
+                if(btnWidth<minBtnLength)
+                    btnWidth = minBtnLength;
+                
+                if(btnWidth>maxBtnLength)
+                    btnWidth = maxBtnLength;
+                
+                
+                if(Btnx + btnWidth > oneLineBtnWidtnLimit)
+                {
+                    BtnlineNum ++;//长度超出换到下一行
+                    Btnx = btnGap;
+                }
+                
+                
+                UIButton *btn = [[UIButton alloc] init];
+                btn.frame = CGRectMake(Btnx, titleLab.frame.size.height+titleLab.frame.origin.x + (BtnlineNum*(BtnHeight+btnGapY)),
+                                        btnWidth,BtnHeight );
+                [btn setTitle:str forState:UIControlStateNormal];
+                btn.backgroundColor = [UIColor whiteColor];
+                [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                btn.layer.cornerRadius = 5;
+                btn.layer.borderWidth = 0.5;
+                btn.layer.borderColor = [[UIColor grayColor] CGColor];
+                btn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [btn addTarget:self action:@selector(standardBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+ 
+                
+                btn.tag = indexPath.row*100 + i/*低16位*/ | ([specArr[i][@"id"] intValue] << 16) /*高16位*/;
+                
+
+                [tempArr addObject:btn];
+                
+                Btnx = btn.frame.origin.x + btn.frame.size.width + btnGap;
+                [cell.contentView addSubview:btn];
+                
+                
+            }
+            
+            [self.standardBtnArr addObject:tempArr];
+        }
+        
+  
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        
+    }
+    
+}
+
+
+-(void)StandardsSureBtnClick:(NSString *)content
+{
+    
+    SureCartController *SureCart=[[SureCartController alloc]init];
+    SureCart.arrayCartList=[[NSMutableArray alloc]init];
+    [SureCart.arrayCartList addObject:dicGoodsDetail];
+    SureCart.strType=@"buynow";
+    [self.navigationController pushViewController:SureCart animated:YES];
+}
+
 #pragma mark tableview delegate
 
 
@@ -886,20 +1152,48 @@
         }
         if (buttonIndex==1) {
             [dicGoodsDetail setObject:textNum.text forKey:@"goods_num"];
+            [self getGoodsStandards:goodsId];
             
-            SureCartController *SureCart=[[SureCartController alloc]init];
-            SureCart.arrayCartList=[[NSMutableArray alloc]init];
-            [SureCart.arrayCartList addObject:dicGoodsDetail];
-            SureCart.strType=@"buynow";
-            [self.navigationController pushViewController:SureCart animated:YES];
+            
+            
+            
         }
     }
 }
 
 - (IBAction)buyNowclick:(id)sender {
     
+    standardsView = [[StandardsView alloc] init];
+    standardsView.delegate = self;
+    [standardsView.mainImgView setImageWithURL:[NSURL URLWithString:goodImgUrl[@"0"]] placeholderImage:[UIImage imageNamed:@"landou_square_default.png"]];
     
+    NSArray * tempArr = dicGoodsDetail[@"spec_name"];
+    NSMutableArray *standardModelArr = [NSMutableArray array];
     
+    for (int i = 0; i < tempArr.count; i++) {
+        StandardModel *tempModel = [[StandardModel alloc] init];
+        tempModel.standardName = tempArr[i][@"name"];
+        
+        NSString *strID = [NSString stringWithFormat:@"%@",tempArr[i][@"id"]];
+        NSArray *specArr = [dicGoodsDetail[@"spec_value"] objectForKey:strID];
+        NSMutableArray *tempInfoArr = [NSMutableArray array];
+        for (int j = 0 ; j < specArr.count; j++) {
+            standardClassInfo *tempInfo = [[standardClassInfo alloc] init];
+            tempInfo.standardClassName = specArr[j][@"name"];
+            tempInfo.standardClassId = specArr[j][@"id"];
+            
+            [tempInfoArr addObject:tempInfo];
+        }
+        
+        tempModel.standardClassInfo = tempInfoArr;
+        [standardModelArr addObject:tempModel];
+    }
+    
+    standardsView.standardArr = standardModelArr;
+    
+    [standardsView show];
+    return;
+  
     if (get_Dsp(@"userinfo")) {
         if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]==0) {
             [Dialog simpleToast:@"亲，商品库存不足"];

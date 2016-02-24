@@ -396,6 +396,7 @@
 		8AF8E5E41AF8C0FC0017C9CD /* icon_officegifts.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AF8E5DC1AF8C0FC0017C9CD /* icon_officegifts.png */; };
 		8AF8E5E51AF8C0FC0017C9CD /* icon_personalcare.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AF8E5DD1AF8C0FC0017C9CD /* icon_personalcare.png */; };
 		8AF8E5E61AF8C0FC0017C9CD /* icon_supplies.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AF8E5DE1AF8C0FC0017C9CD /* icon_supplies.png */; };
+		B555EB0D1C7DA1B400683996 /* StandardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B555EB0C1C7DA1B400683996 /* StandardModel.m */; };
 		B56191E11C02A263004ABA58 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B56191E01C02A263004ABA58 /* Default-568h@2x.png */; };
 		B57104AB1C059AC200A72F53 /* SMS_SDKLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B57104A61C059AC200A72F53 /* SMS_SDKLocalizable.strings */; };
 		B57104AC1C059AC200A72F53 /* MOBFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B57104A81C059AC200A72F53 /* MOBFoundation.framework */; };
@@ -432,6 +433,8 @@
 		B59E8CB61C0D8D8700DDAB27 /* SegmentedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B59E8CB31C0D8D8700DDAB27 /* SegmentedButton.m */; };
 		B59E8CB71C0D8D8700DDAB27 /* SegmentedPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B59E8CB51C0D8D8700DDAB27 /* SegmentedPageView.m */; };
 		B59E8CBA1C0D900400DDAB27 /* DepositViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B59E8CB91C0D900400DDAB27 /* DepositViewController.m */; };
+		B5C1EB601C7BED8200B4AC24 /* StandardsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C1EB5F1C7BED8200B4AC24 /* StandardsView.m */; };
+		B5C1EB611C7BFC0500B4AC24 /* GoodDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1860E5871A5B744200234FB1 /* GoodDetailController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1074,6 +1077,8 @@
 		8AF8E5DC1AF8C0FC0017C9CD /* icon_officegifts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_officegifts.png; sourceTree = "<group>"; };
 		8AF8E5DD1AF8C0FC0017C9CD /* icon_personalcare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_personalcare.png; sourceTree = "<group>"; };
 		8AF8E5DE1AF8C0FC0017C9CD /* icon_supplies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_supplies.png; sourceTree = "<group>"; };
+		B555EB0B1C7DA1B400683996 /* StandardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardModel.h; sourceTree = "<group>"; };
+		B555EB0C1C7DA1B400683996 /* StandardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandardModel.m; sourceTree = "<group>"; };
 		B56191E01C02A263004ABA58 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		B57104A71C059AC200A72F53 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SMS_SDKLocalizable.strings; sourceTree = "<group>"; };
 		B57104A81C059AC200A72F53 /* MOBFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MOBFoundation.framework; sourceTree = "<group>"; };
@@ -1131,6 +1136,8 @@
 		B59E8CB51C0D8D8700DDAB27 /* SegmentedPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentedPageView.m; sourceTree = "<group>"; };
 		B59E8CB81C0D900400DDAB27 /* DepositViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DepositViewController.h; sourceTree = "<group>"; };
 		B59E8CB91C0D900400DDAB27 /* DepositViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DepositViewController.m; sourceTree = "<group>"; };
+		B5C1EB5E1C7BED8200B4AC24 /* StandardsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardsView.h; sourceTree = "<group>"; };
+		B5C1EB5F1C7BED8200B4AC24 /* StandardsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandardsView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1903,6 +1910,10 @@
 				188748461A5D1D51001D2D8E /* CommentCell.h */,
 				188748471A5D1D51001D2D8E /* CommentCell.m */,
 				188748481A5D1D51001D2D8E /* CommentCell.xib */,
+				B5C1EB5E1C7BED8200B4AC24 /* StandardsView.h */,
+				B5C1EB5F1C7BED8200B4AC24 /* StandardsView.m */,
+				B555EB0B1C7DA1B400683996 /* StandardModel.h */,
+				B555EB0C1C7DA1B400683996 /* StandardModel.m */,
 			);
 			path = Typecontrol;
 			sourceTree = "<group>";
@@ -2730,6 +2741,7 @@
 				188139771A49370D00EC9B2F /* ASIHTTPRequest.m in Sources */,
 				188DC59E1A79DE8600785A28 /* IQSegmentedNextPrevious.m in Sources */,
 				188DC5A01A79DE8600785A28 /* IQBarButtonItem.m in Sources */,
+				B555EB0D1C7DA1B400683996 /* StandardModel.m in Sources */,
 				8A829BA01AE62EC200174FD9 /* ApiXml.mm in Sources */,
 				188139971A49370D00EC9B2F /* ImageViewCell.m in Sources */,
 				187040D91A652CA600B88CF3 /* SBJsonWriter.m in Sources */,
@@ -2807,6 +2819,7 @@
 				1881397C1A49370D00EC9B2F /* MBProgressHUD.m in Sources */,
 				1855BD451A74CEF50078FF31 /* CommentEditCell.m in Sources */,
 				188139821A49370D00EC9B2F /* MJRefreshBaseView.m in Sources */,
+				B5C1EB601C7BED8200B4AC24 /* StandardsView.m in Sources */,
 				18AA823E1A67B23700818A34 /* ChooseAreaController.m in Sources */,
 				188139801A49370D00EC9B2F /* MaoAnimation.m in Sources */,
 				1881398A1A49370D00EC9B2F /* SDImageCache.m in Sources */,
@@ -2821,6 +2834,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				188138FD1A4918C200EC9B2F /* LanDouSTests.m in Sources */,
+				B5C1EB611C7BFC0500B4AC24 /* GoodDetailController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
