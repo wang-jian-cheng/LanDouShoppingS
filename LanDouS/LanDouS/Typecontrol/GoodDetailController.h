@@ -13,7 +13,7 @@
 #import <ShareSDKUI/ShareSDK+SSUI.h>
 #import <ShareSDKInterfaceAdapter/ISSContainer.h>
 
-@interface GoodDetailController : BaseNavigationController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UIWebViewDelegate,StandardsViewDelegate>
+@interface GoodDetailController : BaseNavigationController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UIWebViewDelegate,StandardsViewDelegate,StandardsViewDataSource>
 {
     UIButton *btncollect;
     UIButton *btngotoCart;

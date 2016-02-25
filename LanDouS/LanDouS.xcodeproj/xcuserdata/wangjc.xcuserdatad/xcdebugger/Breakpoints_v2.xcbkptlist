@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LanDouS/Typecontrol/GoodDetailController.m"
-            timestampString = "477993609.035025"
+            timestampString = "478012173.507612"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1108"
-            endingLineNumber = "1108"
-            landmarkName = "-collectionView:cellForItemAtIndexPath:"
+            startingLineNumber = "1035"
+            endingLineNumber = "1035"
+            landmarkName = "-buyNowclick:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LanDouS/Typecontrol/GoodDetailController.m"
-            timestampString = "477993609.035025"
+            timestampString = "478012173.507612"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1109"
-            endingLineNumber = "1109"
-            landmarkName = "-collectionView:cellForItemAtIndexPath:"
+            startingLineNumber = "1036"
+            endingLineNumber = "1036"
+            landmarkName = "-buyNowclick:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

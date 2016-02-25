@@ -27,11 +27,13 @@
     
     UIButton *cancelBtn;
     UIButton *sureBtn;
+    UIView *lineView;
     
     UIView *coverView;
     UIView *showView;
     
 }
+
 @property(nonatomic) UITableView *mainTableView;
 @property (nonatomic) NSMutableArray *standardBtnArr;
 //@property(nonatomic)UITextView *contentTextView;
@@ -96,7 +98,7 @@
     self.mainImgView.layer.borderColor = [[UIColor whiteColor] CGColor];
     self.mainImgView.layer.borderWidth = 3;
     
-    self.mainImgView.image = self.mainImg;
+//    self.mainImgView.image = self.mainImg;
     self.mainImgView.center = CGPointMake(80, showView.frame.origin.y+self.mainImgView.frame.size.height/3);
     self.mainImgView.image = [UIImage imageNamed:@"landou_square_default.png"];
     
@@ -130,20 +132,22 @@
     
     cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, ViewHeight-44, ViewWidth/2, 44)];
     cancelBtn.tag = 1000 + 1;
-    [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
     cancelBtn.backgroundColor = ItemsBaseColor;
+    [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+    [cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [cancelBtn addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
     [showView addSubview:cancelBtn];
     
-    
+//
     sureBtn = [[UIButton alloc] initWithFrame:CGRectMake(ViewWidth/2, ViewHeight-44, ViewWidth/2, 44)];
     sureBtn.tag = 1000 + 2;
-    [sureBtn setTitle:@"确定" forState:UIControlStateNormal];
     sureBtn.backgroundColor = ItemsBaseColor;
+    [sureBtn setTitle:@"确定" forState:UIControlStateNormal];
+    [sureBtn setTitleColor:[UIColor blackColor ] forState:UIControlStateNormal];
     [sureBtn addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
     [showView addSubview:sureBtn];
     
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(cancelBtn.frame.size.width, cancelBtn.frame.origin.y, 1, cancelBtn.frame.size.height)];
+    lineView = [[UIView alloc] initWithFrame:CGRectMake(cancelBtn.frame.size.width, cancelBtn.frame.origin.y, 1, cancelBtn.frame.size.height)];
     lineView.backgroundColor = BACKGROUND_COLOR;
     [showView addSubview:lineView];
     
@@ -215,9 +219,9 @@
     self.tipLab.text = str;
     [tempView addSubview:self.tipLab];
     
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(10, tempView.frame.size.height-1, SCREEN_WIDTH - 20, 0.5)];
-    lineView.backgroundColor = [UIColor grayColor];
-    [tempView addSubview:lineView];
+    UIView *HlineView = [[UIView alloc] initWithFrame:CGRectMake(10, tempView.frame.size.height-1, SCREEN_WIDTH - 20, 0.5)];
+    HlineView.backgroundColor = [UIColor grayColor];
+    [tempView addSubview:HlineView];
     
     [showView addSubview:tempView];
     
@@ -235,11 +239,42 @@
 }
 
 #pragma mark - self property
-
--(void)setMainImg:(UIImage *)mainImg
+-(void)setCustomBtns:(NSArray *)customBtns
 {
-    _mainImg = mainImg;
-    self.mainImgView.image = _mainImg;
+    _customBtns = customBtns;
+    
+    [cancelBtn removeFromSuperview];
+    [sureBtn removeFromSuperview];
+    [lineView removeFromSuperview];
+    
+    CGFloat btnHeight = cancelBtn.frame.size.height;
+    CGFloat btnWidth = SCREEN_WIDTH/_customBtns.count;
+    
+   
+    for (int i = 0; i < _customBtns.count; i++) {
+        UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnWidth*i, ViewHeight-44, btnWidth, btnHeight)];
+        [btn setTitle:_customBtns[i] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [btn addTarget:self action:@selector(customBtnsClickAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        btn.backgroundColor = [UIColor whiteColor];
+        btn.tag = i;
+        btn.titleLabel.font = [UIFont systemFontOfSize:14];
+        
+        if(i != _customBtns.count - 1)
+        {
+            UIView *tempLineView = [[UIView alloc] initWithFrame:CGRectMake(btnWidth - 1, 0 , 1, btn.frame.size.height)];
+            tempLineView.backgroundColor = BACKGROUND_COLOR;
+            [btn addSubview:tempLineView];
+            
+        }
+        if([self.delegate respondsToSelector:@selector(StandardsViewSetBtn:andStandView:)])
+        {
+            [self.delegate StandardsViewSetBtn:btn andStandView:self];
+        }
+        
+        [showView addSubview:btn];
+    }
 }
 
 -(void)setStandardArr:(NSArray<StandardModel *> *)standardArr
@@ -285,6 +320,14 @@
 
 #pragma mark - clicks
 
+-(void)customBtnsClickAction:(UIButton *)sender
+{
+    if([self.delegate respondsToSelector:@selector(StandardsViewCustomBtnClickAction:)])
+    {
+        [self.delegate StandardsViewCustomBtnClickAction:sender];
+    }
+}
+
 -(void)standardBtnClick:(UIButton *)sender
 {
     sender.backgroundColor = [UIColor orangeColor];
@@ -299,11 +342,11 @@
         
         tempBtn.backgroundColor = [UIColor whiteColor];
     }
-    NSString *tagStr = [NSString stringWithFormat:@"%ld",(sender.tag & 0xffff0000)>>16];
+    NSString *tagStr = [NSString stringWithFormat:@"%ld",(unsigned long)(sender.tag & 0xffff0000)>>16];
     
-    if([self.delegate respondsToSelector:@selector(StandardsSelectBtnClick:andSelectID:andStandName:)])
+    if([self.delegate respondsToSelector:@selector(StandardsSelectBtnClick:andSelectID:andStandName:andIndex:)])
     {
-        [self.delegate StandardsSelectBtnClick:sender andSelectID:tagStr andStandName:self.standardArr[(sender.tag & 0x0000ffff)/100].standardName];
+        [self.delegate StandardsSelectBtnClick:sender andSelectID:tagStr andStandName:self.standardArr[(sender.tag & 0x0000ffff)/100].standardName andIndex:(sender.tag & 0x0000ffff)/100];
     }
 
 }
@@ -444,7 +487,7 @@
         CGFloat BtnHeight = 30;
         CGFloat minBtnLength =  50;//每个btn的最小长度
         CGFloat maxBtnLength = oneLineBtnWidtnLimit - btnGap*2;//每个btn的最大长度
-        CGFloat Btnx ;//每个btn的起始位置
+        CGFloat Btnx = 0;//每个btn的起始位置
         Btnx += btnGap;
         
 //        NSString *strID = [NSString stringWithFormat:@"%@",dicGoodsDetail[@"spec_name"][indexPath.row][@"id"]];
@@ -472,7 +515,9 @@
             
             
             UIButton *btn = [[UIButton alloc] init];
-            btn.frame = CGRectMake(Btnx, titleLab.frame.size.height+titleLab.frame.origin.x + (BtnlineNum*(BtnHeight+btnGapY)),
+            
+            CGFloat height = titleLab.frame.size.height+titleLab.frame.origin.x + (BtnlineNum*(BtnHeight+btnGapY));
+            btn.frame = CGRectMake(Btnx, height,
                                    btnWidth,BtnHeight );
             [btn setTitle:str forState:UIControlStateNormal];
             btn.backgroundColor = [UIColor whiteColor];
@@ -514,19 +559,58 @@
 //设置cell每行间隔的高度
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if([self.delegate respondsToSelector:@selector(StandTableView:heightForRowAtIndexPath:)])
-    {
-        CGFloat temp = [self.delegate StandTableView:tableView heightForRowAtIndexPath:indexPath];
-        
-        if (temp == 0) {
-            return _cellHeight;
-        }
-        else
-        {
-            return temp;
-        }
-    }
     
+    
+    @try {
+        CGFloat totalHeight = 0;
+        
+        CGFloat oneLineBtnWidtnLimit = 300;//每行btn占的最长长度，超出则换行
+        CGFloat btnGap = 10;//btn的x间距
+        CGFloat btnGapY = 10;
+        NSInteger BtnlineNum = 0;
+        CGFloat BtnHeight = 30;
+        CGFloat minBtnLength =  50;//每个btn的最小长度
+        CGFloat maxBtnLength = oneLineBtnWidtnLimit - btnGap*2;//每个btn的最大长度
+        CGFloat Btnx ;//每个btn的起始位置
+        Btnx += btnGap;
+        
+//        NSString *strID = [NSString stringWithFormat:@"%@",dicGoodsDetail[@"spec_name"][indexPath.row][@"id"]];
+//        NSArray *specArr = [dicGoodsDetail[@"spec_value"] objectForKey:strID];
+        
+        for (int i = 0; i < self.standardArr[indexPath.row].standardClassInfo.count; i++) {
+            NSString *str = self.standardArr[indexPath.row].standardClassInfo[i].standardClassName;
+            CGFloat btnWidth = [self WidthWithString:str fontSize:14 height:BtnHeight];
+            btnWidth += 20;//让文字两端留出间距
+            
+            if(btnWidth<minBtnLength)
+                btnWidth = minBtnLength;
+            
+            if(btnWidth>maxBtnLength)
+                btnWidth = maxBtnLength;
+            
+            
+            if(Btnx + btnWidth > oneLineBtnWidtnLimit)
+            {
+                BtnlineNum ++;//长度超出换到下一行
+                Btnx = btnGap;
+            }
+            
+            
+            
+            Btnx =Btnx + btnWidth + btnGap;
+            
+        }
+        totalHeight = 30 + (1+BtnlineNum)*(BtnHeight+btnGapY) + btnGapY;
+        
+        return totalHeight;
+    }
+    @catch (NSException *exception) {
+        return _cellHeight;
+    }
+    @finally {
+        
+    }
+
     return _cellHeight;
 }
 
