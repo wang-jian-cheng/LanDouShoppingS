@@ -7,7 +7,7 @@
 //
 
 #import "StandardsView.h"
-
+#import "ThrowLineTool.h"
 
 #define ViewHeight  (SCREEN_HEIGHT/3*2)
 #define ViewWidth   (SCREEN_WIDTH)
@@ -16,7 +16,7 @@
 
 #define ItemsBaseColor  [UIColor whiteColor]
 
-@interface StandardsView ()
+@interface StandardsView ()<ThrowLineToolDelegate>
 {
 //    UILabel *tipLab;
 //    UILabel *titleLab;
@@ -31,6 +31,8 @@
     
     UIView *coverView;
     UIView *showView;
+    
+    UIImageView *tempImgView;
     
 }
 
@@ -234,7 +236,7 @@
     
     _mainTableView.tableFooterView = [[UIView alloc] init];
     
-    _cellHeight = _mainTableView.frame.size.height/2;
+    _cellHeight = 100;
     [showView addSubview:_mainTableView];
 }
 
@@ -396,6 +398,72 @@
     [self hideAnimation];
     [self endEditing:YES];
 }
+#pragma mark - Animations
+
+
+-(void)setBackViewAnimationScale:(UIView *)backView andDuration:(NSTimeInterval)duration toValueX:(CGFloat)valueX andValueY:(CGFloat)valueY
+{
+    CGAffineTransform t = backView.transform;
+    
+    [UIView animateWithDuration:duration animations:^{
+        CGAffineTransform tempTrans = CGAffineTransformScale(t, valueX, valueY);
+        backView.transform = tempTrans;
+    }];
+    
+}
+-(void)ThrowGoodTo:(CGPoint)destPoint andDuration:(NSTimeInterval)duration andHeight:(CGFloat)height andScale:(CGFloat)Scale
+{
+    
+//    if (height == 0) {
+//        height = 100;
+//    }
+    
+    if(duration == 0)
+    {
+        duration = 1.6;
+    }
+    
+    if(Scale == 0)
+    {
+        Scale = 20.0;
+    }
+    
+    
+    ThrowLineTool *tool = [ThrowLineTool sharedTool];
+    tool.delegate = self;
+    tempImgView = [[UIImageView alloc] init];
+    tempImgView.frame = self.mainImgView.frame;
+    
+    tempImgView.image = self.mainImgView.image;
+
+    tempImgView.layer.cornerRadius = 5;
+    tempImgView.layer.borderColor = [[UIColor whiteColor] CGColor];
+    tempImgView.layer.borderWidth = 3;
+    [self addSubview:tempImgView];
+    
+    [tool throwObject:tempImgView
+                 from:tempImgView.center // tempImgView.center
+                   to:destPoint
+               height:height
+   andViewBoundsScale:Scale
+             duration:duration];
+    
+    
+    [self performSelector:@selector(viewSetHidden) withObject:[NSNumber numberWithBool:YES] afterDelay:1.6 - 0.1];
+
+}
+
+-(void)viewSetHidden
+{
+    tempImgView.hidden = YES;
+}
+//抛物线结束
+- (void)animationDidFinish
+{
+    [tempImgView removeFromSuperview];
+//    [self bringSubviewToFront:self.mainImgView];
+}
+
 
 - (void)showAnimation {
     CAKeyframeAnimation *popAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
@@ -424,6 +492,8 @@
     
     
 }
+
+
 
 #pragma mark - self tools
 -(CGFloat)WidthWithString:(NSString*)string fontSize:(CGFloat)fontSize height:(CGFloat)height
@@ -454,7 +524,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    return 2;
+    return self.standardArr.count + 1;
     
 }
 
@@ -467,85 +537,98 @@
     
     UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, _cellHeight)];
     
-    if(self.standardArr == nil || self.standardArr.count == 0 || self.standardArr.count -1 < indexPath.row)
+    if(self.standardArr == nil || self.standardArr.count == 0 )
         return cell;
     
     @try {
         
-        StandardModel *standardModel = self.standardArr[indexPath.row];
-        
-        UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, SCREEN_WIDTH, 30)];
-        titleLab.text = standardModel.standardName;//  dicGoodsDetail[@"spec_name"][indexPath.row ][@"name"];
-        titleLab.textColor = [UIColor blackColor];
-        titleLab.font = [UIFont systemFontOfSize:16];
-        [cell.contentView addSubview:titleLab];
-        
-        CGFloat oneLineBtnWidtnLimit = 300;//每行btn占的最长长度，超出则换行
-        CGFloat btnGap = 10;//btn的x间距
-        CGFloat btnGapY = 10;
-        NSInteger BtnlineNum = 0;
-        CGFloat BtnHeight = 30;
-        CGFloat minBtnLength =  50;//每个btn的最小长度
-        CGFloat maxBtnLength = oneLineBtnWidtnLimit - btnGap*2;//每个btn的最大长度
-        CGFloat Btnx = 0;//每个btn的起始位置
-        Btnx += btnGap;
-        
-//        NSString *strID = [NSString stringWithFormat:@"%@",dicGoodsDetail[@"spec_name"][indexPath.row][@"id"]];
-        NSArray<standardClassInfo *> *specArr = standardModel.standardClassInfo;
-        
-        NSMutableArray *tempArr = [NSMutableArray array];
-        
-        for (int i = 0; i < specArr.count; i++) {
-            NSString *str = specArr[i].standardClassName ;
-            CGFloat btnWidth = [self WidthWithString:str fontSize:14 height:BtnHeight];
-            btnWidth += 20;//让文字两端留出间距
+        if(indexPath.row < self.standardArr.count)
+        {
+            StandardModel *standardModel = self.standardArr[indexPath.row];
             
-            if(btnWidth<minBtnLength)
-                btnWidth = minBtnLength;
+            UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, SCREEN_WIDTH, 30)];
+            titleLab.text = standardModel.standardName;//  dicGoodsDetail[@"spec_name"][indexPath.row ][@"name"];
+            titleLab.textColor = [UIColor blackColor];
+            titleLab.font = [UIFont systemFontOfSize:16];
+            [cell.contentView addSubview:titleLab];
             
-            if(btnWidth>maxBtnLength)
-                btnWidth = maxBtnLength;
+            CGFloat oneLineBtnWidtnLimit = 300;//每行btn占的最长长度，超出则换行
+            CGFloat btnGap = 10;//btn的x间距
+            CGFloat btnGapY = 10;
+            NSInteger BtnlineNum = 0;
+            CGFloat BtnHeight = 30;
+            CGFloat minBtnLength =  50;//每个btn的最小长度
+            CGFloat maxBtnLength = oneLineBtnWidtnLimit - btnGap*2;//每个btn的最大长度
+            CGFloat Btnx = 0;//每个btn的起始位置
+            Btnx += btnGap;
             
+    //        NSString *strID = [NSString stringWithFormat:@"%@",dicGoodsDetail[@"spec_name"][indexPath.row][@"id"]];
+            NSArray<standardClassInfo *> *specArr = standardModel.standardClassInfo;
             
-            if(Btnx + btnWidth > oneLineBtnWidtnLimit)
-            {
-                BtnlineNum ++;//长度超出换到下一行
-                Btnx = btnGap;
+            NSMutableArray *tempArr = [NSMutableArray array];
+            
+            for (int i = 0; i < specArr.count; i++) {
+                NSString *str = specArr[i].standardClassName ;
+                CGFloat btnWidth = [self WidthWithString:str fontSize:14 height:BtnHeight];
+                btnWidth += 20;//让文字两端留出间距
+                
+                if(btnWidth<minBtnLength)
+                    btnWidth = minBtnLength;
+                
+                if(btnWidth>maxBtnLength)
+                    btnWidth = maxBtnLength;
+                
+                
+                if(Btnx + btnWidth > oneLineBtnWidtnLimit)
+                {
+                    BtnlineNum ++;//长度超出换到下一行
+                    Btnx = btnGap;
+                }
+                
+                
+                UIButton *btn = [[UIButton alloc] init];
+                
+                CGFloat height = titleLab.frame.size.height+titleLab.frame.origin.x + (BtnlineNum*(BtnHeight+btnGapY));
+                btn.frame = CGRectMake(Btnx, height,
+                                       btnWidth,BtnHeight );
+                [btn setTitle:str forState:UIControlStateNormal];
+                btn.backgroundColor = [UIColor whiteColor];
+                [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                btn.layer.cornerRadius = 5;
+                btn.layer.borderWidth = 0.5;
+                btn.layer.borderColor = [[UIColor grayColor] CGColor];
+                btn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [btn addTarget:self action:@selector(standardBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+                
+                
+                btn.tag = indexPath.row*100 + i/*低16位*/ | ([specArr[i].standardClassId intValue] << 16) /*高16位*/;
+                
+                
+                [tempArr addObject:btn];
+                
+                Btnx = btn.frame.origin.x + btn.frame.size.width + btnGap;
+                [cell.contentView addSubview:btn];
+                
+                
             }
             
+            [self.standardBtnArr addObject:tempArr];
+        }
+        else
+        {
+        
+            UILabel *tipLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 80, 30)];
+            CGPoint tempPoint = tipLab.center;
+            tempPoint.y = _cellHeight/2;
+            tipLab.center = tempPoint;
             
-            UIButton *btn = [[UIButton alloc] init];
+            tipLab.text = @"购买数量";
+            tipLab.font = [UIFont systemFontOfSize:14];
+            tipLab.textColor = [UIColor blackColor];
             
-            CGFloat height = titleLab.frame.size.height+titleLab.frame.origin.x + (BtnlineNum*(BtnHeight+btnGapY));
-            btn.frame = CGRectMake(Btnx, height,
-                                   btnWidth,BtnHeight );
-            [btn setTitle:str forState:UIControlStateNormal];
-            btn.backgroundColor = [UIColor whiteColor];
-            [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            btn.layer.cornerRadius = 5;
-            btn.layer.borderWidth = 0.5;
-            btn.layer.borderColor = [[UIColor grayColor] CGColor];
-            btn.titleLabel.font = [UIFont systemFontOfSize:14];
-            [btn addTarget:self action:@selector(standardBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-            
-            
-            btn.tag = indexPath.row*100 + i/*低16位*/ | ([specArr[i].standardClassId intValue] << 16) /*高16位*/;
-            
-            
-            [tempArr addObject:btn];
-            
-            Btnx = btn.frame.origin.x + btn.frame.size.width + btnGap;
-            [cell.contentView addSubview:btn];
-            
+            [cell addSubview:tipLab];
             
         }
-        
-        [self.standardBtnArr addObject:tempArr];
-//        if([self.delegate respondsToSelector:@selector(StandTableView:cellForRowAtIndexPath:andCell:)])
-//        {
-//            [self.delegate StandTableView:tableView cellForRowAtIndexPath:indexPath andCell:cell];
-//        }
-//        
     }
     @catch (NSException *exception) {
         
@@ -559,7 +642,8 @@
 //设置cell每行间隔的高度
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    
+    if(indexPath.row == self.standardArr.count)
+        return _cellHeight;
     
     @try {
         CGFloat totalHeight = 0;

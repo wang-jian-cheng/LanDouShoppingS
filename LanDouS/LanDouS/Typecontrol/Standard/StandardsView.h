@@ -44,6 +44,10 @@
 
 @end
 
+
+
+
+
 @interface StandardsView : UIView<UITextViewDelegate,UITableViewDataSource,UITableViewDelegate>
 
 @property(nonatomic)id<StandardsViewDelegate>delegate;
@@ -56,6 +60,23 @@
 @property(nonatomic) UILabel *tipLab;//规格
 
 @property(nonatomic) NSArray<NSString *> *customBtns;//自定义btn
+#pragma mark - animation
+/**
+ * 将商品图片抛到指定点
+ * @param destPoint  扔到的点
+ * @param height  高度，抛物线最高点比起点/终点y坐标最低(即高度最高)所超出的高度
+ * @param duration  动画时间 传0  默认1.6s
+ * @param Scale  view 变小的比例 传0  默认20
+ */
+-(void)ThrowGoodTo:(CGPoint)destPoint andDuration:(NSTimeInterval)duration andHeight:(CGFloat)height andScale:(CGFloat)Scale;
+/**
+ * 按比例改变view的大小
+ * @param backView  要改变的view
+ * @param duration  动画时间
+ * @param valuex  x缩小的比例
+ * @param valueY  y缩小的比例
+ */
+-(void)setBackViewAnimationScale:(UIView *)backView andDuration:(NSTimeInterval)duration toValueX:(CGFloat)valueX andValueY:(CGFloat)valueY;
 
 /**
  * 规格数据

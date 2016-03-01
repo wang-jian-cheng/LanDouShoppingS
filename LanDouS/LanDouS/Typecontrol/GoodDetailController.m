@@ -739,7 +739,16 @@
 {
     DLog(@"sender tag %ld click",(long)sender.tag);
     
-    [standardsView dismiss];
+    if(sender.tag == 0)
+    {
+        [standardsView ThrowGoodTo:CGPointMake(200, 40) andDuration:1.0 andHeight:0 andScale:20.0];
+    }
+    else
+    {
+        
+        [standardsView setBackViewAnimationScale:self.view andDuration:1.0 toValueX:(1.0/0.9) andValueY:(1.0/0.9)];
+        [standardsView dismiss];
+    }
 }
 
 -(void)StandardsViewSetBtn:(UIButton *)btn andStandView:(StandardsView *)standardView
@@ -1072,7 +1081,7 @@
     }
     
     standardsView.standardArr = standardModelArr;
-    
+    [standardsView setBackViewAnimationScale:self.view andDuration:1.6 toValueX:0.9 andValueY:0.9];
     [standardsView show];
     return;
   
