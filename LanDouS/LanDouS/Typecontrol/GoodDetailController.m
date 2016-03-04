@@ -71,6 +71,8 @@
     [self getGoodsDetail:goodsId];
     
     
+//    [self getGoodsStandards:goodsId];
+    
     // Do any additional setup after loading the view from its nib.
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -366,7 +368,7 @@
             
             goodImgUrl =resultDict[@"data"][@"goods_image"];
             specListGoodsDict = resultDict[@"data"][@"spec_list_goods"];
-            
+            specListNewGoodsIDDict = resultDict[@"data"][@"spec_list"];
 //            if(![resultDict[@"data"][@"spec_name"] isEqual:[NSNull null]])
 //            {
 //                [self.dictStandard setObject:resultDict[@"data"][@"spec_name"] forKey:@"spec_name"];
@@ -488,7 +490,7 @@
     DataProvider *dataProvider = [[DataProvider alloc] init];
     [dataProvider setFinishBlock:^(NSDictionary *resultDict){
         [SVProgressHUD dismiss];
-        NSLog(@"^^^^%@", resultDict );
+        DLog(@"^^^^%@", resultDict );
         if ([[resultDict objectForKey:@"result"]intValue]==1) {
             
             [Dialog simpleToast:@"添加购物车成功"];
@@ -738,13 +740,33 @@
 
 #pragma mark - standardsView delegate
 
--(void)StandardsViewCustomBtnClickAction:(UIButton *)sender
+-(void)StandardsView:(StandardsView *)standardView CustomBtnClickAction:(UIButton *)sender
 {
     DLog(@"sender tag %ld click",(long)sender.tag);
     
     if(sender.tag == 0)
     {
+       
+        
+        if (standardIdStr == nil||standardIdStr.length ==0) {
+            [Dialog simpleToast:@"亲，请正确选择规格"];
+            return;
+        }
+        self.goodsIdWithSpec = specListNewGoodsIDDict[standardIdStr];
+        if (([self.goodsIdWithSpec isEqual:[NSNull null]] || self.goodsIdWithSpec == nil)) {
+            [Dialog simpleToast:@"亲，请正确选择规格"];
+            return;
+        }
         [standardsView ThrowGoodTo:CGPointMake(200, 40) andDuration:1.0 andHeight:0 andScale:20.0];
+        if (self.goodsIdWithSpec !=nil) {
+            [self addCart:self.goodsIdWithSpec andCount:(int)(standardsView.buyNum)];
+        }
+        else
+        {
+            [self addCart:goodsId andCount:(int)(standardsView.buyNum)];
+        }
+        
+        
     }
     else if(sender.tag == 1)
     {
@@ -814,7 +836,8 @@
     }
 }
 
--(void)StandardsViewSetBtn:(UIButton *)btn andStandView:(StandardsView *)standardView
+
+-(void)StandardsView:(StandardsView *)standardView SetBtn:(UIButton *)btn andStandView:(StandardsView *)standardView
 {
     if(btn.tag == 0 )
     {
@@ -825,8 +848,7 @@
         btn.backgroundColor = [UIColor orangeColor];
     }
 }
-
--(void)StandardsSelectBtnClick:(UIButton *)sender andSelectID:(NSString *)selectID andStandName:(NSString *)standName andIndex:(NSInteger)index
+-(void)Standards:(StandardsView *)standardView SelectBtnClick:(UIButton *)sender andSelectID:(NSString *)selectID andStandName:(NSString *)standName andIndex:(NSInteger)index
 {
     DLog(@"selectId:%@  standName:%@  index:%ld",selectID,standName,(unsigned long)index);
     
@@ -848,23 +870,13 @@
         
         standardsView.priceLab.text = [NSString stringWithFormat:@"¥%@",specInfo[@"goods_price"]];
         standardsView.goodNum.text = [NSString stringWithFormat:@"库存%@件",specInfo[@"goods_storage"]];
+        
+        
+        self.goodsIdWithSpec =[NSString stringWithFormat:@"%@",specListNewGoodsIDDict[standardIdStr]];
     }
-//    else
-//    {
-//        standardIdStr = nil;
-//    }
 
 }
 
-//-(void)StandardsSureBtnClick:(NSString *)content
-//{
-//    
-//    SureCartController *SureCart=[[SureCartController alloc]init];
-//    SureCart.arrayCartList=[[NSMutableArray alloc]init];
-//    [SureCart.arrayCartList addObject:dicGoodsDetail];
-//    SureCart.strType=@"buynow";
-//    [self.navigationController pushViewController:SureCart animated:YES];
-//}
 
 #pragma mark tableview delegate
 
@@ -1109,9 +1121,14 @@
     }
 }
 
-- (IBAction)buyNowclick:(id)sender {
+
+-(void)showSelectStandard:(NSInteger)tag
+{
+    
+    standardIdStr = @"000|000";
     
     standardsView = [[StandardsView alloc] init];
+    standardsView.tag = tag;
     standardsView.delegate = self;
     /*head 信息*/
     standardsView.priceLab.text = [NSString stringWithFormat:@"¥%@",dicGoodsDetail[@"goods_price"]];
@@ -1148,45 +1165,25 @@
     }
     
     standardsView.standardArr = standardModelArr;
-//    standardsView.showAnimationType = StandsViewShowAnimationShowFrombelow;
-//    [standardsView setBackViewAnimationScale:self.view andDuration:1.6 toValueX:0.9 andValueY:0.9];
+    //    standardsView.showAnimationType = StandsViewShowAnimationShowFrombelow;
+    //    [standardsView setBackViewAnimationScale:self.view andDuration:1.6 toValueX:0.9 andValueY:0.9];
     standardsView.GoodDetailView = self.view;
     [standardsView show];
-    return;
-  
-//    if (get_Dsp(@"userinfo")) {
-//        if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]==0) {
-//            [Dialog simpleToast:@"亲，商品库存不足"];
-//            return;
-//        }
-//        
-//        
-//        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请输入商品数量" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-//        
-//        alert.tag=543;
-//        alert.alertViewStyle=UIAlertViewStylePlainTextInput;
-//        UITextField *tf = [alert textFieldAtIndex:0];
-//        tf.keyboardType = UIKeyboardTypeNumberPad;
-//        
-//        [alert show];
-//    }
-//    else{
-//        LoginViewController *LoginView=[[LoginViewController alloc]init];
-//        UINavigationController *nav=[[UINavigationController alloc]initWithRootViewController:LoginView];
-//        nav.navigationBar.hidden=YES;
-//        LoginView.strType=@"nav";
-//        [self presentViewController:nav animated:YES completion:nil];
-//    }
+
+}
+
+- (IBAction)buyNowclick:(id)sender {
     
-    
-    
-    
+    [self showSelectStandard:0];
     
 }
 
 - (IBAction)addCartclick:(id)sender {
     if (get_Dsp(@"userinfo")) {
-        [self addCart:goodsId andCount:1];
+        
+        [self showSelectStandard:1];
+        
+        
     }
     else{
         LoginViewController *LoginView=[[LoginViewController alloc]init];
@@ -1195,7 +1192,8 @@
         LoginView.strType=@"nav";
         [self presentViewController:nav animated:YES completion:nil];
     }
-    
-    
 }
+
+
+
 @end

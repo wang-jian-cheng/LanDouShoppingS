@@ -39,6 +39,7 @@
     
     NSDictionary *goodImgUrl;
     NSDictionary *specListGoodsDict;//商品规格信息
+    NSDictionary *specListNewGoodsIDDict;//选择规格对应的商品id
     NSString *standardIdStr;
     
     
@@ -52,6 +53,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblKucun;
 
 @property(copy,nonatomic)NSString *goodsId;
+@property(copy,nonatomic)NSString *goodsIdWithSpec;
 
 - (IBAction)goodsdetailclick:(id)sender;
 - (IBAction)picturedetailclick:(id)sender;

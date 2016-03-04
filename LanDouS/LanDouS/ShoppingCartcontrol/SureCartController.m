@@ -62,11 +62,30 @@ typedef enum {
     if ([strType isEqualToString:@"buynow"]) {
         [dicPost setObject:[[arrayCartList objectAtIndex:0] objectForKey:@"goods_num"] forKey:@"goods_num"];
         [dicPost setObject:[[arrayCartList objectAtIndex:0] objectForKey:@"goods_id"] forKey:@"goods_id"];
-        totalPrice=totalPrice+[[[arrayCartList objectAtIndex:0] objectForKey:@"goods_price"] floatValue]*[[[arrayCartList objectAtIndex:0] objectForKey:@"goods_num"] intValue];
+        
+        
+        NSString *str = [self getGoodPrice:0];
+        if (str != nil) {
+            totalPrice = totalPrice + ([str floatValue] * [[[arrayCartList objectAtIndex:0] objectForKey:@"goods_num"] intValue]);
+        }
+        else
+        {
+            totalPrice=totalPrice+[[[arrayCartList objectAtIndex:0] objectForKey:@"goods_price"] floatValue]*[[[arrayCartList objectAtIndex:0] objectForKey:@"goods_num"] intValue];
+        }
     }
     else{
         for (int i=0; i<arrayCartList.count; i++) {
-            totalPrice=totalPrice+[[[arrayCartList objectAtIndex:i] objectForKey:@"goods_price"] floatValue]*[[[arrayCartList objectAtIndex:i] objectForKey:@"goods_num"] intValue];
+            
+            NSString *str = [self getGoodPrice:i];
+            if (str != nil) {
+                totalPrice = totalPrice + ([str floatValue] * [[[arrayCartList objectAtIndex:i] objectForKey:@"goods_num"] intValue]);
+            }
+            else
+            {
+                totalPrice=totalPrice+[[[arrayCartList objectAtIndex:i] objectForKey:@"goods_price"] floatValue]*[[[arrayCartList objectAtIndex:i] objectForKey:@"goods_num"] intValue];
+            }
+//            
+//            totalPrice=totalPrice+[[[arrayCartList objectAtIndex:i] objectForKey:@"goods_price"] floatValue]*[[[arrayCartList objectAtIndex:i] objectForKey:@"goods_num"] intValue];
         }
     }
     if(totalPrice>29.0){

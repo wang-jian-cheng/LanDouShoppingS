@@ -255,9 +255,9 @@
             [btn addSubview:tempLineView];
             
         }
-        if([self.delegate respondsToSelector:@selector(StandardsViewSetBtn:andStandView:)])
+        if([self.delegate respondsToSelector:@selector(StandardsView:SetBtn:andStandView:)])
         {
-            [self.delegate StandardsViewSetBtn:btn andStandView:self];
+            [self.delegate StandardsView:self SetBtn:btn andStandView:self];
         }
         
         [showView addSubview:btn];
@@ -355,9 +355,9 @@
 //自定义按键点击
 -(void)customBtnsClickAction:(UIButton *)sender
 {
-    if([self.delegate respondsToSelector:@selector(StandardsViewCustomBtnClickAction:)])
+    if([self.delegate respondsToSelector:@selector(StandardsView:CustomBtnClickAction:)])
     {
-        [self.delegate StandardsViewCustomBtnClickAction:sender];
+        [self.delegate StandardsView:self CustomBtnClickAction:sender];
     }
 }
 //规格键点击
@@ -381,9 +381,9 @@
     
     [self.standardBtnClickDict setObject:tagStr forKey:[NSString stringWithFormat:@"%ld",(sender.tag & 0x0000ffff)/100]];
     
-    if([self.delegate respondsToSelector:@selector(StandardsSelectBtnClick:andSelectID:andStandName:andIndex:)])
+    if([self.delegate respondsToSelector:@selector(Standards:SelectBtnClick:andSelectID:andStandName:andIndex:)])
     {
-        [self.delegate StandardsSelectBtnClick:sender andSelectID:tagStr andStandName:self.standardArr[(sender.tag & 0x0000ffff)/100].standardName andIndex:(sender.tag & 0x0000ffff)/100];
+        [self.delegate Standards:self SelectBtnClick:sender andSelectID:tagStr andStandName:self.standardArr[(sender.tag & 0x0000ffff)/100].standardName andIndex:(sender.tag & 0x0000ffff)/100];
     }
 
 }
@@ -396,9 +396,9 @@
         sureBtn.backgroundColor = [UIColor yellowColor];
         cancelBtn.backgroundColor = ItemsBaseColor;
         
-        if([self.delegate respondsToSelector:@selector(StandardsSureBtnClick:)])
+        if([self.delegate respondsToSelector:@selector(Standards:SureBtnClick:)])
         {
-            [self.delegate StandardsSureBtnClick:@""];
+            [self.delegate Standards:self SureBtnClick:@""];
         }
         
     }

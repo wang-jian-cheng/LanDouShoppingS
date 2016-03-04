@@ -35,16 +35,16 @@
  * 自定义btn点击事件
  */
 
--(void)StandardsViewCustomBtnClickAction:(UIButton *)sender;
+-(void)StandardsView:(StandardsView *)standardView CustomBtnClickAction:(UIButton *)sender;
 
 /**
  * 设置自定义btn属性
  */
--(void)StandardsViewSetBtn:(UIButton *)btn andStandView:(StandardsView *)standardView;
+-(void)StandardsView:(StandardsView *)standardView SetBtn:(UIButton *)btn andStandView:(StandardsView *)standardView;
 /**
  * 为设置自定义按钮时，点击确认按键的回调事件
  */
--(void)StandardsSureBtnClick:(NSString *)content;
+-(void)Standards:(StandardsView *)standardView SureBtnClick:(NSString *)content;
 /**
  * 点击规格分类按键回调
  * @param sender 点击的按键
@@ -52,7 +52,7 @@
  * @param standName 规格名称
  * @param index  规格所在cell的row
  */
--(void)StandardsSelectBtnClick:(UIButton *)sender andSelectID:(NSString *)selectID andStandName:(NSString *)standName andIndex:(NSInteger)index;
+-(void)Standards:(StandardsView *)standardView SelectBtnClick:(UIButton *)sender andSelectID:(NSString *)selectID andStandName:(NSString *)standName andIndex:(NSInteger)index;
 
 
 
