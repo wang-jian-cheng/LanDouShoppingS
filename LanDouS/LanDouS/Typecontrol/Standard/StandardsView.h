@@ -10,6 +10,18 @@
 
 #import "StandardModel.h"
 
+#ifndef SCREEN_WIDTH
+#define SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
+#endif
+
+#ifndef SCREEN_HEIGHT
+#define SCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)
+#endif
+
+
+#define StandardViewHeight  (SCREEN_HEIGHT/4*3)//View 高度
+#define StandardViewWidth   (SCREEN_WIDTH)  // view宽度
+
 
 @protocol StandardsViewDataSource <NSObject>
 
@@ -42,7 +54,43 @@
  */
 -(void)StandardsSelectBtnClick:(UIButton *)sender andSelectID:(NSString *)selectID andStandName:(NSString *)standName andIndex:(NSInteger)index;
 
+
+
+/**
+ * 自定义出场动画 StandsBackViewAnimationType 需设置成StandsViewAnimationCustom
+ */
+-(void)CustomShowAnimation;
+/**
+ * 自定义消失动画 StandsBackViewAnimationType 需设置成StandsViewAnimationCustom
+ */
+-(void)CustomDismissAnimation;
 @end
+
+
+
+
+
+//出场动画
+typedef enum _StandsViewShowAnimationType
+{
+    StandsViewShowAnimationShowFrombelow ,//从下面
+    StandsViewShowAnimationFlash,//闪出
+    StandsViewShowAnimationCustom = 0xFFFF // 自定义
+
+} StandsViewShowAnimationType;
+
+//退场动画
+typedef enum _StandsViewAnimationType
+{
+    StandsViewDismissAnimationDisFrombelow,//从下面退出
+    StandsViewDismissAnimationFlash,//逐渐消失
+    
+    StandsViewDismissAnimationCustom = 0xFFFF // 自定义
+    
+} StandsViewDismissAnimationType;
+
+
+
 
 
 
@@ -52,14 +100,42 @@
 
 @property(nonatomic)id<StandardsViewDelegate>delegate;
 @property(nonatomic)id<StandardsViewDataSource>dataSource;
-
+#pragma mark - 必要条件
 //商品简介view
 @property(nonatomic) UIImageView *mainImgView;//商品图片
 @property(nonatomic) UILabel *priceLab;//价格
-@property(nonatomic) UILabel *goodNum;//数量
+@property(nonatomic) UILabel *goodNum;//库存数量
 @property(nonatomic) UILabel *tipLab;//规格
+@property(nonatomic) NSInteger buyNum;//购买数量 read － write(初始值)
 
-@property(nonatomic) NSArray<NSString *> *customBtns;//自定义btn
+/**
+ * 自定义btn  原始btn功能有限 必需使用自定义btn 可使用代理方法
+ * -(void)StandardsViewSetBtn:(UIButton *)btn andStandView:(StandardsView *)standardView; 去设置btn的属性
+ */
+@property(nonatomic) NSArray<NSString *> *customBtns;
+/**
+ * 规格数据
+ */
+@property(nonatomic) NSArray<StandardModel *>* standardArr;
+/**
+ * reload 内部的tableview(暂时没啥用处)
+ */
+- (void)standardsViewReload;
+/**
+ * 显示规格
+ */
+- (void)show;
+/**
+ * 关闭显示
+ */
+- (void)dismiss;
+
+#pragma mark - 非必需 效果相关
+
+@property (nonatomic) UIView *GoodDetailView;//商品详情页 设置该属性调用show会自带商品详情页后移动画
+@property (nonatomic) StandsViewShowAnimationType showAnimationType;
+@property (nonatomic) StandsViewDismissAnimationType dismissAnimationType;
+
 #pragma mark - animation
 /**
  * 将商品图片抛到指定点
@@ -78,20 +154,5 @@
  */
 -(void)setBackViewAnimationScale:(UIView *)backView andDuration:(NSTimeInterval)duration toValueX:(CGFloat)valueX andValueY:(CGFloat)valueY;
 
-/**
- * 规格数据
- */
-@property(nonatomic) NSArray<StandardModel *>* standardArr;
-/**
- * reload 内部的tableview(暂时没啥用处)
- */
-- (void)standardsViewReload;
-/**
- * 显示规格
- */
-- (void)show;
-/**
- * 关闭显示
- */
-- (void)dismiss;
+
 @end

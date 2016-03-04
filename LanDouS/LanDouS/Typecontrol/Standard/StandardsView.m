@@ -9,11 +9,8 @@
 #import "StandardsView.h"
 #import "ThrowLineTool.h"
 
-#define ViewHeight  (SCREEN_HEIGHT/3*2)
-#define ViewWidth   (SCREEN_WIDTH)
-
 #define GapToLeft   20
-
+#define GoodDetailScaleValue    0.9
 #define ItemsBaseColor  [UIColor whiteColor]
 
 @interface StandardsView ()<ThrowLineToolDelegate>
@@ -32,12 +29,17 @@
     UIView *coverView;
     UIView *showView;
     
-    UIImageView *tempImgView;
+//    UIImageView *tempImgView;
+    UIView *buyNumBackView;
+    
+    NSInteger tempImgViewtag;
     
 }
-
-@property(nonatomic) UITableView *mainTableView;
+@property (nonatomic) NSMutableArray *tempImgViewArr;
+@property (nonatomic) NSMutableDictionary *standardBtnClickDict;//记录被按下的btn
+@property (nonatomic) UITableView *mainTableView;
 @property (nonatomic) NSMutableArray *standardBtnArr;
+@property (nonatomic) UITextField *numberTextFied;
 //@property(nonatomic)UITextView *contentTextView;
 //@property(nonatomic)UILabel *holderLab;
 
@@ -45,6 +47,9 @@
 
 
 @implementation StandardsView
+
+
+@synthesize buyNum = _buyNum;
 
 /*
 // Only override drawRect: if you perform custom drawing.
@@ -58,7 +63,7 @@
 - (instancetype)init{
     self = [super init];
     if (self) {
-        
+        tempImgViewtag = 0;
         [self buildViews];
         
     }
@@ -76,22 +81,13 @@
     coverView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [[self topView] addSubview:coverView];
     
-    showView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, ViewWidth, ViewHeight)];
-    showView.center = CGPointMake(self.frame.size.width/2, (SCREEN_HEIGHT - ViewHeight)+ViewHeight/2);
+    showView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, StandardViewWidth, StandardViewHeight)];
+    showView.center = CGPointMake(self.frame.size.width/2, (SCREEN_HEIGHT - StandardViewHeight)+StandardViewHeight/2);
     showView.layer.masksToBounds = YES;
     showView.layer.cornerRadius = 5;
     showView.backgroundColor = [UIColor whiteColor];
     [self addSubview:showView];
     
-    
-    
-
-//    tipLab = [[UILabel alloc] initWithFrame:CGRectMake(GapToLeft, 0, ViewWidth - GapToLeft*2, 50)];
-//    tipLab.text = self.tip;
-//    tipLab.textColor = [UIColor whiteColor];
-//    tipLab.font = [UIFont boldSystemFontOfSize:16];
-//    
-//    [showView addSubview:tipLab];
     
     self.mainImgView = [[UIImageView alloc] initWithFrame:CGRectMake(GapToLeft,
                                                                      0,
@@ -107,32 +103,8 @@
     self.mainImgView.contentMode = UIViewContentModeScaleAspectFit;
 //    self.mainImgView.alpha = 0;
     [self addSubview:self.mainImgView];
-//    
-//    titleLab = [[UILabel alloc] initWithFrame:CGRectMake(self.mainImgView.frame.size.width+self.mainImgView.frame.origin.x+10,
-//                                                         self.mainImgView.frame.origin.y,
-//                                                         ViewWidth - (self.mainImgView.frame.size.width+self.mainImgView.frame.origin.x) - GapToLeft,
-//                                                         self.mainImgView.frame.size.height/4)];
-//    
-//    
-//    
-//    titleLab.textColor = [UIColor whiteColor];
-//    titleLab.text = self.title;
-//    titleLab.font = [UIFont systemFontOfSize:14];
-//    [showView addSubview:titleLab];
-//    
-//    contentLab = [[UILabel alloc] initWithFrame:CGRectMake(titleLab.frame.origin.x,
-//                                                           titleLab.frame.origin.y+titleLab.frame.size.height,
-//                                                           titleLab.frame.size.width,
-//                                                           self.mainImgView.frame.size.height/4*3)];
-//    contentLab.numberOfLines = 0;
-//    contentLab.font = [UIFont systemFontOfSize:14];
-//    contentLab.text = self.content;
-//    contentLab.textColor = [UIColor whiteColor];
-//    [showView addSubview:contentLab];
-//    
-//    
-    
-    cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, ViewHeight-44, ViewWidth/2, 44)];
+        /*默认按键*/
+    cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, StandardViewHeight-44, StandardViewWidth/2, 44)];
     cancelBtn.tag = 1000 + 1;
     cancelBtn.backgroundColor = ItemsBaseColor;
     [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
@@ -141,7 +113,7 @@
     [showView addSubview:cancelBtn];
     
 //
-    sureBtn = [[UIButton alloc] initWithFrame:CGRectMake(ViewWidth/2, ViewHeight-44, ViewWidth/2, 44)];
+    sureBtn = [[UIButton alloc] initWithFrame:CGRectMake(StandardViewWidth/2, StandardViewHeight-44, StandardViewWidth/2, 44)];
     sureBtn.tag = 1000 + 2;
     sureBtn.backgroundColor = ItemsBaseColor;
     [sureBtn setTitle:@"确定" forState:UIControlStateNormal];
@@ -153,28 +125,30 @@
     lineView.backgroundColor = BACKGROUND_COLOR;
     [showView addSubview:lineView];
     
-//    self.contentTextView = [[UITextView alloc] initWithFrame:CGRectMake(20, sureBtn.frame.origin.y - 40 -10,
-//                                                                        ViewWidth - 20*2,
-//                                                                        40)];
-//    
-//    self.contentTextView.delegate = self;
-//    self.contentTextView.backgroundColor = [UIColor grayColor];
-//    self.contentTextView.font = [UIFont systemFontOfSize:14];
-//    [showView addSubview:self.contentTextView];
-//    
-//    self.holderLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, self.contentTextView.frame.size.width,self.contentTextView.frame.size.height)];
-//    self.holderLab.text = @"来，讲两句！";
-//    self.holderLab.font = [UIFont systemFontOfSize:14];
-//    [self.contentTextView addSubview:self.holderLab];
+    /*键盘退出手势*/
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapShowViewAction:) ];
+    [showView addGestureRecognizer:tapGesture];
     
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapViewAction:) ];
-    [self addGestureRecognizer:tapGesture];
-    
+    UITapGestureRecognizer *tapGesture2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSelfViewAction:) ];
+    [self addGestureRecognizer:tapGesture2];
     
     self.goodNum = [[UILabel alloc] init];
     self.priceLab = [[UILabel alloc] init];
     self.tipLab = [[UILabel alloc] init];
     
+    /*购买或加入购物车数量*/
+    self.numberTextFied = [[UITextField alloc] init];
+    self.numberTextFied.text = [NSString stringWithFormat:@"%ld",self.buyNum];
+    self.numberTextFied.font = [UIFont systemFontOfSize:14];
+    self.numberTextFied.textColor = [UIColor blackColor];
+    self.numberTextFied.textAlignment = NSTextAlignmentCenter;
+    self.numberTextFied.keyboardType = UIKeyboardTypeNumberPad;
+    
+    if(self.buyNum == 0)
+    {
+        self.buyNum = 1;
+    }
+
     [self initTableView];
     
 }
@@ -183,7 +157,7 @@
 -(void) initTableView
 {
     UIView *tempView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 100)];
-    
+    //最上面显示的信息 数据
     self.priceLab.frame = CGRectMake(self.mainImgView.frame.size.width+self.mainImgView.frame.origin.x+10,
                                      0,
                                      (SCREEN_WIDTH - (self.mainImgView.frame.size.width+self.mainImgView.frame.origin.x) - 10),
@@ -212,11 +186,7 @@
     self.tipLab.font = [UIFont systemFontOfSize:14];
     
     NSString *str = @"请选择 ";
-    //    NSArray *tempArr = dicGoodsDetail[@"spec_name"];
-    //
-    //    for (int i = 0; i<tempArr.count; i++) {
-    //        str = [NSString stringWithFormat:@"%@%@ ",str,tempArr[i][@"name"]];
-    //    }
+
     
     self.tipLab.text = str;
     [tempView addSubview:self.tipLab];
@@ -227,7 +197,7 @@
     
     [showView addSubview:tempView];
     
-    _mainTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, tempView.frame.size.height, ViewWidth,ViewHeight - sureBtn.frame.size.height - tempView.frame.size.height )];
+    _mainTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, tempView.frame.size.height, StandardViewWidth,StandardViewHeight - sureBtn.frame.size.height - tempView.frame.size.height )];
     _mainTableView.delegate = self;
     _mainTableView.dataSource = self;
     _mainTableView.separatorColor =  [UIColor grayColor];
@@ -241,6 +211,21 @@
 }
 
 #pragma mark - self property
+
+-(void)setBuyNum:(NSInteger)buyNum
+{
+    _buyNum = buyNum;
+    self.numberTextFied.text = [NSString stringWithFormat:@"%ld",buyNum];
+}
+
+-(NSInteger)buyNum
+{
+    _buyNum = [self.numberTextFied.text integerValue];
+    return _buyNum;
+}
+
+
+/*设置自定义的button  原始btn功能有限建议自定义 或者说必需自定*/
 -(void)setCustomBtns:(NSArray *)customBtns
 {
     _customBtns = customBtns;
@@ -254,7 +239,7 @@
     
    
     for (int i = 0; i < _customBtns.count; i++) {
-        UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnWidth*i, ViewHeight-44, btnWidth, btnHeight)];
+        UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnWidth*i, StandardViewHeight-44, btnWidth, btnHeight)];
         [btn setTitle:_customBtns[i] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(customBtnsClickAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -287,6 +272,24 @@
 }
 
 
+-(NSMutableDictionary *)standardBtnClickDict
+{
+    if (_standardBtnClickDict == nil) {
+        _standardBtnClickDict = [NSMutableDictionary dictionary];
+    }
+    
+    return _standardBtnClickDict;
+}
+-(NSMutableArray *)tempImgViewArr
+{
+    if(_tempImgViewArr == nil)
+    {
+        _tempImgViewArr = [NSMutableArray array];
+    }
+    
+    return _tempImgViewArr;
+}
+
 -(NSMutableArray *)standardBtnArr
 {
     if(_standardBtnArr == nil)
@@ -297,10 +300,7 @@
     return _standardBtnArr;
 }
 
--(void)tapViewAction:(id)sender
-{
-    [self endEditing:YES];
-}
+
 
 - (CGRect)screenBounds
 {
@@ -322,6 +322,37 @@
 
 #pragma mark - clicks
 
+
+-(void)tapSelfViewAction:(id)sender
+{
+    [self dismiss];
+}
+
+-(void)tapShowViewAction:(id)sender
+{
+    [self endEditing:YES];
+}
+
+-(void)buyNumBtnClick:(UIButton *)sender
+{
+    if (sender.tag == 0) {
+        self.buyNum = self.buyNum+1;
+    }
+    if (sender.tag == 1) {
+        
+        if(self.buyNum <= 1)
+        {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"客官，你还买不买啊，都减没了！" delegate:self cancelButtonTitle:@"我看看再说～" otherButtonTitles: nil];
+            
+            [alertView show];
+            return;
+        }
+        
+        self.buyNum = self.buyNum -1 ;
+    }
+    
+}
+//自定义按键点击
 -(void)customBtnsClickAction:(UIButton *)sender
 {
     if([self.delegate respondsToSelector:@selector(StandardsViewCustomBtnClickAction:)])
@@ -329,10 +360,11 @@
         [self.delegate StandardsViewCustomBtnClickAction:sender];
     }
 }
-
+//规格键点击
 -(void)standardBtnClick:(UIButton *)sender
 {
     sender.backgroundColor = [UIColor orangeColor];
+    sender.selected = YES;
     
     NSArray *tempArr = self.standardBtnArr[(sender.tag & 0x0000ffff)/100 ];
     
@@ -343,8 +375,11 @@
         }
         
         tempBtn.backgroundColor = [UIColor whiteColor];
+        tempBtn.selected = NO;
     }
     NSString *tagStr = [NSString stringWithFormat:@"%ld",(unsigned long)(sender.tag & 0xffff0000)>>16];
+    
+    [self.standardBtnClickDict setObject:tagStr forKey:[NSString stringWithFormat:@"%ld",(sender.tag & 0x0000ffff)/100]];
     
     if([self.delegate respondsToSelector:@selector(StandardsSelectBtnClick:andSelectID:andStandName:andIndex:)])
     {
@@ -395,12 +430,25 @@
 }
 
 - (void)dismiss {
+    //清除抛物创建的views
+    if (self.tempImgViewArr.count>0) {
+        for (UIImageView *tempView  in self.tempImgViewArr) {
+            if (tempView!=nil&&tempView.superview!=nil) {
+                tempView.alpha = 0;
+                [tempView removeFromSuperview];
+            }
+        }
+        
+        
+        [self.tempImgViewArr removeAllObjects];
+    }
+    
     [self hideAnimation];
     [self endEditing:YES];
 }
 #pragma mark - Animations
 
-
+//设置指定view大小
 -(void)setBackViewAnimationScale:(UIView *)backView andDuration:(NSTimeInterval)duration toValueX:(CGFloat)valueX andValueY:(CGFloat)valueY
 {
     CGAffineTransform t = backView.transform;
@@ -411,6 +459,8 @@
     }];
     
 }
+
+//将某个view抛到某个地点
 -(void)ThrowGoodTo:(CGPoint)destPoint andDuration:(NSTimeInterval)duration andHeight:(CGFloat)height andScale:(CGFloat)Scale
 {
     
@@ -431,16 +481,19 @@
     
     ThrowLineTool *tool = [ThrowLineTool sharedTool];
     tool.delegate = self;
-    tempImgView = [[UIImageView alloc] init];
-    tempImgView.frame = self.mainImgView.frame;
     
+    UIImageView *tempImgView = [[UIImageView alloc] init];
+    tempImgView.frame = self.mainImgView.frame;
     tempImgView.image = self.mainImgView.image;
+    tempImgView.tag = tempImgViewtag;
 
     tempImgView.layer.cornerRadius = 5;
     tempImgView.layer.borderColor = [[UIColor whiteColor] CGColor];
     tempImgView.layer.borderWidth = 3;
     [self addSubview:tempImgView];
     
+    [self.tempImgViewArr addObject:tempImgView];
+    tempImgViewtag ++;
     [tool throwObject:tempImgView
                  from:tempImgView.center // tempImgView.center
                    to:destPoint
@@ -448,47 +501,185 @@
    andViewBoundsScale:Scale
              duration:duration];
     
+
+    [self performSelector:@selector(viewSetHidden:) withObject:[NSString stringWithFormat:@"%ld",tempImgView.tag] afterDelay:duration - 0.11111];
+
+}
+
+-(void)viewSetHidden:(NSString *)tag
+{
+//    tempImgView.hidden = YES;
+
+    NSLog(@"tag = %@",tag);
     
-    [self performSelector:@selector(viewSetHidden) withObject:[NSNumber numberWithBool:YES] afterDelay:1.6 - 0.1];
-
+//    tempImgView = self.tempImgViewArr[[tag intValue]];
+    
+    for (UIImageView *tempImgView in self.tempImgViewArr) {
+//        UIImageView *tempImgView = self.tempImgViewArr[i];
+        
+        if (tempImgView.tag == [tag intValue]) {
+            tempImgView.hidden = YES;
+            [tempImgView removeFromSuperview];
+            break;
+        }
+    }
+    
+    
+    
 }
-
--(void)viewSetHidden
+////抛物线结束
+- (void)animationDidFinish:(UIView *)view
 {
-    tempImgView.hidden = YES;
-}
-//抛物线结束
-- (void)animationDidFinish
-{
-    [tempImgView removeFromSuperview];
-//    [self bringSubviewToFront:self.mainImgView];
+//    [self.tempImgViewArr removeObject:view];
 }
 
 
+//显示view
 - (void)showAnimation {
-    CAKeyframeAnimation *popAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
-    popAnimation.duration = 0.4;
-    popAnimation.values = @[[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.01f, 0.01f, 1.0f)],
-                            [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.1f, 1.1f, 1.0f)],
-                            [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.9f, 0.9f, 1.0f)],
-                            [NSValue valueWithCATransform3D:CATransform3DIdentity]];
-    popAnimation.keyTimes = @[@0.2f, @0.5f, @0.75f, @1.0f];
-    popAnimation.timingFunctions = @[[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
-                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
-                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [showView.layer addAnimation:popAnimation forKey:nil];
-    [self.mainImgView.layer addAnimation:popAnimation forKey:nil];
+    
+    switch (self.showAnimationType) {
+        case StandsViewShowAnimationFlash:
+        {
+            CAKeyframeAnimation *popAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+            popAnimation.duration = 0.4;
+            popAnimation.values = @[[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.01f, 0.01f, 1.0f)],
+                                    [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.1f, 1.1f, 1.0f)],
+                                    [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.9f, 0.9f, 1.0f)],
+                                    [NSValue valueWithCATransform3D:CATransform3DIdentity]];
+            popAnimation.keyTimes = @[@0.2f, @0.5f, @0.75f, @1.0f];
+            popAnimation.timingFunctions = @[[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                             [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                             [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+            [showView.layer addAnimation:popAnimation forKey:nil];
+            [self.mainImgView.layer addAnimation:popAnimation forKey:nil];
+            
+            
+            if (self.GoodDetailView !=nil) {
+                CGAffineTransform t = self.GoodDetailView.transform;
+                
+                [UIView animateWithDuration:1.0 animations:^{
+                    
+                    CGAffineTransform tempTransform = CGAffineTransformScale(t, GoodDetailScaleValue, GoodDetailScaleValue);
+                    self.GoodDetailView.transform = tempTransform;
+                }];
+            }
+        }
+            break;
+        case StandsViewShowAnimationShowFrombelow:
+        {
+            CGAffineTransform t;
+            if (self.GoodDetailView !=nil) {
+                t = self.GoodDetailView.transform;
+            }
+            CGPoint mainImgCenter = self.mainImgView.center;
+            self.mainImgView.center  = CGPointMake(mainImgCenter.x, mainImgCenter.y+SCREEN_HEIGHT);
+            
+            
+            CGPoint tempPoint = showView.center;
+            showView.center = CGPointMake(SCREEN_WIDTH/2, tempPoint.y+SCREEN_HEIGHT);
+           [UIView animateWithDuration:0.5 animations:^{
+               showView.center = tempPoint;
+               self.mainImgView.center = mainImgCenter;
+               if (self.GoodDetailView !=nil) {
+                       
+                       CGAffineTransform tempTransform = CGAffineTransformScale(t, GoodDetailScaleValue, GoodDetailScaleValue);
+                       self.GoodDetailView.transform = tempTransform;
+               }
+               
+           }];
+        }
+            break;
+            
+        case StandsViewShowAnimationCustom:
+        {
+            if([self.delegate respondsToSelector:@selector(CustomShowAnimation)])
+            {
+                [self.delegate CustomShowAnimation];
+            }
+        }
+            break;
+            
+        default:
+            break;
+    }
+
 }
+
+//移除view
 
 - (void)hideAnimation{
-    [UIView animateWithDuration:0.5 animations:^{
-        coverView.alpha = 0.0;
-        showView.alpha = 0.0;
-        self.mainImgView.alpha = 0.0;
+    
+    
+    switch (self.dismissAnimationType) {
+        case StandsViewDismissAnimationFlash:
+        {
+            CGAffineTransform t ;
+            if (self.GoodDetailView != nil) {
+                t = self.GoodDetailView.transform;
+            }
+            
+            [UIView animateWithDuration:0.5 animations:^{
+                coverView.alpha = 0.0;
+                showView.alpha = 0.0;
+                self.mainImgView.alpha = 0.0;
+                
+                
+                if (self.GoodDetailView != nil) {
+                    CGAffineTransform tempTransform = CGAffineTransformScale(t, 1/GoodDetailScaleValue, 1/GoodDetailScaleValue);
+                    self.GoodDetailView.transform = tempTransform;
+                }
+                
+            } completion:^(BOOL finished) {
+                [self removeFromSuperview];
+            }];
+
+        }
+            break;
+        case StandsViewDismissAnimationDisFrombelow:
+        {
+            CGAffineTransform t ;
+            if (self.GoodDetailView != nil) {
+                t = self.GoodDetailView.transform;
+            }
+            
+            
+            [UIView animateWithDuration:0.5 animations:^{
+
+                
+                CGPoint mainImgCenter = self.mainImgView.center;
+                self.mainImgView.center  = CGPointMake(mainImgCenter.x, mainImgCenter.y+SCREEN_HEIGHT);
+                
+                CGPoint tempPoint = showView.center;
+                showView.center = CGPointMake(SCREEN_WIDTH/2, tempPoint.y+SCREEN_HEIGHT);
+                
+                if (self.GoodDetailView != nil) {
+                    CGAffineTransform tempTransform = CGAffineTransformScale(t, 1/GoodDetailScaleValue, 1/GoodDetailScaleValue);
+                    self.GoodDetailView.transform = tempTransform;
+                }
+                
+                coverView.alpha = 0.0;
+                showView.alpha = 0.0;
+                
+            } completion:^(BOOL finished) {
+                
+                [self removeFromSuperview];
+            }];
+
+        }
+            break;
+        case StandsViewDismissAnimationCustom:
+        {
+            if([self.delegate respondsToSelector:@selector(CustomDismissAnimation)])
+            {
+                [self.delegate CustomDismissAnimation];
+            }
+        }
+        default:
+            break;
+    }
+
         
-    } completion:^(BOOL finished) {
-        [self removeFromSuperview];
-    }];
+    
     
     
 }
@@ -496,6 +687,7 @@
 
 
 #pragma mark - self tools
+//根据字符串计算宽度
 -(CGFloat)WidthWithString:(NSString*)string fontSize:(CGFloat)fontSize height:(CGFloat)height
 {
     NSDictionary *attrs = @{NSFontAttributeName:[UIFont systemFontOfSize:fontSize]};
@@ -601,7 +793,14 @@
                 [btn addTarget:self action:@selector(standardBtnClick:) forControlEvents:UIControlEventTouchUpInside];
                 
                 
-                btn.tag = indexPath.row*100 + i/*低16位*/ | ([specArr[i].standardClassId intValue] << 16) /*高16位*/;
+                btn.tag = indexPath.row*100 + i/*低16位 cell行数*/ | ([specArr[i].standardClassId intValue] << 16) /*高16位  分类id*/;
+                
+                NSString *key = [NSString stringWithFormat:@"%ld",indexPath.row];
+                
+                if ([specArr[i].standardClassId intValue] == [self.standardBtnClickDict[key] intValue]) {
+                    btn.backgroundColor = [UIColor orangeColor];
+                }
+                
                 
                 
                 [tempArr addObject:btn];
@@ -616,18 +815,34 @@
         }
         else
         {
-        
-            UILabel *tipLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 80, 30)];
-            CGPoint tempPoint = tipLab.center;
-            tempPoint.y = _cellHeight/2;
-            tipLab.center = tempPoint;
+
+            cell.textLabel.text = @"购买数量";
+            cell.textLabel.textColor = [UIColor blackColor];
+            cell.textLabel.font = [UIFont systemFontOfSize:14];
             
-            tipLab.text = @"购买数量";
-            tipLab.font = [UIFont systemFontOfSize:14];
-            tipLab.textColor = [UIColor blackColor];
+            CGFloat btnWidth = 30;
             
-            [cell addSubview:tipLab];
+            UIButton *plusBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 10 -btnWidth, 0, btnWidth, 30)];
+            CGPoint tempPoint = plusBtn.center;
+            [plusBtn addTarget:self action:@selector(buyNumBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+            tempPoint.y = _cellHeight/2/2;
+            plusBtn.center = tempPoint;
+            plusBtn.tag = 0;
+            [plusBtn setImage:[UIImage imageNamed:@"StandarsAdd"] forState:UIControlStateNormal];
+            [cell addSubview:plusBtn];
             
+            self.numberTextFied.frame = CGRectMake(plusBtn.frame.origin.x - 40, plusBtn.center.y -10, 40, 20);
+            self.numberTextFied.textAlignment = NSTextAlignmentCenter;
+            self.numberTextFied.backgroundColor = [UIColor grayColor];
+            [cell addSubview:self.numberTextFied];
+            
+            UIButton *reduceBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.numberTextFied.frame.origin.x - btnWidth,plusBtn.center.y - plusBtn.frame.size.height/2 , plusBtn.frame.size.width, plusBtn.frame.size.height)];
+            [reduceBtn addTarget:self action:@selector(buyNumBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+            [reduceBtn setImage:[UIImage imageNamed:@"StandarsDel"] forState:UIControlStateNormal];
+            reduceBtn.tag = 1;
+            [cell addSubview:reduceBtn];
+            
+//            
         }
     }
     @catch (NSException *exception) {
@@ -643,7 +858,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if(indexPath.row == self.standardArr.count)
-        return _cellHeight;
+        return _cellHeight/2/*购买数量*/;
     
     @try {
         CGFloat totalHeight = 0;

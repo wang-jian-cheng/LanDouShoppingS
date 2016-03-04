@@ -193,6 +193,25 @@ lblYunFei.text=[NSString stringWithFormat:@"运费:￥%@",self.strFreightPrice];
 
 
 
+-(NSString *)getGoodPrice:(NSInteger)index
+{
+    NSDictionary *tempDict = self.goosStandardIDStrArr[index];
+    NSString *str = self.standardIDStrArr[index];
+    
+    NSDictionary *specInfo = tempDict[str];
+    if(!([specInfo isEqual:[NSNull null]] || specInfo == nil))
+    {
+        DLog(@"price:%@",specInfo[@"goods_price"]);
+        DLog(@"storage:%@",specInfo[@"goods_storage"]);
+        
+        
+        return specInfo[@"goods_price"];
+
+    }
+
+    return nil;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //    UITableViewCell *cell = [tableView
@@ -210,11 +229,21 @@ lblYunFei.text=[NSString stringWithFormat:@"运费:￥%@",self.strFreightPrice];
     
     
     cell.lblGoodsName.text= [[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_name"];
-    cell.lblGoodsPrice.text=[NSString stringWithFormat:@"￥%@",[[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_price"]];
+//    cell.lblGoodsPrice.text=[NSString stringWithFormat:@"￥%@",[[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_price"]];
     
-        cell.textBuyNum.text=[NSString stringWithFormat:@"%@", [[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_num"]];
-        cell.lblBuyNum.text=[NSString stringWithFormat:@"x%@", [[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_num"]];
+    NSString *str = [self getGoodPrice:indexPath.row];
     
+    if (str!=nil) {
+        cell.lblGoodsPrice.text = str;
+    }
+    else
+    {
+        cell.lblGoodsPrice.text=[NSString stringWithFormat:@"￥%@",[[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_price"]];
+    }
+    
+    cell.textBuyNum.text=[NSString stringWithFormat:@"%@", [[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_num"]];
+    cell.lblBuyNum.text=[NSString stringWithFormat:@"x%@", [[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_num"]];
+
     cell.btnAdd.hidden=YES;
     cell.btnCut.hidden=YES;
     cell.textBuyNum.hidden=YES;

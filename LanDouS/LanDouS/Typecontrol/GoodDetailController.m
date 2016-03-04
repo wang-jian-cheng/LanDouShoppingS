@@ -20,6 +20,9 @@
 #import <ShareSDK/ShareSDK.h>
 #import "SureCartController.h"
 @interface GoodDetailController ()
+{
+    NSInteger goodsNum;
+}
 @property (weak, nonatomic) IBOutlet UIButton *joinCartBtn;
 @property (nonatomic) NSMutableDictionary *dictStandard;
 @property (nonatomic) NSMutableArray *standardBtnArr;
@@ -743,11 +746,71 @@
     {
         [standardsView ThrowGoodTo:CGPointMake(200, 40) andDuration:1.0 andHeight:0 andScale:20.0];
     }
-    else
+    else if(sender.tag == 1)
     {
+        goodsNum = standardsView.buyNum;
+        if (standardIdStr == nil||standardIdStr.length ==0) {
+            [Dialog simpleToast:@"亲，请正确选择规格"];
+            return;
+        }
+        NSDictionary *specInfo = specListGoodsDict[standardIdStr];
+        if (([specInfo isEqual:[NSNull null]] || specInfo == nil)) {
+            [Dialog simpleToast:@"亲，请正确选择规格"];
+            return;
+        }
         
-        [standardsView setBackViewAnimationScale:self.view andDuration:1.0 toValueX:(1.0/0.9) andValueY:(1.0/0.9)];
         [standardsView dismiss];
+        
+        if (get_Dsp(@"userinfo")) {
+            if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]==0) {
+                [Dialog simpleToast:@"亲，商品库存不足"];
+                return;
+            }
+
+            
+            if (goodsNum ==0) {
+                [Dialog simpleToast:@"亲，购买数量不能为零"];
+                return;
+            }
+            if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]<goodsNum) {
+                [Dialog simpleToast:@"亲，库存不足了"];
+                return;
+            }
+
+            [dicGoodsDetail setObject:[NSString stringWithFormat:@"%ld",goodsNum] forKey:@"goods_num"];
+            
+            SureCartController *SureCart=[[SureCartController alloc]init];
+            SureCart.arrayCartList=[[NSMutableArray alloc]init];
+            [SureCart.arrayCartList addObject:dicGoodsDetail];
+            SureCart.strType=@"buynow";
+            
+            SureCart.goosStandardIDStrArr = [NSMutableArray array];
+            [SureCart.goosStandardIDStrArr addObject:specListGoodsDict];
+            SureCart.standardIDStrArr = [NSMutableArray array];
+            [SureCart.standardIDStrArr addObject:standardIdStr];
+            [self.navigationController pushViewController:SureCart animated:YES];
+
+
+//            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请输入商品数量" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+//
+//            alert.tag=543;
+//            alert.alertViewStyle=UIAlertViewStylePlainTextInput;
+//            UITextField *tf = [alert textFieldAtIndex:0];
+//            tf.keyboardType = UIKeyboardTypeNumberPad;
+//
+//            [alert show];
+        }
+        else{
+            LoginViewController *LoginView=[[LoginViewController alloc]init];
+            UINavigationController *nav=[[UINavigationController alloc]initWithRootViewController:LoginView];
+            nav.navigationBar.hidden=YES;
+            LoginView.strType=@"nav";
+            [self presentViewController:nav animated:YES completion:nil];
+        }
+
+        
+//        [standardsView setBackViewAnimationScale:self.view andDuration:1.0 toValueX:(1.0/0.9) andValueY:(1.0/0.9)];
+        
     }
 }
 
@@ -786,18 +849,22 @@
         standardsView.priceLab.text = [NSString stringWithFormat:@"¥%@",specInfo[@"goods_price"]];
         standardsView.goodNum.text = [NSString stringWithFormat:@"库存%@件",specInfo[@"goods_storage"]];
     }
+//    else
+//    {
+//        standardIdStr = nil;
+//    }
 
 }
 
--(void)StandardsSureBtnClick:(NSString *)content
-{
-    
-    SureCartController *SureCart=[[SureCartController alloc]init];
-    SureCart.arrayCartList=[[NSMutableArray alloc]init];
-    [SureCart.arrayCartList addObject:dicGoodsDetail];
-    SureCart.strType=@"buynow";
-    [self.navigationController pushViewController:SureCart animated:YES];
-}
+//-(void)StandardsSureBtnClick:(NSString *)content
+//{
+//    
+//    SureCartController *SureCart=[[SureCartController alloc]init];
+//    SureCart.arrayCartList=[[NSMutableArray alloc]init];
+//    [SureCart.arrayCartList addObject:dicGoodsDetail];
+//    SureCart.strType=@"buynow";
+//    [self.navigationController pushViewController:SureCart animated:YES];
+//}
 
 #pragma mark tableview delegate
 
@@ -1022,17 +1089,17 @@
 {
     
     if (alertView.tag==543) {
-        UITextField *textNum=[alertView textFieldAtIndex:0];
-        if ([textNum.text intValue]==0) {
+//        UITextField *textNum=[alertView textFieldAtIndex:0];
+        if (goodsNum ==0) {
             [Dialog simpleToast:@"亲，购买数量不能为零"];
             return;
         }
-        if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]<[textNum.text intValue]) {
+        if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]<goodsNum) {
             [Dialog simpleToast:@"亲，库存不足了"];
             return;
         }
         if (buttonIndex==1) {
-            [dicGoodsDetail setObject:textNum.text forKey:@"goods_num"];
+            [dicGoodsDetail setObject:[NSString stringWithFormat:@"%ld",goodsNum] forKey:@"goods_num"];
             [self getGoodsStandards:goodsId];
             
             
@@ -1081,33 +1148,35 @@
     }
     
     standardsView.standardArr = standardModelArr;
-    [standardsView setBackViewAnimationScale:self.view andDuration:1.6 toValueX:0.9 andValueY:0.9];
+//    standardsView.showAnimationType = StandsViewShowAnimationShowFrombelow;
+//    [standardsView setBackViewAnimationScale:self.view andDuration:1.6 toValueX:0.9 andValueY:0.9];
+    standardsView.GoodDetailView = self.view;
     [standardsView show];
     return;
   
-    if (get_Dsp(@"userinfo")) {
-        if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]==0) {
-            [Dialog simpleToast:@"亲，商品库存不足"];
-            return;
-        }
-        
-        
-        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请输入商品数量" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-        
-        alert.tag=543;
-        alert.alertViewStyle=UIAlertViewStylePlainTextInput;
-        UITextField *tf = [alert textFieldAtIndex:0];
-        tf.keyboardType = UIKeyboardTypeNumberPad;
-        
-        [alert show];
-    }
-    else{
-        LoginViewController *LoginView=[[LoginViewController alloc]init];
-        UINavigationController *nav=[[UINavigationController alloc]initWithRootViewController:LoginView];
-        nav.navigationBar.hidden=YES;
-        LoginView.strType=@"nav";
-        [self presentViewController:nav animated:YES completion:nil];
-    }
+//    if (get_Dsp(@"userinfo")) {
+//        if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]==0) {
+//            [Dialog simpleToast:@"亲，商品库存不足"];
+//            return;
+//        }
+//        
+//        
+//        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请输入商品数量" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+//        
+//        alert.tag=543;
+//        alert.alertViewStyle=UIAlertViewStylePlainTextInput;
+//        UITextField *tf = [alert textFieldAtIndex:0];
+//        tf.keyboardType = UIKeyboardTypeNumberPad;
+//        
+//        [alert show];
+//    }
+//    else{
+//        LoginViewController *LoginView=[[LoginViewController alloc]init];
+//        UINavigationController *nav=[[UINavigationController alloc]initWithRootViewController:LoginView];
+//        nav.navigationBar.hidden=YES;
+//        LoginView.strType=@"nav";
+//        [self presentViewController:nav animated:YES completion:nil];
+//    }
     
     
     

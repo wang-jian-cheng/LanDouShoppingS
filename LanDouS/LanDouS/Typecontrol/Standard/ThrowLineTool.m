@@ -55,9 +55,9 @@ static ThrowLineTool *s_sharedInstance = nil;
     //旋转
     CABasicAnimation *rotateAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
     rotateAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeRotation(M_PI, 0, 0, 1)];
-    rotateAnimation.autoreverses = YES;
-//    rotateAnimation.repeatCount = MAXFLOAT;
-//    rotateAnimation.duration = 2;
+//    rotateAnimation.autoreverses = YES;
+    rotateAnimation.repeatCount = MAXFLOAT;
+    rotateAnimation.duration = 0.3;
     
     
     
@@ -76,8 +76,8 @@ static ThrowLineTool *s_sharedInstance = nil;
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(animationDidFinish)]) {
-        [self.delegate performSelector:@selector(animationDidFinish) withObject:nil];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(animationDidFinish:)]) {
+        [self.delegate performSelector:@selector(animationDidFinish:) withObject:self.showingView];
     }
 //    self.showingView = nil;
 }
