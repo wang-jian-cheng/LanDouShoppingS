@@ -20,7 +20,8 @@
     float onLinePayDiscount;
     
 }
-
+@property(nonatomic) NSMutableArray *goosStandardIDStrArr;//商品规格列表
+@property(nonatomic) NSMutableArray *standardIDStrArr;//选择规格列表
 @property(nonatomic,copy)NSString *strType;
 @property(nonatomic,copy)NSString *strFreightPrice;
 @property (strong, nonatomic) IBOutlet UIButton *btnPeisong;
