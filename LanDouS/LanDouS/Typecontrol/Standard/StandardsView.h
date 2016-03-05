@@ -70,13 +70,15 @@
 
 
 
+
 //出场动画
 typedef enum _StandsViewShowAnimationType
 {
     StandsViewShowAnimationShowFrombelow ,//从下面
     StandsViewShowAnimationFlash,//闪出
+    StandsViewShowAnimationShowFromLeft,//从左边
     StandsViewShowAnimationCustom = 0xFFFF // 自定义
-
+    
 } StandsViewShowAnimationType;
 
 //退场动画
@@ -84,7 +86,7 @@ typedef enum _StandsViewAnimationType
 {
     StandsViewDismissAnimationDisFrombelow,//从下面退出
     StandsViewDismissAnimationFlash,//逐渐消失
-    
+    StandsViewDismissAnimationDisToRight,
     StandsViewDismissAnimationCustom = 0xFFFF // 自定义
     
 } StandsViewDismissAnimationType;

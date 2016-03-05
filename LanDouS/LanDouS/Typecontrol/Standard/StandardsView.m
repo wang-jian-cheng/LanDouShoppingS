@@ -122,7 +122,7 @@
     [showView addSubview:sureBtn];
     
     lineView = [[UIView alloc] initWithFrame:CGRectMake(cancelBtn.frame.size.width, cancelBtn.frame.origin.y, 1, cancelBtn.frame.size.height)];
-    lineView.backgroundColor = BACKGROUND_COLOR;
+    lineView.backgroundColor = [UIColor whiteColor];
     [showView addSubview:lineView];
     
     /*键盘退出手势*/
@@ -448,6 +448,75 @@
 }
 #pragma mark - Animations
 
+-(void)showAnimationFromLeft:(UIView *)view
+{
+    CGRect tempRect = view.frame;
+    view.layer.anchorPoint = CGPointMake(0.5, 2.0);
+    view.frame = tempRect;//重设frame，重新计算center  因为anchorpoint的设置会导致center的改变
+    
+    
+    view.transform = CGAffineTransformMakeRotation(-M_PI_4);
+    [UIView animateWithDuration:1.0 animations:^{
+        view.transform = CGAffineTransformIdentity;
+    }];
+    
+}
+
+-(void)selfDismissAnimationToRight
+{
+    CGRect tempRect = showView.frame;
+    showView.layer.anchorPoint = CGPointMake(0.5, 2.0);
+    showView.frame = tempRect;//重设frame，重新计算center  因为anchorpoint的设置会导致center的改变
+
+    CGPoint tempPoint = self.mainImgView.center;
+    [UIView animateWithDuration:0.5 animations:^{
+        self.mainImgView.center = CGPointMake(tempPoint.x, SCREEN_HEIGHT);
+        showView.transform = CGAffineTransformMakeRotation(M_PI_4);
+        coverView.alpha = 0.0;
+        
+        CGAffineTransform t ;
+        if (self.GoodDetailView != nil) {
+            t = self.GoodDetailView.transform;
+        }
+        if (self.GoodDetailView != nil) {
+            CGAffineTransform tempTransform = CGAffineTransformScale(t, 1/GoodDetailScaleValue, 1/GoodDetailScaleValue);
+            self.GoodDetailView.transform = tempTransform;
+        }
+        
+    } completion:^(BOOL finished) {
+        showView.alpha = 0.0;
+        [self removeFromSuperview];
+    }];
+}
+
+-(void)selfShowAnimationFromLeft
+{
+    
+    CGRect tempRect = showView.frame;
+    showView.layer.anchorPoint = CGPointMake(0.5, 2.0);
+    showView.frame = tempRect;//重设frame，重新计算center  因为anchorpoint的设置会导致center的改变
+    showView.transform = CGAffineTransformMakeRotation(-M_PI_4);
+    
+    CGPoint tempPoint = self.mainImgView.center;
+    self.mainImgView.center =CGPointMake(tempPoint.x, 0);
+    CGAffineTransform t;
+    if (self.GoodDetailView !=nil) {
+        t = self.GoodDetailView.transform;
+    }
+    [UIView animateWithDuration:0.5 animations:^{
+        self.mainImgView.center = tempPoint;
+        showView.transform = CGAffineTransformIdentity;//回到原始位置
+        
+        if (self.GoodDetailView !=nil) {
+            CGAffineTransform tempTransform = CGAffineTransformScale(t, GoodDetailScaleValue, GoodDetailScaleValue);
+            self.GoodDetailView.transform = tempTransform;
+        }
+        
+    }];
+    
+}
+
+
 //设置指定view大小
 -(void)setBackViewAnimationScale:(UIView *)backView andDuration:(NSTimeInterval)duration toValueX:(CGFloat)valueX andValueY:(CGFloat)valueY
 {
@@ -534,6 +603,7 @@
 }
 
 
+
 //显示view
 - (void)showAnimation {
     
@@ -577,19 +647,23 @@
             
             CGPoint tempPoint = showView.center;
             showView.center = CGPointMake(SCREEN_WIDTH/2, tempPoint.y+SCREEN_HEIGHT);
-           [UIView animateWithDuration:0.5 animations:^{
-               showView.center = tempPoint;
-               self.mainImgView.center = mainImgCenter;
-               if (self.GoodDetailView !=nil) {
-                       
-                       CGAffineTransform tempTransform = CGAffineTransformScale(t, GoodDetailScaleValue, GoodDetailScaleValue);
-                       self.GoodDetailView.transform = tempTransform;
-               }
-               
-           }];
+            [UIView animateWithDuration:0.5 animations:^{
+                showView.center = tempPoint;
+                self.mainImgView.center = mainImgCenter;
+                if (self.GoodDetailView !=nil) {
+                    
+                    CGAffineTransform tempTransform = CGAffineTransformScale(t, GoodDetailScaleValue, GoodDetailScaleValue);
+                    self.GoodDetailView.transform = tempTransform;
+                }
+                
+            }];
         }
             break;
-            
+        case StandsViewShowAnimationShowFromLeft:
+        {
+            [self selfShowAnimationFromLeft];
+        }
+            break;
         case StandsViewShowAnimationCustom:
         {
             if([self.delegate respondsToSelector:@selector(CustomShowAnimation)])
@@ -602,7 +676,7 @@
         default:
             break;
     }
-
+    
 }
 
 //移除view
@@ -632,7 +706,7 @@
             } completion:^(BOOL finished) {
                 [self removeFromSuperview];
             }];
-
+            
         }
             break;
         case StandsViewDismissAnimationDisFrombelow:
@@ -644,7 +718,7 @@
             
             
             [UIView animateWithDuration:0.5 animations:^{
-
+                
                 
                 CGPoint mainImgCenter = self.mainImgView.center;
                 self.mainImgView.center  = CGPointMake(mainImgCenter.x, mainImgCenter.y+SCREEN_HEIGHT);
@@ -664,7 +738,12 @@
                 
                 [self removeFromSuperview];
             }];
-
+            
+        }
+            break;
+        case StandsViewDismissAnimationDisToRight:
+        {
+            [self selfDismissAnimationToRight];
         }
             break;
         case StandsViewDismissAnimationCustom:
@@ -677,11 +756,6 @@
         default:
             break;
     }
-
-        
-    
-    
-    
 }
 
 
@@ -800,7 +874,6 @@
                 if ([specArr[i].standardClassId intValue] == [self.standardBtnClickDict[key] intValue]) {
                     btn.backgroundColor = [UIColor orangeColor];
                 }
-                
                 
                 
                 [tempArr addObject:btn];
