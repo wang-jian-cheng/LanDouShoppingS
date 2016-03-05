@@ -20,8 +20,12 @@
 #import <ShareSDK/ShareSDK.h>
 #import "SureCartController.h"
 @interface GoodDetailController ()
+{
+    NSInteger goodsNum;
+}
 @property (weak, nonatomic) IBOutlet UIButton *joinCartBtn;
-
+@property (nonatomic) NSMutableDictionary *dictStandard;
+@property (nonatomic) NSMutableArray *standardBtnArr;
 @end
 
 @implementation GoodDetailController
@@ -35,6 +39,9 @@
     [self addRightButton:@"sharebgbai@2x.png"];
     page=1;
     perpage=20;
+    
+    standardIdStr = @"000|000";
+    
     
     _joinCartBtn.backgroundColor = navi_bar_bg_color;
     
@@ -63,6 +70,8 @@
     
     [self getGoodsDetail:goodsId];
     
+    
+//    [self getGoodsStandards:goodsId];
     
     // Do any additional setup after loading the view from its nib.
 }
@@ -346,6 +355,7 @@
     
     [dataProvider delFavoriteGoods:goodsID];
 }
+
 -(void)getGoodsDetail:(NSString *)goodsID
 {
     [SVProgressHUD show];
@@ -354,12 +364,23 @@
         [SVProgressHUD dismiss];
         DLog(@"^^^^%@", resultDict );
         if ([[resultDict objectForKey:@"result"]intValue]==1) {
-            dicGoodsDetail=[NSMutableDictionary dictionaryWithDictionary:[resultDict objectForKey:@"data"]];
+            dicGoodsDetail=[NSMutableDictionary dictionaryWithDictionary:[resultDict objectForKey:@"data"][@"goods_info"]];
+            
+            goodImgUrl =resultDict[@"data"][@"goods_image"];
+            specListGoodsDict = resultDict[@"data"][@"spec_list_goods"];
+            specListNewGoodsIDDict = resultDict[@"data"][@"spec_list"];
+//            if(![resultDict[@"data"][@"spec_name"] isEqual:[NSNull null]])
+//            {
+//                [self.dictStandard setObject:resultDict[@"data"][@"spec_name"] forKey:@"spec_name"];
+//            }
+//            if(![resultDict[@"data"][@"spec_value"] isEqual:[NSNull null]])
+//            {
+//               [self.dictStandard setObject:resultDict[@"data"][@"spec_value"] forKey:@"spec_value"];
+//            }
+//            
+            
             if ([[resultDict objectForKey:@"recommends"] isKindOfClass:[NSArray class]]) {
                 arrayRecommends=[NSMutableArray arrayWithArray:[resultDict objectForKey:@"recommends"]];
-                
-                
-                
             }
             [self initGoodsDetailView];
             [self initPicDetailView];
@@ -469,7 +490,7 @@
     DataProvider *dataProvider = [[DataProvider alloc] init];
     [dataProvider setFinishBlock:^(NSDictionary *resultDict){
         [SVProgressHUD dismiss];
-        NSLog(@"^^^^%@", resultDict );
+        DLog(@"^^^^%@", resultDict );
         if ([[resultDict objectForKey:@"result"]intValue]==1) {
             
             [Dialog simpleToast:@"添加购物车成功"];
@@ -559,15 +580,36 @@
     else{
         [btncollect setSelected:NO];
     }
-    if ([[dicGoodsDetail objectForKey:@"images"]isKindOfClass:[NSArray class]]) {
-        NSArray *imagearray=[[NSArray alloc]initWithArray:[dicGoodsDetail objectForKey:@"images"]];
+    
+    
+    NSMutableArray *imagearray = [NSMutableArray array];
+    @try {
+        for (int i = 0; i<[goodImgUrl allKeys].count; i++) {
+            NSString *str = [NSString stringWithFormat:@"%ld",i];
+            
+            [imagearray addObject:goodImgUrl[str]];
+            
+        }
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        
+    }
+   
+    
+//    imagearray=[[NSArray alloc]initWithArray:[dicGoodsDetail objectForKey:@"images"]];
+    if (imagearray.count > 0) {
         pageCol.numberOfPages=imagearray.count;
         
         scrollTop.pagingEnabled=YES;
         scrollTop.contentSize=CGSizeMake(SCREEN_WIDTH*imagearray.count,SCREEN_WIDTH);
         for (int i=0;i<imagearray.count;i++) {
             UIImageView *imgGoodsDetail=[[UIImageView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH*i,0,SCREEN_WIDTH,SCREEN_WIDTH)];
-            NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",GOODS_IMG_URL,[dicGoodsDetail objectForKey:@"store_id"],[[imagearray objectAtIndex:i]objectForKey:@"goods_image"]]];
+//            NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",GOODS_IMG_URL,[dicGoodsDetail objectForKey:@"store_id"],[[imagearray objectAtIndex:i]objectForKey:@"goods_image"]]];
+            
+            NSURL *url = [NSURL URLWithString:imagearray[i]];
             [imgGoodsDetail setImageWithURL:url placeholderImage:img(@"landou_square_default.png")];
             imgGoodsDetail.contentMode= UIViewContentModeScaleAspectFit;
             //imgGoodsDetail.image=[UIImage imageNamed:@"line_01.png"];
@@ -607,7 +649,7 @@
      imageweb.scalesPageToFit=YES ;
     //imageweb.backgroundColor=[UIColor blueColor];
     imageweb.delegate=self;
-    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"http://wap.landous.com/tmpl/product_info.html?goods_id=%@",goodsId]];
+    NSURL *url=[NSURL URLWithString:@""/*goodImgUrl[@"0"]*/];
     NSURLRequest *urlrequest=[NSURLRequest requestWithURL:url];
     [imageweb loadRequest:urlrequest];
     [self.view addSubview:imageweb];
@@ -652,6 +694,211 @@
     
     [self getmoreGoodsComments:goodsId];
 }
+
+-(void)getGoodsStandards:(NSString *)goodsID
+{
+    
+//    standardsView.delegate = self;
+    
+    [SVProgressHUD show];
+    DataProvider *dataProvider = [[DataProvider alloc] init];
+    [dataProvider setFinishBlock:^(NSDictionary *resultDict){
+        [SVProgressHUD dismiss];
+        DLog(@"^^^^%@", resultDict );
+        if ([[resultDict objectForKey:@"result"]intValue]==1) {
+            
+            
+            
+//            standardsView.delegate = self;
+//            [standardsView show];
+            
+          
+        }
+        else{
+            
+        }
+        
+        
+        
+    }];
+    
+    [dataProvider setFailedBlock:^(NSString *strError){
+        [SVProgressHUD dismiss];
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"检查网络！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        
+    }];
+    
+//    [dataProvider getGoodsSpec:goodsID];
+}
+
+-(NSMutableDictionary *)dictStandard
+{
+    if(_dictStandard ==nil)
+    {
+        _dictStandard = [NSMutableDictionary dictionary];
+    }
+    
+    return _dictStandard;
+}
+
+
+-(CGFloat)WidthWithString:(NSString*)string fontSize:(CGFloat)fontSize height:(CGFloat)height
+{
+    NSDictionary *attrs = @{NSFontAttributeName:[UIFont systemFontOfSize:fontSize]};
+    return  [string boundingRectWithSize:CGSizeMake(0, height) options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attrs context:nil].size.width;
+}
+
+-(NSMutableArray *)standardBtnArr
+{
+    if(_standardBtnArr == nil)
+    {
+        _standardBtnArr = [NSMutableArray array];
+    }
+    
+    return _standardBtnArr;
+}
+
+#pragma mark - standardsView delegate
+
+-(void)StandardsView:(StandardsView *)standardView CustomBtnClickAction:(UIButton *)sender
+{
+    DLog(@"sender tag %ld click",(long)sender.tag);
+    
+    if(sender.tag == 0)
+    {
+       
+        
+        if (standardIdStr == nil||standardIdStr.length ==0) {
+            [Dialog simpleToast:@"亲，请正确选择规格"];
+            return;
+        }
+        self.goodsIdWithSpec = specListNewGoodsIDDict[standardIdStr];
+        if (([self.goodsIdWithSpec isEqual:[NSNull null]] || self.goodsIdWithSpec == nil)) {
+            [Dialog simpleToast:@"亲，请正确选择规格"];
+            return;
+        }
+        [standardsView ThrowGoodTo:CGPointMake(200, 40) andDuration:1.0 andHeight:0 andScale:20.0];
+        if (self.goodsIdWithSpec !=nil) {
+            [self addCart:self.goodsIdWithSpec andCount:(int)(standardsView.buyNum)];
+        }
+        else
+        {
+            [self addCart:goodsId andCount:(int)(standardsView.buyNum)];
+        }
+        
+        
+    }
+    else if(sender.tag == 1)
+    {
+        goodsNum = standardsView.buyNum;
+        if (standardIdStr == nil||standardIdStr.length ==0) {
+            [Dialog simpleToast:@"亲，请正确选择规格"];
+            return;
+        }
+        NSDictionary *specInfo = specListGoodsDict[standardIdStr];
+        if (([specInfo isEqual:[NSNull null]] || specInfo == nil)) {
+            [Dialog simpleToast:@"亲，请正确选择规格"];
+            return;
+        }
+        
+        [standardsView dismiss];
+        
+        if (get_Dsp(@"userinfo")) {
+            if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]==0) {
+                [Dialog simpleToast:@"亲，商品库存不足"];
+                return;
+            }
+
+            
+            if (goodsNum ==0) {
+                [Dialog simpleToast:@"亲，购买数量不能为零"];
+                return;
+            }
+            if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]<goodsNum) {
+                [Dialog simpleToast:@"亲，库存不足了"];
+                return;
+            }
+
+            [dicGoodsDetail setObject:[NSString stringWithFormat:@"%ld",goodsNum] forKey:@"goods_num"];
+            
+            SureCartController *SureCart=[[SureCartController alloc]init];
+            SureCart.arrayCartList=[[NSMutableArray alloc]init];
+            [SureCart.arrayCartList addObject:dicGoodsDetail];
+            SureCart.strType=@"buynow";
+            
+            SureCart.goosStandardIDStrArr = [NSMutableArray array];
+            [SureCart.goosStandardIDStrArr addObject:specListGoodsDict];
+            SureCart.standardIDStrArr = [NSMutableArray array];
+            [SureCart.standardIDStrArr addObject:standardIdStr];
+            [self.navigationController pushViewController:SureCart animated:YES];
+
+
+//            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请输入商品数量" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+//
+//            alert.tag=543;
+//            alert.alertViewStyle=UIAlertViewStylePlainTextInput;
+//            UITextField *tf = [alert textFieldAtIndex:0];
+//            tf.keyboardType = UIKeyboardTypeNumberPad;
+//
+//            [alert show];
+        }
+        else{
+            LoginViewController *LoginView=[[LoginViewController alloc]init];
+            UINavigationController *nav=[[UINavigationController alloc]initWithRootViewController:LoginView];
+            nav.navigationBar.hidden=YES;
+            LoginView.strType=@"nav";
+            [self presentViewController:nav animated:YES completion:nil];
+        }
+
+        
+//        [standardsView setBackViewAnimationScale:self.view andDuration:1.0 toValueX:(1.0/0.9) andValueY:(1.0/0.9)];
+        
+    }
+}
+
+
+-(void)StandardsView:(StandardsView *)standardView SetBtn:(UIButton *)btn andStandView:(StandardsView *)standardView
+{
+    if(btn.tag == 0 )
+    {
+        btn.backgroundColor = [UIColor yellowColor];
+    }
+    else if(btn.tag == 1)
+    {
+        btn.backgroundColor = [UIColor orangeColor];
+    }
+}
+-(void)Standards:(StandardsView *)standardView SelectBtnClick:(UIButton *)sender andSelectID:(NSString *)selectID andStandName:(NSString *)standName andIndex:(NSInteger)index
+{
+    DLog(@"selectId:%@  standName:%@  index:%ld",selectID,standName,(unsigned long)index);
+    
+    if(index == 0)
+    {
+        standardIdStr = [NSString stringWithFormat:@"%@|%@",selectID,[standardIdStr substringFromIndex:4]];
+    }
+    else if(index == 1)
+    {
+        standardIdStr = [NSString stringWithFormat:@"%@|%@",[standardIdStr substringToIndex:3],selectID];
+    }
+
+    DLog(@"standardIdStr = %@",standardIdStr);
+    NSDictionary *specInfo = specListGoodsDict[standardIdStr];
+    if(!([specInfo isEqual:[NSNull null]] || specInfo == nil))
+    {
+        DLog(@"price:%@",specInfo[@"goods_price"]);
+        DLog(@"storage:%@",specInfo[@"goods_storage"]);
+        
+        standardsView.priceLab.text = [NSString stringWithFormat:@"¥%@",specInfo[@"goods_price"]];
+        standardsView.goodNum.text = [NSString stringWithFormat:@"库存%@件",specInfo[@"goods_storage"]];
+        
+        
+        self.goodsIdWithSpec =[NSString stringWithFormat:@"%@",specListNewGoodsIDDict[standardIdStr]];
+    }
+
+}
+
+
 #pragma mark tableview delegate
 
 
@@ -876,7 +1123,7 @@
     
     if (alertView.tag==543) {
         UITextField *textNum=[alertView textFieldAtIndex:0];
-        if ([textNum.text intValue]==0) {
+        if ([textNum.text intValue] ==0) {
             [Dialog simpleToast:@"亲，购买数量不能为零"];
             return;
         }
@@ -885,54 +1132,104 @@
             return;
         }
         if (buttonIndex==1) {
-            [dicGoodsDetail setObject:textNum.text forKey:@"goods_num"];
+            [dicGoodsDetail setObject:[NSString stringWithFormat:@"%@",textNum.text] forKey:@"goods_num"];
+//            [self getGoodsStandards:goodsId];
+            
             
             SureCartController *SureCart=[[SureCartController alloc]init];
             SureCart.arrayCartList=[[NSMutableArray alloc]init];
             [SureCart.arrayCartList addObject:dicGoodsDetail];
             SureCart.strType=@"buynow";
+            
+//            SureCart.goosStandardIDStrArr = [NSMutableArray array];
+//            [SureCart.goosStandardIDStrArr addObject:specListGoodsDict];
+//            SureCart.standardIDStrArr = [NSMutableArray array];
+//            [SureCart.standardIDStrArr addObject:standardIdStr];
             [self.navigationController pushViewController:SureCart animated:YES];
+            
         }
     }
 }
 
-- (IBAction)buyNowclick:(id)sender {
+
+-(BOOL)showSelectStandard:(NSInteger)tag
+{
     
+    standardIdStr = @"000|000";
     
+    standardsView = [[StandardsView alloc] init];
+    standardsView.tag = tag;
+    standardsView.delegate = self;
+    /*head 信息*/
+    standardsView.priceLab.text = [NSString stringWithFormat:@"¥%@",dicGoodsDetail[@"goods_price"]];
+    standardsView.goodNum.text = [NSString stringWithFormat:@"库存%@件",dicGoodsDetail[@"goods_storage"]];
     
-    if (get_Dsp(@"userinfo")) {
-        if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]==0) {
-            [Dialog simpleToast:@"亲，商品库存不足"];
-            return;
+    standardsView.customBtns = @[@"加入购物车",@"立即购买"];
+    
+    if ([NSStringFromClass([dicGoodsDetail[@"spec_name"] class])isEqualToString:@"__NSCFArray"]) {
+    
+        NSArray *tempArr = dicGoodsDetail[@"spec_name"]  ;
+        NSString *str = @"请选择 ";
+        for (int i = 0; i<tempArr.count; i++) {
+            str = [NSString stringWithFormat:@"%@%@ ",str,tempArr[i][@"name"]];
+        }
+        standardsView.tipLab.text = str;
+        [standardsView.mainImgView setImageWithURL:[NSURL URLWithString:goodImgUrl[@"0"]] placeholderImage:[UIImage imageNamed:@"landou_square_default.png"]];
+        /*规格详情*/
+        NSMutableArray *standardModelArr = [NSMutableArray array];
+        
+        for (int i = 0; i < tempArr.count; i++) {
+            StandardModel *tempModel = [[StandardModel alloc] init];
+            tempModel.standardName = tempArr[i][@"name"];
+            
+            NSString *strID = [NSString stringWithFormat:@"%@",tempArr[i][@"id"]];
+            NSArray *specArr = [dicGoodsDetail[@"spec_value"] objectForKey:strID];
+            NSMutableArray *tempInfoArr = [NSMutableArray array];
+            for (int j = 0 ; j < specArr.count; j++) {
+                standardClassInfo *tempInfo = [[standardClassInfo alloc] init];
+                tempInfo.standardClassName = specArr[j][@"name"];
+                tempInfo.standardClassId = specArr[j][@"id"];
+                
+                [tempInfoArr addObject:tempInfo];
+            }
+            
+            tempModel.standardClassInfo = tempInfoArr;
+            [standardModelArr addObject:tempModel];
         }
         
-        
-        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请输入商品数量" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-        
-        alert.tag=543;
-        alert.alertViewStyle=UIAlertViewStylePlainTextInput;
-        UITextField *tf = [alert textFieldAtIndex:0];
-        tf.keyboardType = UIKeyboardTypeNumberPad;
-        
-        [alert show];
+        standardsView.standardArr = standardModelArr;
+        standardsView.showAnimationType = StandsViewShowAnimationShowFromLeft;
+        standardsView.dismissAnimationType = StandsViewDismissAnimationDisToRight;
+        standardsView.GoodDetailView = self.view;
+        [standardsView show];
+        return YES;
     }
-    else{
-        LoginViewController *LoginView=[[LoginViewController alloc]init];
-        UINavigationController *nav=[[UINavigationController alloc]initWithRootViewController:LoginView];
-        nav.navigationBar.hidden=YES;
-        LoginView.strType=@"nav";
-        [self presentViewController:nav animated:YES completion:nil];
+    return NO;
+}
+
+- (IBAction)buyNowclick:(id)sender {
+    
+    if ([self showSelectStandard:0] == NO) {
+            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请输入商品数量" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+
+            alert.tag=543;
+            alert.alertViewStyle=UIAlertViewStylePlainTextInput;
+            UITextField *tf = [alert textFieldAtIndex:0];
+            tf.keyboardType = UIKeyboardTypeNumberPad;
+
+            [alert show];
     }
-    
-    
-    
-    
     
 }
 
 - (IBAction)addCartclick:(id)sender {
     if (get_Dsp(@"userinfo")) {
-        [self addCart:goodsId andCount:1];
+        
+        if ([self showSelectStandard:1] == NO)
+        {
+            [self addCart:goodsId andCount:1];
+        }
+        
     }
     else{
         LoginViewController *LoginView=[[LoginViewController alloc]init];
@@ -941,7 +1238,8 @@
         LoginView.strType=@"nav";
         [self presentViewController:nav animated:YES completion:nil];
     }
-    
-    
 }
+
+
+
 @end

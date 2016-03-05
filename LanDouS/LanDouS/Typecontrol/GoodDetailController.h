@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseNavigationController.h"
-
+#import "StandardsView.h"
+#import "UIImageView+WebCache.h"
 #import <ShareSDKUI/ShareSDK+SSUI.h>
 #import <ShareSDKInterfaceAdapter/ISSContainer.h>
 
-@interface GoodDetailController : BaseNavigationController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UIWebViewDelegate>
+@interface GoodDetailController : BaseNavigationController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UIWebViewDelegate,StandardsViewDelegate,StandardsViewDataSource>
 {
     UIButton *btncollect;
     UIButton *btngotoCart;
@@ -33,6 +34,16 @@
     int page;
     int perpage;
     
+    StandardsView *standardsView;
+    
+    
+    NSDictionary *goodImgUrl;
+    NSDictionary *specListGoodsDict;//商品规格信息
+    NSDictionary *specListNewGoodsIDDict;//选择规格对应的商品id
+    NSString *standardIdStr;
+    
+    
+    
 }
 @property (strong, nonatomic) IBOutlet UIView *viewToplbl;
 
@@ -42,6 +53,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblKucun;
 
 @property(copy,nonatomic)NSString *goodsId;
+@property(copy,nonatomic)NSString *goodsIdWithSpec;
 
 - (IBAction)goodsdetailclick:(id)sender;
 - (IBAction)picturedetailclick:(id)sender;

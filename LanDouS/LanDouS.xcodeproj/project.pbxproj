@@ -400,6 +400,11 @@
 		B57104AB1C059AC200A72F53 /* SMS_SDKLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B57104A61C059AC200A72F53 /* SMS_SDKLocalizable.strings */; };
 		B57104AC1C059AC200A72F53 /* MOBFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B57104A81C059AC200A72F53 /* MOBFoundation.framework */; };
 		B57104AD1C059AC200A72F53 /* SMS_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B57104A91C059AC200A72F53 /* SMS_SDK.framework */; };
+		B57FC8A71C8ABFE000A8D9A2 /* StandardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B57FC8A01C8ABFE000A8D9A2 /* StandardModel.m */; };
+		B57FC8A81C8ABFE000A8D9A2 /* StandardsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B57FC8A21C8ABFE000A8D9A2 /* StandardsView.m */; };
+		B57FC8A91C8ABFE000A8D9A2 /* StandarsAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B57FC8A31C8ABFE000A8D9A2 /* StandarsAdd@2x.png */; };
+		B57FC8AA1C8ABFE000A8D9A2 /* StandarsDel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B57FC8A41C8ABFE000A8D9A2 /* StandarsDel@2x.png */; };
+		B57FC8AB1C8ABFE000A8D9A2 /* ThrowLineTool.m in Sources */ = {isa = PBXBuildFile; fileRef = B57FC8A61C8ABFE000A8D9A2 /* ThrowLineTool.m */; };
 		B58B924D1C0BE0B100246DB9 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B58B924C1C0BE0B100246DB9 /* JavaScriptCore.framework */; };
 		B58B924F1C0BE0F600246DB9 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B58B924E1C0BE0F600246DB9 /* AdSupport.framework */; };
 		B58B92CF1C0C302100246DB9 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B58B92CE1C0C302000246DB9 /* libicucore.tbd */; };
@@ -1079,6 +1084,14 @@
 		B57104A81C059AC200A72F53 /* MOBFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MOBFoundation.framework; sourceTree = "<group>"; };
 		B57104A91C059AC200A72F53 /* SMS_SDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SMS_SDK.framework; sourceTree = "<group>"; };
 		B57104AA1C059AC200A72F53 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SMS_SDKLocalizable.strings"; sourceTree = "<group>"; };
+		B57FC89F1C8ABFE000A8D9A2 /* StandardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardModel.h; sourceTree = "<group>"; };
+		B57FC8A01C8ABFE000A8D9A2 /* StandardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandardModel.m; sourceTree = "<group>"; };
+		B57FC8A11C8ABFE000A8D9A2 /* StandardsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardsView.h; sourceTree = "<group>"; };
+		B57FC8A21C8ABFE000A8D9A2 /* StandardsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandardsView.m; sourceTree = "<group>"; };
+		B57FC8A31C8ABFE000A8D9A2 /* StandarsAdd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "StandarsAdd@2x.png"; sourceTree = "<group>"; };
+		B57FC8A41C8ABFE000A8D9A2 /* StandarsDel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "StandarsDel@2x.png"; sourceTree = "<group>"; };
+		B57FC8A51C8ABFE000A8D9A2 /* ThrowLineTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThrowLineTool.h; sourceTree = "<group>"; };
+		B57FC8A61C8ABFE000A8D9A2 /* ThrowLineTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThrowLineTool.m; sourceTree = "<group>"; };
 		B58B924C1C0BE0B100246DB9 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		B58B924E1C0BE0F600246DB9 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		B58B92CE1C0C302000246DB9 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
@@ -1882,6 +1895,7 @@
 		188139C71A494D1A00EC9B2F /* Typecontrol */ = {
 			isa = PBXGroup;
 			children = (
+				B57FC89E1C8ABFE000A8D9A2 /* Standard */,
 				188139D81A494E2D00EC9B2F /* TypeViewController.h */,
 				188139D91A494E2D00EC9B2F /* TypeViewController.m */,
 				188139DA1A494E2D00EC9B2F /* TypeViewController.xib */,
@@ -2208,6 +2222,21 @@
 			path = SMS_SDK;
 			sourceTree = "<group>";
 		};
+		B57FC89E1C8ABFE000A8D9A2 /* Standard */ = {
+			isa = PBXGroup;
+			children = (
+				B57FC89F1C8ABFE000A8D9A2 /* StandardModel.h */,
+				B57FC8A01C8ABFE000A8D9A2 /* StandardModel.m */,
+				B57FC8A11C8ABFE000A8D9A2 /* StandardsView.h */,
+				B57FC8A21C8ABFE000A8D9A2 /* StandardsView.m */,
+				B57FC8A31C8ABFE000A8D9A2 /* StandarsAdd@2x.png */,
+				B57FC8A41C8ABFE000A8D9A2 /* StandarsDel@2x.png */,
+				B57FC8A51C8ABFE000A8D9A2 /* ThrowLineTool.h */,
+				B57FC8A61C8ABFE000A8D9A2 /* ThrowLineTool.m */,
+			);
+			path = Standard;
+			sourceTree = "<group>";
+		};
 		B58BBAA21C0C31E500246DB9 /* libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -2447,6 +2476,7 @@
 				1860E5931A5BBB8200234FB1 /* goodsDetailcollect.png in Resources */,
 				180C85581A4BF56C00C7DA41 /* ShopInfoClassController.xib in Resources */,
 				188B292E1A4AABC10057185D /* drink.png in Resources */,
+				B57FC8AA1C8ABFE000A8D9A2 /* StandarsDel@2x.png in Resources */,
 				B59E8CAA1C0D3EB300DDAB27 /* AlipaySDK.bundle in Resources */,
 				8A03C12A1AF8C6C600A8FBEA /* 03@2x.png in Resources */,
 				188B29101A4A61A30057185D /* RegisterController.xib in Resources */,
@@ -2618,6 +2648,7 @@
 				18932E9B1A5937F700CC15CA /* GoodsListController.xib in Resources */,
 				8AF8E5E01AF8C0FC0017C9CD /* icon_beverages.png in Resources */,
 				1891A5FC1A4BAF9500A26520 /* tableUnselect.png in Resources */,
+				B57FC8A91C8ABFE000A8D9A2 /* StandarsAdd@2x.png in Resources */,
 				1855BD631A74DBB50078FF31 /* CompanyPhoneViewController.xib in Resources */,
 				8AF8E5D61AF8A90E0017C9CD /* sharebgbai@2x.png in Resources */,
 				B58BBAC41C0C31E500246DB9 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
@@ -2705,6 +2736,7 @@
 				188139991A49370D00EC9B2F /* WaterFlowViewCell.m in Sources */,
 				18683CE71A638434003F5C04 /* SureCartController.m in Sources */,
 				1869ABFE1A663C7600E4A290 /* CartStateController.m in Sources */,
+				B57FC8A81C8ABFE000A8D9A2 /* StandardsView.m in Sources */,
 				188139D11A494E0D00EC9B2F /* ShopListViewController.m in Sources */,
 				188139E01A494E3C00EC9B2F /* UserCenterController.m in Sources */,
 				18706DFD1A68B1AD005807E5 /* WaitTakeGoodsController.m in Sources */,
@@ -2751,6 +2783,7 @@
 				8A829BA21AE62EC200174FD9 /* WXUtil.mm in Sources */,
 				18683D001A63CBF8003F5C04 /* MyAddressCell.m in Sources */,
 				B59408BA1C0E880D003DC15D /* ExpressDetailViewController.m in Sources */,
+				B57FC8AB1C8ABFE000A8D9A2 /* ThrowLineTool.m in Sources */,
 				180C85461A4BC48200C7DA41 /* ShopListCell.m in Sources */,
 				B59E8CB61C0D8D8700DDAB27 /* SegmentedButton.m in Sources */,
 				186D64FB1A6E3E62003F73B4 /* MyScoreCell.m in Sources */,
@@ -2778,6 +2811,7 @@
 				188DC59F1A79DE8600785A28 /* IQTextView.m in Sources */,
 				187040D51A652CA600B88CF3 /* NSObject+SBJSON.m in Sources */,
 				188B290F1A4A61A30057185D /* RegisterController.m in Sources */,
+				B57FC8A71C8ABFE000A8D9A2 /* StandardModel.m in Sources */,
 				185CBE201A741F6A000EDC4A /* DataVerifier.m in Sources */,
 				188139961A49370D00EC9B2F /* UIImage+NSBundle.m in Sources */,
 				18759F951A4D354D007AE9EC /* shopinfoCell.m in Sources */,
