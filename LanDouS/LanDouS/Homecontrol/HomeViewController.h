@@ -21,6 +21,8 @@
 @property (strong, nonatomic) IBOutlet UIView *viewtopClassBG;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollBG;
 @property (strong, nonatomic) IBOutlet UIView *btnIndexView;
+@property (weak, nonatomic) IBOutlet UIButton *Btn1;
+@property (weak, nonatomic) IBOutlet UIButton *Btn2;
  
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 - (IBAction)snackFoodclick:(id)sender;

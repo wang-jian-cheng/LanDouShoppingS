@@ -38,7 +38,8 @@
         NSLog(@"%@",[itemTitle objectAtIndex:i]);
         [tempBtn setTitle:[itemTitle objectAtIndex:i] forState:UIControlStateNormal];
         [tempBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [tempBtn setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+//        175,208,65
+        [tempBtn setTitleColor:[UIColor colorWithRed:175/255.0 green:208/255.0 blue:65/255.0 alpha:1.0] forState:UIControlStateSelected];
         if(_titleFont!=nil)
             tempBtn.titleLabel.font = _titleFont;
     }

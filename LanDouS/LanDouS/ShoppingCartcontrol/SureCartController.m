@@ -243,7 +243,10 @@ lblYunFei.text=[NSString stringWithFormat:@"运费:￥%@",self.strFreightPrice];
         cell.selectionStyle=UITableViewCellSelectionStyleNone;
         //cell.backgroundColor=[UIColor colorWithRed:0.94 green:0.95 blue:0.95 alpha:1];
     }
-    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",GOODS_IMG_URL,[[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"store_id"],[[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_image"]]];
+//    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",[[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"store_id"],[[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_image"]]];
+    
+    NSURL *url=[NSURL URLWithString:[[arrayCartList objectAtIndex:indexPath.row] objectForKey:@"goods_image"]];
+    
     [cell.ImgGoods setImageWithURL:url placeholderImage:img(@"landou_square_default.png")];
     
     
@@ -443,107 +446,214 @@ lblYunFei.text=[NSString stringWithFormat:@"运费:￥%@",self.strFreightPrice];
 
 -(void)gotoAlipay
 {
-    /*============================================================================*/
-    /*=======================需要填写商户app申请的===================================*/
-    /*============================================================================*/
-    NSString *partner =PartnerID;
-    NSString *seller = SellerID;
-    NSString *privateKey =PartnerPrivKey;
-    /*============================================================================*/
-    /*============================================================================*/
-    /*============================================================================*/
+//    /*============================================================================*/
+//    /*=======================需要填写商户app申请的===================================*/
+//    /*============================================================================*/
+//    NSString *partner =PartnerID;
+//    NSString *seller = SellerID;
+//    NSString *privateKey =PartnerPrivKey;
+//    /*============================================================================*/
+//    /*============================================================================*/
+//    /*============================================================================*/
+//    
+//    //partner和seller获取失败,提示
+//    if ([partner length] == 0 ||
+//        [seller length] == 0 ||
+//        [privateKey length] == 0)
+//    {
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
+//                                                        message:@"缺少partner或者seller或者私钥。"
+//                                                       delegate:self
+//                                              cancelButtonTitle:@"确定"
+//                                              otherButtonTitles:nil];
+//        [alert show];
+//        return;
+//    }
+//    
+//    /*
+//     *生成订单信息及签名
+//     */
+//    //将商品信息赋予AlixPayOrder的成员变量
+//    Order *order = [[Order alloc] init];
+//    order.partner = partner;
+//    order.seller = seller;
+//    order.tradeNO =dingDanNum; //订单ID（由商家自行制定）
+//    order.productName = @"懒豆商城订单"; //商品标题
+//    order.productDescription = @"懒豆商城订单"; //商品描述
+//    
+//    if ((totalPrice+[self.strFreightPrice floatValue])>minTotalPrice) {
+//        order.amount = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]-onLinePayDiscount];
+//        
+//    }
+//    else{
+//        order.amount = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]];
+//    }
+//    
+//     //商品价格
+//    order.notifyURL =  @"http://www.xxx.com"; //回调URL
+//    
+//    order.service = @"mobile.securitypay.pay";
+//    order.paymentType = @"1";
+//    order.inputCharset = @"utf-8";
+//    order.itBPay = @"30m";
+//    order.showUrl = @"m.alipay.com";
+//    
+//    //应用注册scheme,在AlixPayDemo-Info.plist定义URL types
+//    NSString *appScheme = @"alisdkdemo";
+//    
+//    //将商品信息拼接成字符串
+//    NSString *orderSpec = [order description];
+//    NSLog(@"orderSpec = %@",orderSpec);
+//    
+//    //获取私钥并将商户信息签名,外部商户可以根据情况存放私钥和签名,只需要遵循RSA签名规范,并将签名字符串base64编码和UrlEncode
+//    id<DataSigner> signer = CreateRSADataSigner(privateKey);
+//    NSString *signedString = [signer signString:orderSpec];
+////
+//    //将签名成功字符串格式化为订单字符串,请严格按照该格式
+//    NSString *orderString = nil;
+//    if (signedString != nil) {
+//        orderString = [NSString stringWithFormat:@"%@&sign=\"%@\"&sign_type=\"%@\"",
+//                       orderSpec, signedString, @"RSA"];
+//        CartStateController *CartState=[[CartStateController alloc]init];
+//        CartState.strPrice=[NSString stringWithFormat:@"%.2f",totalPrice];
+//        CartState.strNum=dingDanNum;
+//        CartState.strName=goodsName;
+//        [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
+//            NSLog(@"***************&&&&&&&&reslut = %@",resultDic);
+//            if([[resultDic objectForKey:@"resultStatus"] intValue]==9000){
+//                DataProvider *dataProvider = [[DataProvider alloc] init];
+//                [dataProvider setFinishBlock:^(NSDictionary *resultDict){
+//                    
+//                }];
+//                
+//                [dataProvider setFailedBlock:^(NSString *strError){
+//                    
+//                }];
+//                
+//                [dataProvider payorder:dingDanNum];
+//
+//                
+//                        CartState.strState=@"success";
+//                
+//            }
+//            else{
+//                
+//                CartState.strState=@"failed";
+//            }
+//            
+//            [self.navigationController pushViewController:CartState animated:YES];
+//        }];
+//        
+//        
+//    }
     
-    //partner和seller获取失败,提示
-    if ([partner length] == 0 ||
-        [seller length] == 0 ||
-        [privateKey length] == 0)
+    [self realPay:@"alipay"];
+    
+}
+
+- (void)realPay:(NSString *)channel
+{
+    
+    if(!([channel isEqualToString:@"wx"] || [channel isEqualToString:@"alipay"]))
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                        message:@"缺少partner或者seller或者私钥。"
-                                                       delegate:self
-                                              cancelButtonTitle:@"确定"
-                                              otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"支付方式错误" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
         [alert show];
         return;
     }
     
-    /*
-     *生成订单信息及签名
-     */
-    //将商品信息赋予AlixPayOrder的成员变量
-    Order *order = [[Order alloc] init];
-    order.partner = partner;
-    order.seller = seller;
-    order.tradeNO =dingDanNum; //订单ID（由商家自行制定）
-    order.productName = @"懒豆商城订单"; //商品标题
-    order.productDescription = @"懒豆商城订单"; //商品描述
+    if(totalPrice ==0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"请选择套餐" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        return;
+    }
     
-    if ((totalPrice+[self.strFreightPrice floatValue])>minTotalPrice) {
-        order.amount = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]-onLinePayDiscount];
+    [SVProgressHUD showWithStatus:@"正在加载"];
+    DataProvider *dataProvider = [[DataProvider alloc] init];
+    [dataProvider setFinishBlock:^(NSDictionary *resultDict){
+        [SVProgressHUD dismiss];
+        DLog(@"%@", resultDict);
+        //        if ([[resultDict objectForKey:@"result"]intValue]==1) {
+        [self realPayCallBack:resultDict];
         
-    }
-    else{
-        order.amount = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]];
-    }
+        
+    }];
     
-     //商品价格
-    order.notifyURL =  @"http://www.xxx.com"; //回调URL
+    [dataProvider setFailedBlock:^(NSString *strError){
+        [SVProgressHUD dismiss];
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"支付失败" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        
+    }];
+    [dataProvider getPingPPChargeChannel:channel andAmount:@"1" andOrdernum:dingDanNum andSubject:@"suibian" andBody:@"test"];
+    //    [dataProvider setDelegateObject:self setBackFunctionName:@"realPayCallBack:"];
+    //    [dataProvider getPingppCharge:[Toolkit getUserID]
+    //                       andChannel:channel
+    //                        andAmount:[NSString stringWithFormat:@"%d",(int)realpaymoney*100]
+    //                   andDescription:@"1"
+    //                           andFlg:@"0"];
     
-    order.service = @"mobile.securitypay.pay";
-    order.paymentType = @"1";
-    order.inputCharset = @"utf-8";
-    order.itBPay = @"30m";
-    order.showUrl = @"m.alipay.com";
-    
-    //应用注册scheme,在AlixPayDemo-Info.plist定义URL types
-    NSString *appScheme = @"alisdkdemo";
-    
-    //将商品信息拼接成字符串
-    NSString *orderSpec = [order description];
-    NSLog(@"orderSpec = %@",orderSpec);
-    
-    //获取私钥并将商户信息签名,外部商户可以根据情况存放私钥和签名,只需要遵循RSA签名规范,并将签名字符串base64编码和UrlEncode
-    id<DataSigner> signer = CreateRSADataSigner(privateKey);
-    NSString *signedString = [signer signString:orderSpec];
-//
-    //将签名成功字符串格式化为订单字符串,请严格按照该格式
-    NSString *orderString = nil;
-    if (signedString != nil) {
-        orderString = [NSString stringWithFormat:@"%@&sign=\"%@\"&sign_type=\"%@\"",
-                       orderSpec, signedString, @"RSA"];
-        CartStateController *CartState=[[CartStateController alloc]init];
-        CartState.strPrice=[NSString stringWithFormat:@"%.2f",totalPrice];
-        CartState.strNum=dingDanNum;
-        CartState.strName=goodsName;
-        [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
-            NSLog(@"***************&&&&&&&&reslut = %@",resultDic);
-            if([[resultDic objectForKey:@"resultStatus"] intValue]==9000){
-                DataProvider *dataProvider = [[DataProvider alloc] init];
-                [dataProvider setFinishBlock:^(NSDictionary *resultDict){
-                    
-                }];
-                
-                [dataProvider setFailedBlock:^(NSString *strError){
-                    
-                }];
-                
-                [dataProvider payorder:dingDanNum];
+}
 
-                
-                        CartState.strState=@"success";
-                
-            }
-            else{
-                
-                CartState.strState=@"failed";
-            }
-            
-            [self.navigationController pushViewController:CartState animated:YES];
-        }];
+
+- (void)showAlertWait
+{
+    mAlert = [[UIAlertView alloc] initWithTitle:@"正在获取支付凭据,请稍后..." message:nil delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
+    [mAlert show];
+    UIActivityIndicatorView* aiv = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    aiv.center = CGPointMake(mAlert.frame.size.width / 2.0f - 15, mAlert.frame.size.height / 2.0f + 10 );
+    [aiv startAnimating];
+    [mAlert addSubview:aiv];
+}
+
+- (void)hideAlert
+{
+    if (mAlert != nil)
+    {
+        [mAlert dismissWithClickedButtonIndex:0 animated:YES];
+        mAlert = nil;
+    }
+}
+
+- (void)showAlertMessage:(NSString*)msg
+{
+    mAlert = [[UIAlertView alloc] initWithTitle:@"提示" message:msg delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    [mAlert show];
+}
+
+-(void)realPayCallBack:(id)dict
+{
+    DLog(@"%@",dict);
+    //    if ([dict[@"code"] intValue]==200) {
+    @try {
         
+        NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
+        NSString* charge = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"str_data:%@",charge);
+        
+        //            NSString* charge = [[NSString alloc] initWithData:    data encoding:NSUTF8StringEncoding];
+        //            NSLog(@"charge = %@", charge);
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [Pingpp createPayment:charge viewController:self appURLScheme:kUrlScheme withCompletion:^(NSString *result, PingppError *error) {
+                               NSLog(@"completion block: %@", result);
+                               if (error == nil) {
+                                   NSLog(@"PingppError is nil");
+                               } else {
+                                   NSLog(@"PingppError: code=%lu msg=%@", (unsigned  long)error.code, [error getMsg]);
+                               }
+                               [self showAlertMessage:result];
+                           }];
+                       });
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
         
     }
 }
+
 
 
 -(void)addorder:(NSDictionary *)infoDict
@@ -662,60 +772,62 @@ lblYunFei.text=[NSString stringWithFormat:@"运费:￥%@",self.strFreightPrice];
 }
 
 -(void)gotoWxpay{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wxpaySuccess) name:@"wxpaySuccess" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wxpayFail) name:@"wxpayFail" object:nil];
-    
-    NSString* orderPrice;
-    //{{{
-    //本实例只是演示签名过程， 请将该过程在商户服务器上实现
-    
-    //创建支付签名对象
-    payRequsestHandler *req = [[payRequsestHandler alloc] init];
-    //初始化支付签名对象
-    [req init:APP_ID mch_id:MCH_ID];
-    //设置密钥
-    [req setKey:PARTNER_ID];
-    
-    //}}}
-    if ((totalPrice+[self.strFreightPrice floatValue])>minTotalPrice) {
-        orderPrice = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]-onLinePayDiscount];
-        
-    }
-    else{
-        orderPrice= [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]];
-    }
-    
-    orderPrice=[NSString stringWithFormat:@"%.0f"  ,  [orderPrice floatValue]*100];
-    //获取到实际调起微信支付的参数后，在app端调起支付
-    NSMutableDictionary *dict = [req sendPayWithOrderName:@"懒豆商城商品" orderPrice:orderPrice orderNo:dingDanNum];
-    
-    if(dict == nil){
-        //错误提示
-        NSString *debug = [req getDebugifo];
-        
-        [self alert:@"提示信息" msg:debug];
-        
-        NSLog(@"%@\n\n",debug);
-    }else{
-        NSLog(@"%@\n\n",[req getDebugifo]);
-        //[self alert:@"确认" msg:@"下单成功，点击OK后调起支付！"];
-        
-        NSMutableString *stamp  = [dict objectForKey:@"timestamp"];
-        
-        //调起微信支付
-        PayReq* req             = [[PayReq alloc] init];
-        req.openID              = [dict objectForKey:@"appid"];
-        req.partnerId           = [dict objectForKey:@"partnerid"];
-        req.prepayId            = [dict objectForKey:@"prepayid"];
-        req.nonceStr            = [dict objectForKey:@"noncestr"];
-        req.timeStamp           = stamp.intValue;
-        req.package             = [dict objectForKey:@"package"];
-        req.sign                = [dict objectForKey:@"sign"];
-        
-        //[WXApi safeSendReq:req];
-        [WXApi sendReq:req];
-    }
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wxpaySuccess) name:@"wxpaySuccess" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wxpayFail) name:@"wxpayFail" object:nil];
+//    
+//    NSString* orderPrice;
+//    //{{{
+//    //本实例只是演示签名过程， 请将该过程在商户服务器上实现
+//    
+//    //创建支付签名对象
+//    payRequsestHandler *req = [[payRequsestHandler alloc] init];
+//    //初始化支付签名对象
+//    [req init:APP_ID mch_id:MCH_ID];
+//    //设置密钥
+//    [req setKey:PARTNER_ID];
+//    
+//    //}}}
+//    if ((totalPrice+[self.strFreightPrice floatValue])>minTotalPrice) {
+//        orderPrice = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]-onLinePayDiscount];
+//        
+//    }
+//    else{
+//        orderPrice= [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]];
+//    }
+//    
+//    orderPrice=[NSString stringWithFormat:@"%.0f"  ,  [orderPrice floatValue]*100];
+//    //获取到实际调起微信支付的参数后，在app端调起支付
+//    NSMutableDictionary *dict = [req sendPayWithOrderName:@"懒豆商城商品" orderPrice:orderPrice orderNo:dingDanNum];
+//    
+//    if(dict == nil){
+//        //错误提示
+//        NSString *debug = [req getDebugifo];
+//        
+//        [self alert:@"提示信息" msg:debug];
+//        
+//        NSLog(@"%@\n\n",debug);
+//    }else{
+//        NSLog(@"%@\n\n",[req getDebugifo]);
+//        //[self alert:@"确认" msg:@"下单成功，点击OK后调起支付！"];
+//        
+//        NSMutableString *stamp  = [dict objectForKey:@"timestamp"];
+//        
+//        //调起微信支付
+//        PayReq* req             = [[PayReq alloc] init];
+//        req.openID              = [dict objectForKey:@"appid"];
+//        req.partnerId           = [dict objectForKey:@"partnerid"];
+//        req.prepayId            = [dict objectForKey:@"prepayid"];
+//        req.nonceStr            = [dict objectForKey:@"noncestr"];
+//        req.timeStamp           = stamp.intValue;
+//        req.package             = [dict objectForKey:@"package"];
+//        req.sign                = [dict objectForKey:@"sign"];
+//        
+//        //[WXApi safeSendReq:req];
+//        [WXApi sendReq:req];
+//    }
 
+    [self realPay:@"wx"];
+    
 }
 //客户端提示信息
 - (void)alert:(NSString *)title msg:(NSString *)msg

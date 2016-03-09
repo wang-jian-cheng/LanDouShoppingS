@@ -33,6 +33,16 @@
 }
 
 
+-(void)getPingPPChargeChannel:(NSString *)channel andAmount:(NSString *)amount andOrdernum:(NSString *)ordernum andSubject:(NSString *)subject andBody:(NSString *)body
+{
+    if (channel&&amount && ordernum && subject && body) {
+        NSString *str = [NSString stringWithFormat:@"http://115.28.67.86/zysc_fei_dfy/pingxx/api/pay.php?channel=%@&amount=%@&ordernum=%@&subject=%@&body=%@",channel,amount,ordernum,subject,body];
+        NSURL *url = [NSURL URLWithString:str];
+        [self requestData:url];
+    }
+}
+
+
 -(void)getAlipay
 {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=getAlipay", BASE_URL]];

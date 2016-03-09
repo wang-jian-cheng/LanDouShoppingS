@@ -74,6 +74,11 @@
     //[self getScreenList];
     [self getHomelist];
     [scrollBG bringSubviewToFront:pageControl];
+    
+    
+    
+    self.Btn1.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.Btn2.imageView.contentMode = UIViewContentModeScaleAspectFit;
     // Do any additional setup after loading the view from its nib.
 }
 -(void)headrefresh
@@ -136,10 +141,10 @@
     if (imageArray) {
         
         NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
-        [shareParams SSDKSetupShareParamsByText:@"东方云商城，上线啦！快来一起享受购物的乐趣吧！http://zhongyangjituan.com/zysc/shop/index.php"
+        [shareParams SSDKSetupShareParamsByText:@"淘小七商城，上线啦！快来一起享受购物的乐趣吧！http://zhongyangjituan.com/zysc/shop/index.php"
                                          images:imageArray
                                             url:[NSURL URLWithString:@"http://zhongyangjituan.com/zysc/shop/index.php"]
-                                          title:@"东方云商城"
+                                          title:@"淘小七商城"
                                            type:SSDKContentTypeAuto];
         
     

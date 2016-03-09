@@ -255,9 +255,9 @@
             [btn addSubview:tempLineView];
             
         }
-        if([self.delegate respondsToSelector:@selector(StandardsView:SetBtn:andStandView:)])
+        if([self.delegate respondsToSelector:@selector(StandardsView:SetBtn:)])
         {
-            [self.delegate StandardsView:self SetBtn:btn andStandView:self];
+            [self.delegate StandardsView:self SetBtn:btn ];
         }
         
         [showView addSubview:btn];
@@ -860,6 +860,7 @@
                 [btn setTitle:str forState:UIControlStateNormal];
                 btn.backgroundColor = [UIColor whiteColor];
                 [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
                 btn.layer.cornerRadius = 5;
                 btn.layer.borderWidth = 0.5;
                 btn.layer.borderColor = [[UIColor grayColor] CGColor];

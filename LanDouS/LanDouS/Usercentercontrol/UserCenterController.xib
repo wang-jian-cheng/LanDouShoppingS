@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UserCenterController">
             <connections>
+                <outlet property="JIFen" destination="Jc5-Tf-c65" id="M1y-tc-LaK"/>
+                <outlet property="JIFenView" destination="kMh-z0-mGm" id="PeX-Ke-KiB"/>
+                <outlet property="YuCunKuan" destination="b2S-gG-LPu" id="koS-Ty-AZv"/>
                 <outlet property="btnWaitPay" destination="NhB-p3-XzO" id="Za1-G8-8S8"/>
                 <outlet property="btnWaitReceive" destination="YaW-W1-je7" id="DzP-it-h3d"/>
                 <outlet property="btnWaitSend" destination="lN7-ON-y65" id="kiB-hm-CUP"/>
@@ -38,7 +41,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         </imageView>
                         <view contentMode="scaleToFill" id="b2S-gG-LPu">
-                            <rect key="frame" x="163" y="168" width="148.99999979255819" height="38"/>
+                            <rect key="frame" x="163" y="168" width="149" height="38"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="预存款：0.0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="su0-5Y-AIi">
@@ -63,7 +66,7 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" id="h6u-EC-A8w">
-                            <rect key="frame" x="8" y="336" width="303.99999979255819" height="53"/>
+                            <rect key="frame" x="8" y="336" width="304" height="53"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mycollect.png" id="6Kf-I1-LF7">
@@ -78,7 +81,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_forward_normal.png" id="oAd-QH-dHO">
-                                    <rect key="frame" x="265.99999979255819" y="12" width="30" height="30"/>
+                                    <rect key="frame" x="266" y="12" width="30" height="30"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 </imageView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1EJ-oG-RAY">
@@ -103,7 +106,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" id="XVJ-f0-Mv8">
-                            <rect key="frame" x="8" y="390" width="303.99999979255819" height="53"/>
+                            <rect key="frame" x="8" y="390" width="304" height="53"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="myscore.png" id="atV-a8-Ode">
@@ -118,7 +121,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_forward_normal.png" id="OH1-CW-qeU">
-                                    <rect key="frame" x="265.99999979255819" y="12" width="30" height="30"/>
+                                    <rect key="frame" x="266" y="12" width="30" height="30"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 </imageView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="5JV-49-qhA">
@@ -139,7 +142,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
                         <view contentMode="scaleToFill" id="X1u-9D-ddc">
-                            <rect key="frame" x="8" y="214" width="303.99999979255819" height="60"/>
+                            <rect key="frame" x="8" y="214" width="304" height="60"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <view contentMode="scaleToFill" id="MIj-iE-Zgy">
@@ -274,7 +277,7 @@
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="积分：0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="BbE-Ab-yQL">
                                     <rect key="frame" x="51" y="8" width="88" height="21"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -309,7 +312,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" id="ebj-OA-ugK">
-                            <rect key="frame" x="8" y="282" width="303.99999979255819" height="53"/>
+                            <rect key="frame" x="8" y="282" width="304" height="53"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="myaddress.png" id="eon-yt-zmt">
@@ -324,7 +327,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_forward_normal.png" id="0c3-fc-CPn">
-                                    <rect key="frame" x="265.99999979255819" y="12" width="30" height="30"/>
+                                    <rect key="frame" x="266" y="12" width="30" height="30"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 </imageView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fgd-SU-11d">

@@ -65,7 +65,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>zhongyangshangcheng.zykj</string>
+				<string>com.taoxiaoqi.app</string>
 			</array>
 		</dict>
 	</array>

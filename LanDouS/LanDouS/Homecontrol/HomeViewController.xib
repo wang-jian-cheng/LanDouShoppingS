@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeViewController">
             <connections>
+                <outlet property="Btn1" destination="BU3-Zv-B7E" id="coQ-08-drc"/>
+                <outlet property="Btn2" destination="xHy-4x-93l" id="sjU-CH-OKj"/>
                 <outlet property="btnIndexView" destination="HOd-a4-4qg" id="zcx-CK-6rF"/>
                 <outlet property="pageControl" destination="XnZ-4z-QJg" id="fIQ-Aj-h9S"/>
                 <outlet property="scrollBG" destination="5kd-L5-wjD" id="npn-6j-Ava"/>
@@ -29,39 +31,39 @@
                     <rect key="frame" x="0.0" y="168" width="320" height="158"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="shengxianyinpin.png" id="hv7-og-2PB">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="shengxianyinpin.png" id="hv7-og-2PB">
                             <rect key="frame" x="17" y="9" width="45" height="62"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="yanjiulipin.png" id="tiF-hY-5GD">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="yanjiulipin.png" id="tiF-hY-5GD">
                             <rect key="frame" x="98" y="9" width="45" height="62"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="muyingshenghuo.png" id="XLC-f6-TOF">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="muyingshenghuo.png" id="XLC-f6-TOF">
                             <rect key="frame" x="180" y="9" width="45" height="62"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="riyongtuza.png" id="aN5-Tg-HQd">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="riyongtuza.png" id="aN5-Tg-HQd">
                             <rect key="frame" x="258" y="9" width="45" height="62"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="xiuxianlingshi.png" id="7Yr-yd-gfi">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="xiuxianlingshi.png" id="7Yr-yd-gfi">
                             <rect key="frame" x="17" y="88" width="45" height="62"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="liangyoutiaowei.png" id="bkm-aM-lwW">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="liangyoutiaowei.png" id="bkm-aM-lwW">
                             <rect key="frame" x="98" y="88" width="45" height="62"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gerenxihua.png" id="Tp8-1z-VKF">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gerenxihua.png" id="Tp8-1z-VKF">
                             <rect key="frame" x="180" y="88" width="45" height="62"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="jiajvwenti.png" id="pIR-mE-q3P">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="jiajvwenti.png" id="pIR-mE-q3P">
                             <rect key="frame" x="258" y="88" width="45" height="62"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="BU3-Zv-B7E">
+                        <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="BU3-Zv-B7E">
                             <rect key="frame" x="17" y="9" width="45" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal">
@@ -211,18 +213,13 @@
         <image name="02.png" width="15" height="15"/>
         <image name="03.png" width="15" height="15"/>
         <image name="04" width="15" height="15"/>
-        <image name="gerenxihua.png" width="100" height="136"/>
-        <image name="jiajvwenti.png" width="100" height="136"/>
-        <image name="liangyoutiaowei.png" width="100" height="136"/>
-        <image name="muyingshenghuo.png" width="100" height="136"/>
-        <image name="riyongtuza.png" width="100" height="136"/>
-        <image name="shengxianyinpin.png" width="100" height="136"/>
-        <image name="xiuxianlingshi.png" width="100" height="136"/>
-        <image name="yanjiulipin.png" width="100" height="136"/>
+        <image name="gerenxihua.png" width="100" height="120"/>
+        <image name="jiajvwenti.png" width="100" height="120"/>
+        <image name="liangyoutiaowei.png" width="100" height="120"/>
+        <image name="muyingshenghuo.png" width="100" height="120"/>
+        <image name="riyongtuza.png" width="100" height="120"/>
+        <image name="shengxianyinpin.png" width="100" height="120"/>
+        <image name="xiuxianlingshi.png" width="100" height="120"/>
+        <image name="yanjiulipin.png" width="100" height="120"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
 </document>

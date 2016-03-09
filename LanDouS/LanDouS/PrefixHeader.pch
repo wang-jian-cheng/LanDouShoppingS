@@ -29,7 +29,7 @@
 
 //http://115.28.67.86/zysc/data/upload/shop/store_joinin/04872761827698144.jpg
 
-#define USER_IMAGE_URL @"http://115.28.67.86/zysc/shop/avatar/"
+#define USER_IMAGE_URL @"http://115.28.67.86/zysc_fei_dfy/data/upload/shop/avatar/"
 #define SHOP_IMG_URL @"http://115.28.67.86/zysc/shop/store/"
 #define GOODS_IMG_URL @"http://115.28.67.86/zysc/data/upload/shop/store/goods/"
 #define LUNBO_IMAGE_URL @"http://115.28.67.86/zysc/data/upload/shop/store_joinin/"

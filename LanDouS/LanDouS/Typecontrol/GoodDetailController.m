@@ -822,6 +822,9 @@
 
             [dicGoodsDetail setObject:[NSString stringWithFormat:@"%ld",goodsNum] forKey:@"goods_num"];
             
+            [dicGoodsDetail setObject:goodImgUrl[@"0"] forKey:@"goods_image"];
+            
+            
             SureCartController *SureCart=[[SureCartController alloc]init];
             SureCart.arrayCartList=[[NSMutableArray alloc]init];
             [SureCart.arrayCartList addObject:dicGoodsDetail];
@@ -858,20 +861,23 @@
 }
 
 
--(void)StandardsView:(StandardsView *)standardView SetBtn:(UIButton *)btn andStandView:(StandardsView *)standardView
+-(void)StandardsView:(StandardsView *)standardView SetBtn:(UIButton *)btn
 {
     if(btn.tag == 0 )
     {
-        btn.backgroundColor = [UIColor yellowColor];
+        btn.backgroundColor = navi_bar_bg_color;
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
     else if(btn.tag == 1)
     {
         btn.backgroundColor = [UIColor orangeColor];
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
 }
 -(void)Standards:(StandardsView *)standardView SelectBtnClick:(UIButton *)sender andSelectID:(NSString *)selectID andStandName:(NSString *)standName andIndex:(NSInteger)index
 {
     DLog(@"selectId:%@  standName:%@  index:%ld",selectID,standName,(unsigned long)index);
+    
     
     if(index == 0)
     {
