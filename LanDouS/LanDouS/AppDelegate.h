@@ -10,6 +10,7 @@
 #import "CustomTabBarViewController.h"
 #import "FirstScrollController.h"
 #import "WXApi.h"
+#import "Pingpp.h"
 @interface AppDelegate : UIResponder <UIApplicationDelegate,WXApiDelegate>
 {
     CustomTabBarViewController *_tabBarViewCol;

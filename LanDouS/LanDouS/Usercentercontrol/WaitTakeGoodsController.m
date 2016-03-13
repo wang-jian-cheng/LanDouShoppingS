@@ -126,7 +126,7 @@
             else{
                 imgNoData.hidden=NO;
                 tableWaitpay.hidden=YES;
-                [Dialog simpleToast:@"暂无信息"];
+//                [Dialog simpleToast:@"暂无信息"];
             }
             [tableWaitpay reloadData];
         }

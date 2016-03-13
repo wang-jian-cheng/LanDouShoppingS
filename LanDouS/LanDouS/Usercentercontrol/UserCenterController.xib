@@ -80,8 +80,8 @@
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_forward_normal.png" id="oAd-QH-dHO">
-                                    <rect key="frame" x="266" y="12" width="30" height="30"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dacknext.png" id="oAd-QH-dHO">
+                                    <rect key="frame" x="271" y="16.5" width="20" height="20"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 </imageView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1EJ-oG-RAY">
@@ -120,8 +120,8 @@
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_forward_normal.png" id="OH1-CW-qeU">
-                                    <rect key="frame" x="266" y="12" width="30" height="30"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dacknext.png" id="OH1-CW-qeU">
+                                    <rect key="frame" x="271" y="16.5" width="20" height="20"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 </imageView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="5JV-49-qhA">
@@ -326,9 +326,9 @@
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_forward_normal.png" id="0c3-fc-CPn">
-                                    <rect key="frame" x="266" y="12" width="30" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dacknext.png" id="0c3-fc-CPn">
+                                    <rect key="frame" x="271" y="16.5" width="20" height="20"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 </imageView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fgd-SU-11d">
                                     <rect key="frame" x="17" y="12" width="271" height="30"/>
@@ -376,11 +376,11 @@
         </view>
     </objects>
     <resources>
+        <image name="dacknext.png" width="57" height="60"/>
         <image name="daifahuo.png" width="100" height="100"/>
         <image name="daifukuan.png" width="100" height="100"/>
         <image name="daishouhuo.png" width="100" height="100"/>
         <image name="faceBG.png" width="720" height="230"/>
-        <image name="icon_forward_normal.png" width="46" height="46"/>
         <image name="myaddress.png" width="100" height="100"/>
         <image name="mycollect.png" width="100" height="100"/>
         <image name="myscore.png" width="100" height="100"/>

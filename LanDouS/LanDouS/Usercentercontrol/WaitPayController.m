@@ -130,7 +130,7 @@
             else{
                 imgNoData.hidden=NO;
                 tableWaitpay.hidden=YES;
-                [Dialog simpleToast:@"暂无信息"];
+//                [Dialog simpleToast:@"暂无信息"];
             }
             
           [tableWaitpay reloadData];
@@ -720,7 +720,10 @@
         [alert show];
         
     }];
-    [dataProvider getPingPPChargeChannel:channel andAmount:@"1" andOrdernum:pay_sn andSubject:@"suibian" andBody:@"test"];
+    
+    
+    
+    [dataProvider getPingPPChargeChannel:channel andAmount:[NSString stringWithFormat:@"%lf",(realpaymoney)] andOrdernum:pay_sn andSubject:@"suibian" andBody:@"test"];
 //    [dataProvider setDelegateObject:self setBackFunctionName:@"realPayCallBack:"];
 //    [dataProvider getPingppCharge:[Toolkit getUserID]
 //                       andChannel:channel

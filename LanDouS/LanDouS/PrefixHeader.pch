@@ -32,7 +32,7 @@
 #define USER_IMAGE_URL @"http://115.28.67.86/zysc_fei_dfy/data/upload/shop/avatar/"
 #define SHOP_IMG_URL @"http://115.28.67.86/zysc/shop/store/"
 #define GOODS_IMG_URL @"http://115.28.67.86/zysc/data/upload/shop/store/goods/"
-#define LUNBO_IMAGE_URL @"http://115.28.67.86/zysc/data/upload/shop/store_joinin/"
+#define LUNBO_IMAGE_URL @"http://115.28.67.86/zysc_fei_dfy/data/upload/shop/store_joinin/"
 
 #endif
 //#define SCORE_GOODS_URL @"http://img.landous.com/shop/pointprod/"

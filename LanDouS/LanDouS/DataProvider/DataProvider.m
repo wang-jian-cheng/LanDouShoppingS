@@ -19,6 +19,7 @@
 #if LANDOU
 #define BASE_URL @"http://api.landous.com/api.php?"
 #else
+#define LunBoUrl @"http://115.28.67.86/zysc_fei_dfy/data/upload/shop/store_joinin/api.php?"
 #define BASE_URL @"http://115.28.67.86/zysc_fei_dfy/appif/api.php?"
 //@"http://103.56.17.40/appif/api.php?"
 //@"http://192.168.199.174/appif/api.php?"
@@ -36,7 +37,9 @@
 -(void)getPingPPChargeChannel:(NSString *)channel andAmount:(NSString *)amount andOrdernum:(NSString *)ordernum andSubject:(NSString *)subject andBody:(NSString *)body
 {
     if (channel&&amount && ordernum && subject && body) {
-        NSString *str = [NSString stringWithFormat:@"http://115.28.67.86/zysc_fei_dfy/pingxx/api/pay.php?channel=%@&amount=%@&ordernum=%@&subject=%@&body=%@",channel,amount,ordernum,subject,body];
+        NSString *str = [NSString stringWithFormat:@"http://115.28.67.86/zysc_fei_dfy/Pingpp/api/pay.php?channel=%@&amount=%@&ordernum=%@&subject=%@&body=%@",channel,amount,ordernum,subject,body];
+        
+        DLog(@"%@",str);
         NSURL *url = [NSURL URLWithString:str];
         [self requestData:url];
     }
@@ -136,13 +139,14 @@
 
 -(void)getGoodsDetail:(NSString *)goodsId
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=goods_detailOp&goods_id=%@", BASE_URL,goodsId]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=getGoodsDetail_origi&goods_id=%@", BASE_URL,goodsId]];
+    
     [self requestData:url];
 }
 
 -(void)getGoodsSpec:(NSString *)goodsId{
     if (goodsId) {
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=getGoodsDetail_origi&goods_id=%@", BASE_URL,goodsId]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@m=user&a=goods_detailOp&goods_id=%@", BASE_URL,goodsId]];
         [self requestData:url];
     }
 }
