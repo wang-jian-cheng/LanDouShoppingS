@@ -723,7 +723,7 @@
     
     
     
-    [dataProvider getPingPPChargeChannel:channel andAmount:[NSString stringWithFormat:@"%lf",(realpaymoney)] andOrdernum:pay_sn andSubject:@"suibian" andBody:@"test"];
+    [dataProvider getPingPPChargeChannel:channel andAmount:[NSString stringWithFormat:@"%ld",(long)(realpaymoney*100)] andOrdernum:pay_sn andSubject:@"suibian" andBody:@"test"];
 //    [dataProvider setDelegateObject:self setBackFunctionName:@"realPayCallBack:"];
 //    [dataProvider getPingppCharge:[Toolkit getUserID]
 //                       andChannel:channel
@@ -744,6 +744,12 @@
         NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
         NSString* charge = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         NSLog(@"str_data:%@",charge);
+        NSRange keyWordRange =  [charge rangeOfString:@"it_b_pay=" options:NSCaseInsensitiveSearch];
+        NSMutableString *mutStr = [[NSMutableString alloc] initWithString:charge];
+        [mutStr insertString:@" " atIndex:(keyWordRange.length+keyWordRange.location + 12)];
+        DLog(@"%@",mutStr);
+        charge = mutStr;
+        
         
         //            NSString* charge = [[NSString alloc] initWithData:    data encoding:NSUTF8StringEncoding];
         //            NSLog(@"charge = %@", charge);

@@ -37,7 +37,7 @@
 -(void)getPingPPChargeChannel:(NSString *)channel andAmount:(NSString *)amount andOrdernum:(NSString *)ordernum andSubject:(NSString *)subject andBody:(NSString *)body
 {
     if (channel&&amount && ordernum && subject && body) {
-        NSString *str = [NSString stringWithFormat:@"http://115.28.67.86/zysc_fei_dfy/Pingpp/api/pay.php?channel=%@&amount=%@&ordernum=%@&subject=%@&body=%@",channel,amount,ordernum,subject,body];
+        NSString *str = [NSString stringWithFormat:@"http://115.28.67.86/zysc_fei_dfy/pingxx/api/pay.php?channel=%@&amount=%@&ordernum=%@&subject=%@&body=%@",channel,amount,ordernum,subject,body];
         
         DLog(@"%@",str);
         NSURL *url = [NSURL URLWithString:str];
