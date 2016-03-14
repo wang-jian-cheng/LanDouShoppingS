@@ -10,6 +10,6 @@
 #import "SegmentedPageView.h"
 @interface DepositViewController : BaseNavigationController<SegmentedPageViewDelegate,UITableViewDataSource,UITableViewDelegate>
 {
-    NSMutableArray *_tableViews;
+//    NSMutableArray *_tableViews;
 }
 @end

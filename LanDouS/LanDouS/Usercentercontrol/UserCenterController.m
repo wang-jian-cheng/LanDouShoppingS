@@ -33,6 +33,27 @@
     [super viewDidLoad];
     [self setBarTitle:@"会员中心"];
     [self addRightButton:@"setting@2x.png"];
+    
+    self.YuCunKuan.hidden = YES;
+    CGRect tempRect =  self.JIFen.bounds ;
+    tempRect.size.width  = SCREEN_WIDTH - 16;
+    self.JIFen.bounds = tempRect;
+    
+    CGRect tempRect1 =  self.JIFenView.bounds ;
+    tempRect1.size.width  = SCREEN_WIDTH - 16;
+     self.JIFenView.bounds = tempRect1;
+    CGPoint center = self.JIFenView.center;
+    center.x = SCREEN_WIDTH/2;
+    self.JIFenView.center = center;
+    
+    
+    CGRect tempRect2 =  self.lblScore.frame ;
+    tempRect2.origin.x = 45;
+    self.lblScore.frame = tempRect2;
+    
+    
+    
+    
     _lblTitle.textColor=[UIColor whiteColor];
     _topView.backgroundColor=navi_bar_bg_color;
     [imageface.layer setMasksToBounds:YES];
@@ -52,7 +73,7 @@
     
     
     //    imageface.layer.borderWidth=2;
-    //    imageface.layer.borderColor=[[UIColor whiteColor]CGColor];
+    //    imageface.layer.bo                                                rderColor=[[UIColor whiteColor]CGColor];
     // Do any additional setup after loading the view from its nib.
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -160,10 +181,10 @@
 -(void)edituserinfo
 {
     
-    DataProvider *dataProvider = [[DataProvider alloc] init];
+    DataProvider *dataProvider = [[DataProvider alloc]  init];
     [dataProvider setFinishBlock:^(NSDictionary *resultDict){
         //        [SVProgressHUD dismiss];
-        NSLog(@"^^^^%@", resultDict );
+        DLog(@"^^^^%@", resultDict );
         if ([[resultDict objectForKey:@"result"]intValue]==1) {
             set_sp(@"userinfo",[resultDict objectForKey:@"data"]);
             [sp synchronize];

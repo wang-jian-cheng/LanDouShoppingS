@@ -422,8 +422,8 @@
     order.partner = partner;
     order.seller = seller;
     order.tradeNO = [self generateTradeNO]; //订单ID（由商家自行制定）
-    order.productName = @"懒豆商城订单"; //商品标题
-    order.productDescription = @"懒豆商城订单"; //商品描述
+    order.productName = @"淘小七订单"; //商品标题
+    order.productDescription = @"淘小七订单"; //商品描述
     order.amount = [NSString stringWithFormat:@"0.01"]; //商品价格
     order.notifyURL =  @"http://www.xxx.com"; //回调URL
     

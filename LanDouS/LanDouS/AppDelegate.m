@@ -178,6 +178,70 @@
     return _tabBarViewCol;
 }
 
+
+
+
+#pragma mark - ping++
+
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    // BOOL result = [UMSocialSnsService handleOpenURL:url];
+    //   if (result == FALSE) {
+    //
+    
+    
+    [Pingpp handleOpenURL:url
+           withCompletion:^(NSString *result, PingppError *error) {
+               if ([result isEqualToString:@"success"]) {
+                   // 支付成功
+                   NSLog(@"支付成功，准备跳转");
+                   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"支付成功，请重新登录" delegate:self cancelButtonTitle:@"确认" otherButtonTitles: nil];
+                   [alertView show];
+                   [[NSNotificationCenter defaultCenter] postNotificationName:@"OrderPay_success" object:nil];
+               } else {
+                   // 支付失败或取消
+                   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"支付失败" delegate:self cancelButtonTitle:@"确认" otherButtonTitles: nil];
+                   [alertView show];
+                   // NSLog(@"Error: code=%lu msg=%@", (unsigned long)error.code, [error getMsg]);
+               }
+           }];
+    return  YES;
+    //    }
+    //    return YES;
+    
+}
+//- (BOOL)application:(UIApplication *)app
+//            openURL:(NSURL *)url
+//            options:(NSDictionary *)options {
+//    BOOL canHandleURL = [Pingpp handleOpenURL:url
+//                               withCompletion:^(NSString *result, PingppError *error) {
+//                                   if ([result isEqualToString:@"success"]) {
+//                                       // 支付成功
+//                                       NSLog(@"支付成功，准备跳转");
+//                                       mUserDefault = [NSUserDefaults standardUserDefaults];
+//                                       NSString *mPayType = [mUserDefault valueForKey:@"PayType"];
+//                                       if ([mPayType isEqual:@"1"]) {
+//                                           [[NSNotificationCenter defaultCenter] postNotificationName:@"OrderPay_success" object:nil];
+//                                       }else{
+//                                           [[NSNotificationCenter defaultCenter] postNotificationName:@"PaySuccessFun" object:nil];
+//                                       }
+//                                   } else {
+//                                       // 支付失败或取消
+//                                       [[NSNotificationCenter defaultCenter] postNotificationName:@"PayFailFun" object:nil];
+//                                       // NSLog(@"Error: code=%lu msg=%@", (unsigned long)error.code, [error getMsg]);
+//                                   }
+//                               }];
+//    return canHandleURL;
+//}
+//
+
+
+
+
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
@@ -222,38 +286,38 @@
 
 
 
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
-{
-    
-    
-    if ([url.host isEqualToString:@"safepay"]) {
-        [[AlipaySDK defaultService]processOrderWithPaymentResult:(NSURL *)url standbyCallback:^(NSDictionary *resultDic){
-            NSLog(@"result = %@",resultDic);
-            
-            
-            
-            
-        }];
-//        [[AlipaySDK defaultService] processAuth_V2Result:url
-//                                         standbyCallback:^(NSDictionary *resultDic) {
-//                                             NSLog(@"result = %@",resultDic);
-//                                             NSString *resultStr = resultDic[@"result"];
-//                                         }];
-        
-    }
-//    return YES;
-//    [ShareSDK handleOpenURL:url
-//          sourceApplication:sourceApplication
-//                 annotation:annotation
-//                 wxDelegate:self];
-    [WXApi handleOpenURL:url delegate:self];
-    NSLog(@"url: %@, annotation: %@", url, annotation);
-    
-    return [TencentOAuth HandleOpenURL:url];
-}
+//- (BOOL)application:(UIApplication *)application
+//            openURL:(NSURL *)url
+//  sourceApplication:(NSString *)sourceApplication
+//         annotation:(id)annotation
+//{
+//    
+//    
+//    if ([url.host isEqualToString:@"safepay"]) {
+//        [[AlipaySDK defaultService]processOrderWithPaymentResult:(NSURL *)url standbyCallback:^(NSDictionary *resultDic){
+//            NSLog(@"result = %@",resultDic);
+//            
+//            
+//            
+//            
+//        }];
+////        [[AlipaySDK defaultService] processAuth_V2Result:url
+////                                         standbyCallback:^(NSDictionary *resultDic) {
+////                                             NSLog(@"result = %@",resultDic);
+////                                             NSString *resultStr = resultDic[@"result"];
+////                                         }];
+//        
+//    }
+////    return YES;
+////    [ShareSDK handleOpenURL:url
+////          sourceApplication:sourceApplication
+////                 annotation:annotation
+////                 wxDelegate:self];
+//    [WXApi handleOpenURL:url delegate:self];
+//    NSLog(@"url: %@, annotation: %@", url, annotation);
+//    
+//    return [TencentOAuth HandleOpenURL:url];
+//}
 
 /**
  *  微信支付完成的回调

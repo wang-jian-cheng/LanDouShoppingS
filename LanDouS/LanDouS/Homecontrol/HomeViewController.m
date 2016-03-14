@@ -74,6 +74,11 @@
     //[self getScreenList];
     [self getHomelist];
     [scrollBG bringSubviewToFront:pageControl];
+    
+    
+    
+    self.Btn1.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.Btn2.imageView.contentMode = UIViewContentModeScaleAspectFit;
     // Do any additional setup after loading the view from its nib.
 }
 -(void)headrefresh
@@ -136,10 +141,10 @@
     if (imageArray) {
         
         NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
-        [shareParams SSDKSetupShareParamsByText:@"东方云商城，上线啦！快来一起享受购物的乐趣吧！http://zhongyangjituan.com/zysc/shop/index.php"
+        [shareParams SSDKSetupShareParamsByText:@"淘小七商城，上线啦！快来一起享受购物的乐趣吧！http://zhongyangjituan.com/zysc/shop/index.php"
                                          images:imageArray
                                             url:[NSURL URLWithString:@"http://zhongyangjituan.com/zysc/shop/index.php"]
-                                          title:@"东方云商城"
+                                          title:@"淘小七商城"
                                            type:SSDKContentTypeAuto];
         
     
@@ -266,12 +271,12 @@
 
 -(void)initLunBoView
 {
-    scrollBG.frame=CGRectMake(0, 40, SCREEN_WIDTH, SCREEN_WIDTH/2.5);
-    pageControl.frame=CGRectMake(0, SCREEN_WIDTH/2.5-37+40, 320, 37);
-    btnIndexView.frame=CGRectMake(0, 100+40, SCREEN_WIDTH,SCREEN_WIDTH/2.5+158+40);
+    scrollBG.frame=CGRectMake(0, 40, SCREEN_WIDTH, SCREEN_WIDTH/2.5+20);
+    pageControl.frame=CGRectMake(0, scrollBG.frame.size.height-37+40, 320, 37);
+    btnIndexView.frame=CGRectMake(0, 100+40, SCREEN_WIDTH,scrollBG.frame.size.height+158+40);
     tableHome.tableHeaderView=btnIndexView;
     
-    self.viewtopClassBG.frame=CGRectMake(0,SCREEN_WIDTH/2.5+40, SCREEN_WIDTH, 158);
+    self.viewtopClassBG.frame=CGRectMake(0,scrollBG.frame.size.height+40, SCREEN_WIDTH, 158);
     
     
     // 初始化mypagecontrol
@@ -284,7 +289,7 @@
     for (int i = 0;i<[slideImages count];i++)
     {
         UIImageView *imageView = [[UIImageView alloc] init];
-        imageView.frame = CGRectMake((SCREEN_WIDTH * i) + SCREEN_WIDTH,0,SCREEN_WIDTH,SCREEN_WIDTH/2.5);
+        imageView.frame = CGRectMake((SCREEN_WIDTH * i) + SCREEN_WIDTH,0,SCREEN_WIDTH,scrollBG.frame.size.height);
         //imageView.image=[UIImage imageNamed:[NSString stringWithFormat:@"%@",[slideImages objectAtIndex:i]]];
         NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",LUNBO_IMAGE_URL,[[slideImages objectAtIndex:i] objectForKey:@"special_image"]]];
         [imageView setImageWithURL:url placeholderImage:img(@"landou_rectangle_default.png")];
@@ -303,16 +308,16 @@
     }
     // 取数组最后一张图片 放在第0页
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[[slideImages objectAtIndex:([slideImages count]-1)] objectForKey:@"special_image"]]];
-    imageView.frame = CGRectMake(0, 0, SCREEN_WIDTH,SCREEN_WIDTH/2.5); // 添加最后1页在首页 循环
+    imageView.frame = CGRectMake(0, 0, SCREEN_WIDTH,scrollBG.frame.size.height); // 添加最后1页在首页 循环
     [scrollBG addSubview:imageView];
     // 取数组第一张图片 放在最后1页
     imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[[slideImages objectAtIndex:0] objectForKey:@"special_image"]]];
-    imageView.frame = CGRectMake((SCREEN_WIDTH * ([slideImages count] + 1)) , 0, SCREEN_WIDTH,SCREEN_WIDTH/2.5); // 添加第1页在最后 循环
+    imageView.frame = CGRectMake((SCREEN_WIDTH * ([slideImages count] + 1)) , 0, SCREEN_WIDTH,scrollBG.frame.size.height); // 添加第1页在最后 循环
     [scrollBG addSubview:imageView];
     
-    [scrollBG setContentSize:CGSizeMake(SCREEN_WIDTH * ([slideImages count] + 2),SCREEN_WIDTH/2.5)]; //  +上第1页和第4页  原理：4-[1-2-3-4]-1
+    [scrollBG setContentSize:CGSizeMake(SCREEN_WIDTH * ([slideImages count] + 2),scrollBG.frame.size.height)]; //  +上第1页和第4页  原理：4-[1-2-3-4]-1
     [scrollBG setContentOffset:CGPointMake(0, 0)];
-    [scrollBG scrollRectToVisible:CGRectMake(SCREEN_WIDTH,0,SCREEN_WIDTH,SCREEN_WIDTH/2.5) animated:NO];
+    [scrollBG scrollRectToVisible:CGRectMake(SCREEN_WIDTH,0,SCREEN_WIDTH,scrollBG.frame.size.height) animated:NO];
     
     
     pageControl.numberOfPages = [slideImages count];
@@ -332,9 +337,6 @@
 
 -(void)getScreenList
 {
-    
-    
-    
     DataProvider *dataProvider = [[DataProvider alloc] init];
     [dataProvider setFinishBlock:^(NSDictionary *resultDict){
         [SVProgressHUD dismiss];

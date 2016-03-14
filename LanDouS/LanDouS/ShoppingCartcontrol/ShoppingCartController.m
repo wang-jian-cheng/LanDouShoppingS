@@ -62,7 +62,7 @@
     
     if (get_Dsp(@"userinfo")) {
         if ([strType isEqualToString:@"allscreen"]) {
-            [self addLeftButton:@"dackback@2x.png"];
+            [self addLeftButton:@"whiteback@2x.png"];
             tableCart.frame=CGRectMake(0, NavigationBar_HEIGHT+20, SCREEN_WIDTH, SCREEN_HEIGHT-113);
             viewDown.frame=CGRectMake(0, SCREEN_HEIGHT-45, SCREEN_WIDTH, 45);
             [(AppDelegate *)[[UIApplication sharedApplication] delegate] hiddenTabBar];

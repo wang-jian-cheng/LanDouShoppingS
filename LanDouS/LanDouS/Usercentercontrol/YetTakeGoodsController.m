@@ -132,9 +132,9 @@
                 
             }
             else{
-                imgNoData.hidden=YES;
-                tableWaitpay.hidden=NO;
-                [Dialog simpleToast:@"暂无信息"];
+                imgNoData.hidden=NO;
+                tableWaitpay.hidden=YES;
+//                [Dialog simpleToast:@"暂无信息"];
             }
             [tableWaitpay reloadData];
         }

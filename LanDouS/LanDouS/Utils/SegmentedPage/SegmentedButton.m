@@ -15,7 +15,7 @@
     self = [super init];
     
     _selectLayer = [CALayer layer];
-    _selectLayer.backgroundColor = [[UIColor redColor] CGColor];
+    _selectLayer.backgroundColor = [[UIColor colorWithRed:175/255.0 green:208/255.0 blue:65/255.0 alpha:1.0] CGColor];
     [self.layer addSublayer:_selectLayer];
     
     self.selectLayerEnable = NO;
@@ -28,7 +28,7 @@
     self = [super initWithFrame:frame];
     
     _selectLayer = [CALayer layer];
-    _selectLayer.backgroundColor = [[UIColor redColor] CGColor];
+    _selectLayer.backgroundColor = [[UIColor colorWithRed:175/255.0 green:208/255.0 blue:65/255.0 alpha:1.0] CGColor];
     _selectLayer.frame = CGRectMake(0, (frame.size.height/16)*15, frame.size.width, (frame.size.height/16));
     [self.layer addSublayer:_selectLayer];
     

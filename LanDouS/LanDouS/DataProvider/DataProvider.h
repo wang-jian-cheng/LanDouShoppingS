@@ -15,6 +15,7 @@ typedef void(^dataProviderFailedBlock)(NSString *);
 
 @interface DataProvider : NSObject
 -(void)getAlipay;
+-(void)getPingPPChargeChannel:(NSString *)channel andAmount:(NSString *)amount andOrdernum:(NSString *)ordernum andSubject:(NSString *)subject andBody:(NSString *)body;
  -(void)isPhoneRegged:(NSString *)phone;
 -(void)userregister:(NSString *)phone andPassword:(NSString *)password andName:(NSString *)name andEmail:(NSString *)email;
 -(void)userlogin:(NSString *)phone andPassword:(NSString *)password;
