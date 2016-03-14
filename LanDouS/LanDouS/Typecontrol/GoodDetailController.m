@@ -82,16 +82,17 @@
 
 -(void)shareContentBuild
 {
-    NSArray* imageArray = @[[UIImage imageNamed:@"1136.png"]];
+    NSArray* imageArray = @[[UIImage imageNamed:@"120.png"]];
     
-    NSString *strurl=[NSString stringWithFormat:@"http://wap.landous.com/tmpl/product_detail.html?goods_id=%@",goodsId];
+//    NSString *strurl=[NSString stringWithFormat:@"http://wap.landous.com/tmpl/product_detail.html?goods_id=%@",goodsId];
+    NSString *strurl=[NSString stringWithFormat:@"http://www.zhongyangjituan.com"];
     if (imageArray) {
         
         NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
-        [shareParams SSDKSetupShareParamsByText:[[@"东方云商城上线啦！快来乐享" stringByAppendingString:[dicGoodsDetail objectForKey:@"goods_name"]] stringByAppendingString:strurl]
+        [shareParams SSDKSetupShareParamsByText:[[@"淘小七商城上线啦！快来乐享" stringByAppendingString:[dicGoodsDetail objectForKey:@"goods_name"]] stringByAppendingString:strurl]
                                          images:imageArray
                                             url:[NSURL URLWithString:strurl]
-                                          title:@"东方云商城"
+                                          title:@"淘小七商城"
                                            type:SSDKContentTypeAuto];
         
         

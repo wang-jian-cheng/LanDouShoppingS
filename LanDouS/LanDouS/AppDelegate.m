@@ -16,7 +16,7 @@
 #import <ShareSDKConnector/ShareSDKConnector.h>
 //#import <QZoneConnection/QZoneConnection.h>
 #import "WXApi.h"
-#import "WeiboSDK.h"
+//#import "WeiboSDK.h"
 #import "DataProvider.h"
 //#import <PgySDK/PgyManager.h>
 @interface AppDelegate ()
@@ -64,7 +64,7 @@
                              [ShareSDKConnector connectQQ:[QQApiInterface class] tencentOAuthClass:[TencentOAuth class]];
                              break;
                          case SSDKPlatformTypeSinaWeibo:
-                             [ShareSDKConnector connectWeibo:[WeiboSDK class]];
+//                             [ShareSDKConnector connectWeibo:[WeiboSDK class]];
                              break;
                              
                          default:
