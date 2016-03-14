@@ -22,7 +22,9 @@
 #import "payRequsestHandler.h"
 #import "WXApi.h"
 @interface SureCartController ()
-
+{
+    NSString *relpayChannel;
+}
 @end
 
 @implementation SureCartController
@@ -554,6 +556,8 @@ lblYunFei.text=[NSString stringWithFormat:@"运费:￥%@",self.strFreightPrice];
 - (void)realPay:(NSString *)channel
 {
     
+    relpayChannel = channel;
+    
     if(!([channel isEqualToString:@"wx"] || [channel isEqualToString:@"alipay"]))
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"支付方式错误" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
@@ -652,14 +656,16 @@ lblYunFei.text=[NSString stringWithFormat:@"运费:￥%@",self.strFreightPrice];
         NSString* charge = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         
         
-        //在返回的charge中[@"credential"][@"alipay"][@"orderInfo"] 下 有个时间 日期和时间之间没有空格 在这里手动插入
-        NSRange keyWordRange =  [charge rangeOfString:@"it_b_pay=" options:NSCaseInsensitiveSearch];
-        NSMutableString *mutStr = [[NSMutableString alloc] initWithString:charge];
-        [mutStr insertString:@" " atIndex:(keyWordRange.length+keyWordRange.location + 12)];
-        DLog(@"%@",mutStr);
-
-        charge = mutStr;
-        NSString *charge2;
+        if ([relpayChannel isEqualToString:@"alipay"]) {
+            //在返回的charge中[@"credential"][@"alipay"][@"orderInfo"] 下 有个时间 日期和时间之间没有空格 在这里手动插入
+            NSRange keyWordRange =  [charge rangeOfString:@"it_b_pay=" options:NSCaseInsensitiveSearch];
+            NSMutableString *mutStr = [[NSMutableString alloc] initWithString:charge];
+            [mutStr insertString:@" " atIndex:(keyWordRange.length+keyWordRange.location + 12)];
+            DLog(@"%@",mutStr);
+            charge = mutStr;
+        }
+        
+        
 //        charge = [charge stringByReplacingOccurrencesOfString:@"\n" withString:@""];
         
 //        charge =@"{ \"id\" : \"ch_5SSKS04CWjvPfj58WTP0yLqD\",\"object\" : \"charge\", \"created\" : 1457686602,\"livemode\" : true, \"paid\" : false,\"refunded\" : false,\"app\" : \"app_aD0yT4DCSiH00qn9\", \"channel\" : \"alipay\",\"order_no\" : \"4ca0bc8028c3\", \"client_ip\" : \"113.122.238.6\",\"amount\" : 2700,\"amount_settle\" : 2700,  \"currency\" : \"cny\", \"subject\" : \"Your Subject\",\"body\" : \"Your Body\",\"extra\" : {  },\"time_paid\" : null,\"time_expire\" : 1457773002,\"time_settle\" : null,\"transaction_no\" : null,\"refunds\" : {       \"object\" : \"list\",       \"url\" : \"/v1/charges/ch_5SSKS04CWjvPfj58WTP0yLqD/refunds\", \"has_more\" : false,  \"data\" : [    ] },  \"amount_refunded\" : 0, \"failure_code\" : null, \"failure_msg\" : null, \"metadata\" : {  }, \"credential\" : {  \"object\" : \"credential\",   \"alipay\" : {      \"orderInfo\" : \"service=\\\"mobile.securitypay.pay\\\"&_input_charset=\\\"utf-8\\\"&notify_url=\\\"https%3A%2F%2Fapi.pingxx.com%2Fnotify%2Fcharges%2Fch_5SSKS04CWjvPfj58WTP0yLqD\\\"&partner=\\\"2088911456459895\\\"&out_trade_no=\\\"4ca0bc8028c3\\\"&subject=\\\"Your Subject\\\"&body=\\\"Your Body\\\"&total_fee=\\\"27.00\\\"&payment_type=\\\"1\\\"&seller_id=\\\"2088911456459895\\\"&it_b_pay=\\\"2016-03-12 16:56:42\\\"&sign=\\\"VYnUO16FS8Bw6%2FagZnI5b3yHdjBhQfDa8qPNpGwz2W3%2BazIds1KmWImPoC%2BTuAHpRSRZYCsOUhEmInTEuZRhlIwIIidhD8hM2dcM68QsO%2FrFJicdm087QQCWNIeQY4Xq9Dp7SPrxbHd1sShVA98hAmTaXFsgFM2w4RzUHEGRkPE%3D\\\"&sign_type=\\\"RSA\\\"\"    } },  \"description\" : null}";

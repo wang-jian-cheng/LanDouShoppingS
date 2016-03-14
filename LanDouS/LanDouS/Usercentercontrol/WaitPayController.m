@@ -23,7 +23,9 @@
 #import "WXApi.h"
 #import "CartStateController.h"
 @interface WaitPayController ()
-
+{
+    NSString *relpayChannel;
+}
 @end
 
 @implementation WaitPayController
@@ -688,6 +690,7 @@
 
 - (void)realPay:(NSString *)channel
 {
+    relpayChannel = channel;
     
     if(!([channel isEqualToString:@"wx"] || [channel isEqualToString:@"alipay"]))
     {
@@ -721,7 +724,10 @@
         
     }];
     
-    
+    if(realpaymoney <= 29.0){
+   
+        realpaymoney += 5;
+    }
     
     [dataProvider getPingPPChargeChannel:channel andAmount:[NSString stringWithFormat:@"%ld",(long)(realpaymoney*100)] andOrdernum:pay_sn andSubject:@"suibian" andBody:@"test"];
 //    [dataProvider setDelegateObject:self setBackFunctionName:@"realPayCallBack:"];
@@ -738,17 +744,22 @@
 -(void)realPayCallBack:(id)dict
 {
     DLog(@"%@",dict);
+    
+    
     //    if ([dict[@"code"] intValue]==200) {
     @try {
         
         NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
         NSString* charge = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         NSLog(@"str_data:%@",charge);
-        NSRange keyWordRange =  [charge rangeOfString:@"it_b_pay=" options:NSCaseInsensitiveSearch];
-        NSMutableString *mutStr = [[NSMutableString alloc] initWithString:charge];
-        [mutStr insertString:@" " atIndex:(keyWordRange.length+keyWordRange.location + 12)];
-        DLog(@"%@",mutStr);
-        charge = mutStr;
+        if ([relpayChannel isEqualToString:@"alipay"]) {
+            //在返回的charge中[@"credential"][@"alipay"][@"orderInfo"] 下 有个时间 日期和时间之间没有空格 在这里手动插入
+            NSRange keyWordRange =  [charge rangeOfString:@"it_b_pay=" options:NSCaseInsensitiveSearch];
+            NSMutableString *mutStr = [[NSMutableString alloc] initWithString:charge];
+            [mutStr insertString:@" " atIndex:(keyWordRange.length+keyWordRange.location + 12)];
+            DLog(@"%@",mutStr);
+            charge = mutStr;
+        }
         
         
         //            NSString* charge = [[NSString alloc] initWithData:    data encoding:NSUTF8StringEncoding];
