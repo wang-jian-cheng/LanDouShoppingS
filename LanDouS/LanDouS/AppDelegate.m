@@ -18,7 +18,7 @@
 #import "WXApi.h"
 #import "WeiboSDK.h"
 #import "DataProvider.h"
-#import <PgySDK/PgyManager.h>
+//#import <PgySDK/PgyManager.h>
 @interface AppDelegate ()
 
 @end
@@ -33,9 +33,9 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [[PgyManager sharedPgyManager] setEnableFeedback:NO];
+//    [[PgyManager sharedPgyManager] setEnableFeedback:NO];
     
-    [[PgyManager sharedPgyManager] startManagerWithAppId:@"38300e1864f178c57beafdc68932058c"];//蒲公英app-id
+//    [[PgyManager sharedPgyManager] startManagerWithAppId:@"38300e1864f178c57beafdc68932058c"];//蒲公英app-id
 //    [[PgyManager sharedPgyManager] checkUpdate];
     
     [SMSSDK registerApp:SMS_APPKEY withSecret:SMS_SECRET];
