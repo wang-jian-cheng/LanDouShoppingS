@@ -71,7 +71,7 @@
     [self getGoodsDetail:goodsId];
     
     
-//    [self getGoodsStandards:goodsId];
+    [self getGoodsStandards:goodsId];
     
     // Do any additional setup after loading the view from its nib.
 }
@@ -82,16 +82,17 @@
 
 -(void)shareContentBuild
 {
-    NSArray* imageArray = @[[UIImage imageNamed:@"1136.png"]];
+    NSArray* imageArray = @[[UIImage imageNamed:@"120.png"]];
     
-    NSString *strurl=[NSString stringWithFormat:@"http://wap.landous.com/tmpl/product_detail.html?goods_id=%@",goodsId];
+//    NSString *strurl=[NSString stringWithFormat:@"http://wap.landous.com/tmpl/product_detail.html?goods_id=%@",goodsId];
+    NSString *strurl=[NSString stringWithFormat:@"http://www.zhongyangjituan.com"];
     if (imageArray) {
         
         NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
-        [shareParams SSDKSetupShareParamsByText:[[@"东方云商城上线啦！快来乐享" stringByAppendingString:[dicGoodsDetail objectForKey:@"goods_name"]] stringByAppendingString:strurl]
+        [shareParams SSDKSetupShareParamsByText:[[@"淘小七商城上线啦！快来乐享" stringByAppendingString:[dicGoodsDetail objectForKey:@"goods_name"]] stringByAppendingString:strurl]
                                          images:imageArray
                                             url:[NSURL URLWithString:strurl]
-                                          title:@"东方云商城"
+                                          title:@"淘小七商城"
                                            type:SSDKContentTypeAuto];
         
         
@@ -300,7 +301,7 @@
     DataProvider *dataProvider = [[DataProvider alloc] init];
     [dataProvider setFinishBlock:^(NSDictionary *resultDict){
         [SVProgressHUD dismiss];
-        NSLog(@"^^^^%@", resultDict );
+        DLog(@"^^^^%@", resultDict );
         if ([[resultDict objectForKey:@"result"]intValue]==1) {
             [btncollect setSelected:YES];
             [Dialog simpleToast:@"YEAH，收藏商品成功"];
@@ -331,7 +332,7 @@
     DataProvider *dataProvider = [[DataProvider alloc] init];
     [dataProvider setFinishBlock:^(NSDictionary *resultDict){
         [SVProgressHUD dismiss];
-        NSLog(@"^^^^%@", resultDict );
+        DLog(@"^^^^%@", resultDict );
         if ([[resultDict objectForKey:@"result"]intValue]==1) {
             
             [btncollect setSelected:NO];
@@ -364,11 +365,16 @@
         [SVProgressHUD dismiss];
         DLog(@"^^^^%@", resultDict );
         if ([[resultDict objectForKey:@"result"]intValue]==1) {
-            dicGoodsDetail=[NSMutableDictionary dictionaryWithDictionary:[resultDict objectForKey:@"data"][@"goods_info"]];
+//            dicGoodsDetail=[NSMutableDictionary dictionaryWithDictionary:[resultDict objectForKey:@"data"][@"goods_info"]];
+            dicGoodsDetail  = [NSMutableDictionary dictionaryWithDictionary:[resultDict objectForKey:@"data"]];
             
-            goodImgUrl =resultDict[@"data"][@"goods_image"];
-            specListGoodsDict = resultDict[@"data"][@"spec_list_goods"];
-            specListNewGoodsIDDict = resultDict[@"data"][@"spec_list"];
+            goodImgUrl =resultDict[@"data"][@"images"];
+//            specListGoodsDict = resultDict[@"data"][@"spec_list_goods"];
+//            specListNewGoodsIDDict = resultDict[@"data"][@"spec_list"];
+            
+            
+            
+            
 //            if(![resultDict[@"data"][@"spec_name"] isEqual:[NSNull null]])
 //            {
 //                [self.dictStandard setObject:resultDict[@"data"][@"spec_name"] forKey:@"spec_name"];
@@ -584,10 +590,10 @@
     
     NSMutableArray *imagearray = [NSMutableArray array];
     @try {
-        for (int i = 0; i<[goodImgUrl allKeys].count; i++) {
+        for (int i = 0; i< goodImgUrl.count; i++) {
             NSString *str = [NSString stringWithFormat:@"%ld",i];
             
-            [imagearray addObject:goodImgUrl[str]];
+            [imagearray addObject:goodImgUrl[i]];//[@"goods_image"]
             
         }
     }
@@ -607,9 +613,9 @@
         scrollTop.contentSize=CGSizeMake(SCREEN_WIDTH*imagearray.count,SCREEN_WIDTH);
         for (int i=0;i<imagearray.count;i++) {
             UIImageView *imgGoodsDetail=[[UIImageView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH*i,0,SCREEN_WIDTH,SCREEN_WIDTH)];
-//            NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",GOODS_IMG_URL,[dicGoodsDetail objectForKey:@"store_id"],[[imagearray objectAtIndex:i]objectForKey:@"goods_image"]]];
+            NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",GOODS_IMG_URL,[dicGoodsDetail objectForKey:@"store_id"],[[imagearray objectAtIndex:i]objectForKey:@"goods_image"]]];
             
-            NSURL *url = [NSURL URLWithString:imagearray[i]];
+//            NSURL *url = [NSURL URLWithString:imagearray[i]];
             [imgGoodsDetail setImageWithURL:url placeholderImage:img(@"landou_square_default.png")];
             imgGoodsDetail.contentMode= UIViewContentModeScaleAspectFit;
             //imgGoodsDetail.image=[UIImage imageNamed:@"line_01.png"];
@@ -706,9 +712,13 @@
         [SVProgressHUD dismiss];
         DLog(@"^^^^%@", resultDict );
         if ([[resultDict objectForKey:@"result"]intValue]==1) {
+//            dicGoodsStandardDetail = [NSMutableDictionary dictionary];
             
+            dicGoodsStandardDetail = [NSMutableDictionary dictionaryWithDictionary:[resultDict objectForKey:@"data"][@"goods_info"]];
             
-            
+            specListGoodsDict = resultDict[@"data"][@"spec_list_goods"];
+            specListNewGoodsIDDict = resultDict[@"data"][@"spec_list"];
+            goodStandardImgUrl = resultDict[@"data"][@"goods_image"];
 //            standardsView.delegate = self;
 //            [standardsView show];
             
@@ -729,7 +739,7 @@
         
     }];
     
-//    [dataProvider getGoodsSpec:goodsID];
+    [dataProvider getGoodsSpec:goodsID];
 }
 
 -(NSMutableDictionary *)dictStandard
@@ -805,7 +815,7 @@
         [standardsView dismiss];
         
         if (get_Dsp(@"userinfo")) {
-            if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]==0) {
+            if ([[specInfo objectForKey:@"goods_storage"] intValue]==0) {
                 [Dialog simpleToast:@"亲，商品库存不足"];
                 return;
             }
@@ -815,23 +825,41 @@
                 [Dialog simpleToast:@"亲，购买数量不能为零"];
                 return;
             }
-            if ([[dicGoodsDetail objectForKey:@"goods_storage"] intValue]<goodsNum) {
+            if ([[specInfo objectForKey:@"goods_storage"] intValue]<goodsNum) {
                 [Dialog simpleToast:@"亲，库存不足了"];
                 return;
             }
+            
+            @try {
+                [dicGoodsDetail setObject:[NSString stringWithFormat:@"%ld",goodsNum] forKey:@"goods_num"];
+                
+                
+//                NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",GOODS_IMG_URL,[dicGoodsDetail objectForKey:@"store_id"],[goodImgUrl[0] objectForKey:@"goods_image"]]];
+                
+                [dicGoodsDetail setObject:goodStandardImgUrl[@"0"] forKey:@"goods_image"];
+                [dicGoodsDetail setObject:specListNewGoodsIDDict[standardIdStr] forKey:@"goods_id"];
+                
+                SureCartController *SureCart=[[SureCartController alloc]init];
+                SureCart.arrayCartList=[[NSMutableArray alloc]init];
+                [SureCart.arrayCartList addObject:dicGoodsDetail];
+                SureCart.strType=@"buynow";
+                
+                SureCart.goosStandardIDStrArr = [NSMutableArray array];
+                [SureCart.goosStandardIDStrArr addObject:specListGoodsDict];
+                SureCart.standardIDStrArr = [NSMutableArray array];
+                [SureCart.standardIDStrArr addObject:standardIdStr];
+                [self.navigationController pushViewController:SureCart animated:YES];
+                
+            }
+            @catch (NSException *exception) {
+                
+            }
+            @finally {
+                
+            }
+            
 
-            [dicGoodsDetail setObject:[NSString stringWithFormat:@"%ld",goodsNum] forKey:@"goods_num"];
             
-            SureCartController *SureCart=[[SureCartController alloc]init];
-            SureCart.arrayCartList=[[NSMutableArray alloc]init];
-            [SureCart.arrayCartList addObject:dicGoodsDetail];
-            SureCart.strType=@"buynow";
-            
-            SureCart.goosStandardIDStrArr = [NSMutableArray array];
-            [SureCart.goosStandardIDStrArr addObject:specListGoodsDict];
-            SureCart.standardIDStrArr = [NSMutableArray array];
-            [SureCart.standardIDStrArr addObject:standardIdStr];
-            [self.navigationController pushViewController:SureCart animated:YES];
 
 
 //            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请输入商品数量" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
@@ -858,20 +886,23 @@
 }
 
 
--(void)StandardsView:(StandardsView *)standardView SetBtn:(UIButton *)btn andStandView:(StandardsView *)standardView
+-(void)StandardsView:(StandardsView *)standardView SetBtn:(UIButton *)btn
 {
     if(btn.tag == 0 )
     {
-        btn.backgroundColor = [UIColor yellowColor];
+        btn.backgroundColor = navi_bar_bg_color;
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
     else if(btn.tag == 1)
     {
         btn.backgroundColor = [UIColor orangeColor];
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
 }
 -(void)Standards:(StandardsView *)standardView SelectBtnClick:(UIButton *)sender andSelectID:(NSString *)selectID andStandName:(NSString *)standName andIndex:(NSInteger)index
 {
     DLog(@"selectId:%@  standName:%@  index:%ld",selectID,standName,(unsigned long)index);
+    
     
     if(index == 0)
     {
@@ -1135,6 +1166,9 @@
             [dicGoodsDetail setObject:[NSString stringWithFormat:@"%@",textNum.text] forKey:@"goods_num"];
 //            [self getGoodsStandards:goodsId];
             
+             NSString *url=[NSString stringWithFormat:@"%@/%@/%@",GOODS_IMG_URL,[dicGoodsDetail objectForKey:@"store_id"],[goodImgUrl[0] objectForKey:@"goods_image"]];
+            
+            [dicGoodsDetail setObject:url forKey:@"goods_image"] ;
             
             SureCartController *SureCart=[[SureCartController alloc]init];
             SureCart.arrayCartList=[[NSMutableArray alloc]init];
@@ -1161,20 +1195,20 @@
     standardsView.tag = tag;
     standardsView.delegate = self;
     /*head 信息*/
-    standardsView.priceLab.text = [NSString stringWithFormat:@"¥%@",dicGoodsDetail[@"goods_price"]];
-    standardsView.goodNum.text = [NSString stringWithFormat:@"库存%@件",dicGoodsDetail[@"goods_storage"]];
+    standardsView.priceLab.text = [NSString stringWithFormat:@"¥%@",dicGoodsStandardDetail[@"goods_price"]];
+    standardsView.goodNum.text = [NSString stringWithFormat:@"库存%@件",dicGoodsStandardDetail[@"goods_storage"]];
     
     standardsView.customBtns = @[@"加入购物车",@"立即购买"];
     
-    if ([NSStringFromClass([dicGoodsDetail[@"spec_name"] class])isEqualToString:@"__NSCFArray"]) {
+    if ([NSStringFromClass([dicGoodsStandardDetail[@"spec_name"] class])isEqualToString:@"__NSCFArray"]) {
     
-        NSArray *tempArr = dicGoodsDetail[@"spec_name"]  ;
+        NSArray *tempArr = dicGoodsStandardDetail[@"spec_name"]  ;
         NSString *str = @"请选择 ";
         for (int i = 0; i<tempArr.count; i++) {
             str = [NSString stringWithFormat:@"%@%@ ",str,tempArr[i][@"name"]];
         }
         standardsView.tipLab.text = str;
-        [standardsView.mainImgView setImageWithURL:[NSURL URLWithString:goodImgUrl[@"0"]] placeholderImage:[UIImage imageNamed:@"landou_square_default.png"]];
+        [standardsView.mainImgView setImageWithURL:[NSURL URLWithString:goodStandardImgUrl[@"0"]] placeholderImage:[UIImage imageNamed:@"landou_square_default.png"]];
         /*规格详情*/
         NSMutableArray *standardModelArr = [NSMutableArray array];
         
@@ -1183,7 +1217,7 @@
             tempModel.standardName = tempArr[i][@"name"];
             
             NSString *strID = [NSString stringWithFormat:@"%@",tempArr[i][@"id"]];
-            NSArray *specArr = [dicGoodsDetail[@"spec_value"] objectForKey:strID];
+            NSArray *specArr = [dicGoodsStandardDetail[@"spec_value"] objectForKey:strID];
             NSMutableArray *tempInfoArr = [NSMutableArray array];
             for (int j = 0 ; j < specArr.count; j++) {
                 standardClassInfo *tempInfo = [[standardClassInfo alloc] init];

@@ -40,7 +40,7 @@
 /**
  * 设置自定义btn属性
  */
--(void)StandardsView:(StandardsView *)standardView SetBtn:(UIButton *)btn andStandView:(StandardsView *)standardView;
+-(void)StandardsView:(StandardsView *)standardView SetBtn:(UIButton *)btn;
 /**
  * 为设置自定义按钮时，点击确认按键的回调事件
  */

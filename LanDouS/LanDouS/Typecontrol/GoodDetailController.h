@@ -28,6 +28,7 @@
     UITableView *tableComment;//评论列表
     
     NSMutableDictionary *dicGoodsDetail;//商品详情字典
+    NSMutableDictionary *dicGoodsStandardDetail;//商品详情字典
     NSMutableArray *arrayRecommends;//猜你喜欢的数组
     NSMutableArray *arrayComments;//评论列表的数组
     
@@ -36,8 +37,8 @@
     
     StandardsView *standardsView;
     
-    
-    NSDictionary *goodImgUrl;
+    NSDictionary *goodStandardImgUrl;
+    NSArray *goodImgUrl;
     NSDictionary *specListGoodsDict;//商品规格信息
     NSDictionary *specListNewGoodsIDDict;//选择规格对应的商品id
     NSString *standardIdStr;

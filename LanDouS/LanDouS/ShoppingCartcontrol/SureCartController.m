@@ -16,13 +16,15 @@
 #import "CartStateController.h"
 #import "MyAdressMagController.h"
 #import <AlipaySDK/AlipaySDK.h>
-#import "Order.h"
-#import "APAuthV2Info.h"
+//#import "Order.h"
+//#import "APAuthV2Info.h"
 #import "DataSigner.h"
 #import "payRequsestHandler.h"
 #import "WXApi.h"
 @interface SureCartController ()
-
+{
+    NSString *relpayChannel;
+}
 @end
 
 @implementation SureCartController
@@ -243,7 +245,10 @@ lblYunFei.text=[NSString stringWithFormat:@"运费:￥%@",self.strFreightPrice];
         cell.selectionStyle=UITableViewCellSelectionStyleNone;
         //cell.backgroundColor=[UIColor colorWithRed:0.94 green:0.95 blue:0.95 alpha:1];
     }
-    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",GOODS_IMG_URL,[[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"store_id"],[[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_image"]]];
+//    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",[[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"store_id"],[[arrayCartList   objectAtIndex:indexPath.row] objectForKey:@"goods_image"]]];
+    
+    NSURL *url=[NSURL URLWithString:[[arrayCartList objectAtIndex:indexPath.row] objectForKey:@"goods_image"]];
+    
     [cell.ImgGoods setImageWithURL:url placeholderImage:img(@"landou_square_default.png")];
     
     
@@ -443,107 +448,277 @@ lblYunFei.text=[NSString stringWithFormat:@"运费:￥%@",self.strFreightPrice];
 
 -(void)gotoAlipay
 {
-    /*============================================================================*/
-    /*=======================需要填写商户app申请的===================================*/
-    /*============================================================================*/
-    NSString *partner =PartnerID;
-    NSString *seller = SellerID;
-    NSString *privateKey =PartnerPrivKey;
-    /*============================================================================*/
-    /*============================================================================*/
-    /*============================================================================*/
+//    /*============================================================================*/
+//    /*=======================需要填写商户app申请的===================================*/
+//    /*============================================================================*/
+//    NSString *partner =PartnerID;
+//    NSString *seller = SellerID;
+//    NSString *privateKey =PartnerPrivKey;
+//    /*============================================================================*/
+//    /*============================================================================*/
+//    /*============================================================================*/
+//    
+//    //partner和seller获取失败,提示
+//    if ([partner length] == 0 ||
+//        [seller length] == 0 ||
+//        [privateKey length] == 0)
+//    {
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
+//                                                        message:@"缺少partner或者seller或者私钥。"
+//                                                       delegate:self
+//                                              cancelButtonTitle:@"确定"
+//                                              otherButtonTitles:nil];
+//        [alert show];
+//        return;
+//    }
+//    
+//    /*
+//     *生成订单信息及签名
+//     */
+//    //将商品信息赋予AlixPayOrder的成员变量
+//    Order *order = [[Order alloc] init];
+//    order.partner = partner;
+//    order.seller = seller;
+//    order.tradeNO =dingDanNum; //订单ID（由商家自行制定）
+//    order.productName = @"懒豆商城订单"; //商品标题
+//    order.productDescription = @"懒豆商城订单"; //商品描述
+//    
+//    if ((totalPrice+[self.strFreightPrice floatValue])>minTotalPrice) {
+//        order.amount = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]-onLinePayDiscount];
+//        
+//    }
+//    else{
+//        order.amount = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]];
+//    }
+//    
+//     //商品价格
+//    order.notifyURL =  @"http://www.xxx.com"; //回调URL
+//    
+//    order.service = @"mobile.securitypay.pay";
+//    order.paymentType = @"1";
+//    order.inputCharset = @"utf-8";
+//    order.itBPay = @"30m";
+//    order.showUrl = @"m.alipay.com";
+//    
+//    //应用注册scheme,在AlixPayDemo-Info.plist定义URL types
+//    NSString *appScheme = @"alisdkdemo";
+//    
+//    //将商品信息拼接成字符串
+//    NSString *orderSpec = [order description];
+//    NSLog(@"orderSpec = %@",orderSpec);
+//    
+//    //获取私钥并将商户信息签名,外部商户可以根据情况存放私钥和签名,只需要遵循RSA签名规范,并将签名字符串base64编码和UrlEncode
+//    id<DataSigner> signer = CreateRSADataSigner(privateKey);
+//    NSString *signedString = [signer signString:orderSpec];
+////
+//    //将签名成功字符串格式化为订单字符串,请严格按照该格式
+//    NSString *orderString = nil;
+//    if (signedString != nil) {
+//        orderString = [NSString stringWithFormat:@"%@&sign=\"%@\"&sign_type=\"%@\"",
+//                       orderSpec, signedString, @"RSA"];
+//        CartStateController *CartState=[[CartStateController alloc]init];
+//        CartState.strPrice=[NSString stringWithFormat:@"%.2f",totalPrice];
+//        CartState.strNum=dingDanNum;
+//        CartState.strName=goodsName;
+//        [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
+//            NSLog(@"***************&&&&&&&&reslut = %@",resultDic);
+//            if([[resultDic objectForKey:@"resultStatus"] intValue]==9000){
+//                DataProvider *dataProvider = [[DataProvider alloc] init];
+//                [dataProvider setFinishBlock:^(NSDictionary *resultDict){
+//                    
+//                }];
+//                
+//                [dataProvider setFailedBlock:^(NSString *strError){
+//                    
+//                }];
+//                
+//                [dataProvider payorder:dingDanNum];
+//
+//                
+//                        CartState.strState=@"success";
+//                
+//            }
+//            else{
+//                
+//                CartState.strState=@"failed";
+//            }
+//            
+//            [self.navigationController pushViewController:CartState animated:YES];
+//        }];
+//        
+//        
+//    }
     
-    //partner和seller获取失败,提示
-    if ([partner length] == 0 ||
-        [seller length] == 0 ||
-        [privateKey length] == 0)
+    [self realPay:@"alipay"];
+    
+}
+
+- (void)realPay:(NSString *)channel
+{
+    
+    relpayChannel = channel;
+    
+    if(!([channel isEqualToString:@"wx"] || [channel isEqualToString:@"alipay"]))
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                        message:@"缺少partner或者seller或者私钥。"
-                                                       delegate:self
-                                              cancelButtonTitle:@"确定"
-                                              otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"支付方式错误" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
         [alert show];
         return;
     }
     
-    /*
-     *生成订单信息及签名
-     */
-    //将商品信息赋予AlixPayOrder的成员变量
-    Order *order = [[Order alloc] init];
-    order.partner = partner;
-    order.seller = seller;
-    order.tradeNO =dingDanNum; //订单ID（由商家自行制定）
-    order.productName = @"懒豆商城订单"; //商品标题
-    order.productDescription = @"懒豆商城订单"; //商品描述
+    if(totalPrice ==0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"请选择套餐" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        return;
+    }
+    
+    [SVProgressHUD showWithStatus:@"正在加载"];
+    DataProvider *dataProvider = [[DataProvider alloc] init];
+    [dataProvider setFinishBlock:^(NSDictionary *resultDict){
+        [SVProgressHUD dismiss];
+        DLog(@"%@", resultDict);
+        //        if ([[resultDict objectForKey:@"result"]intValue]==1) {
+        [self realPayCallBack:resultDict];
+        
+        
+    }];
+    
+    [dataProvider setFailedBlock:^(NSString *strError){
+        [SVProgressHUD dismiss];
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"支付失败" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        
+    }];
+    
+    CGFloat amount;
     
     if ((totalPrice+[self.strFreightPrice floatValue])>minTotalPrice) {
-        order.amount = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]-onLinePayDiscount];
-        
+        amount = totalPrice+[self.strFreightPrice floatValue]-onLinePayDiscount;
+
     }
     else{
-        order.amount = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]];
+        amount =totalPrice+[self.strFreightPrice floatValue];
     }
-    
-     //商品价格
-    order.notifyURL =  @"http://www.xxx.com"; //回调URL
-    
-    order.service = @"mobile.securitypay.pay";
-    order.paymentType = @"1";
-    order.inputCharset = @"utf-8";
-    order.itBPay = @"30m";
-    order.showUrl = @"m.alipay.com";
-    
-    //应用注册scheme,在AlixPayDemo-Info.plist定义URL types
-    NSString *appScheme = @"alisdkdemo";
-    
-    //将商品信息拼接成字符串
-    NSString *orderSpec = [order description];
-    NSLog(@"orderSpec = %@",orderSpec);
-    
-    //获取私钥并将商户信息签名,外部商户可以根据情况存放私钥和签名,只需要遵循RSA签名规范,并将签名字符串base64编码和UrlEncode
-    id<DataSigner> signer = CreateRSADataSigner(privateKey);
-    NSString *signedString = [signer signString:orderSpec];
-//
-    //将签名成功字符串格式化为订单字符串,请严格按照该格式
-    NSString *orderString = nil;
-    if (signedString != nil) {
-        orderString = [NSString stringWithFormat:@"%@&sign=\"%@\"&sign_type=\"%@\"",
-                       orderSpec, signedString, @"RSA"];
-        CartStateController *CartState=[[CartStateController alloc]init];
-        CartState.strPrice=[NSString stringWithFormat:@"%.2f",totalPrice];
-        CartState.strNum=dingDanNum;
-        CartState.strName=goodsName;
-        [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
-            NSLog(@"***************&&&&&&&&reslut = %@",resultDic);
-            if([[resultDic objectForKey:@"resultStatus"] intValue]==9000){
-                DataProvider *dataProvider = [[DataProvider alloc] init];
-                [dataProvider setFinishBlock:^(NSDictionary *resultDict){
-                    
-                }];
-                
-                [dataProvider setFailedBlock:^(NSString *strError){
-                    
-                }];
-                
-                [dataProvider payorder:dingDanNum];
 
-                
-                        CartState.strState=@"success";
-                
-            }
-            else{
-                
-                CartState.strState=@"failed";
-            }
-            
-            [self.navigationController pushViewController:CartState animated:YES];
-        }];
+    [dataProvider getPingPPChargeChannel:channel andAmount:[NSString stringWithFormat:@"%ld",(long)(amount*100)] andOrdernum:dingDanNum andSubject:@"TaoXiaoQi" andBody:@"PayForGoods"];
+    //    [dataProvider setDelegateObject:self setBackFunctionName:@"realPayCallBack:"];
+    //    [dataProvider getPingppCharge:[Toolkit getUserID]
+    //                       andChannel:channel
+    //                        andAmount:[NSString stringWithFormat:@"%d",(int)realpaymoney*100]
+    //                   andDescription:@"1"
+    //                           andFlg:@"0"];
+    
+}
+
+
+- (void)showAlertWait
+{
+    mAlert = [[UIAlertView alloc] initWithTitle:@"正在获取支付凭据,请稍后..." message:nil delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
+    [mAlert show];
+    UIActivityIndicatorView* aiv = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    aiv.center = CGPointMake(mAlert.frame.size.width / 2.0f - 15, mAlert.frame.size.height / 2.0f + 10 );
+    [aiv startAnimating];
+    [mAlert addSubview:aiv];
+}
+
+- (void)hideAlert
+{
+    if (mAlert != nil)
+    {
+        [mAlert dismissWithClickedButtonIndex:0 animated:YES];
+        mAlert = nil;
+    }
+}
+
+- (void)showAlertMessage:(NSString*)msg
+{
+    mAlert = [[UIAlertView alloc] initWithTitle:@"提示" message:msg delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    [mAlert show];
+}
+
+-(void)realPayCallBack:(id)dict
+{
+    DLog(@"%@",dict);
+    
+    DLog(@"%@",dict[@"credential"][@"alipay"][@"orderInfo"]);
+//    NSString *aliInfoStr = dict[@"credential"][@"alipay"][@"orderInfo"];
+//    
+//    NSRange keyWordRange =  [aliInfoStr rangeOfString:@"it_b_pay=" options:NSCaseInsensitiveSearch];
+//    
+//    DLog(@"%@",NSStringFromRange(keyWordRange));
+    
+  
+    
+    //    if ([dict[@"code"] intValue]==200) {
+    @try {
         
+        NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
+        NSString* charge = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+        
+        if ([relpayChannel isEqualToString:@"alipay"]) {
+            //在返回的charge中[@"credential"][@"alipay"][@"orderInfo"] 下 有个时间 日期和时间之间没有空格 在这里手动插入
+            NSRange keyWordRange =  [charge rangeOfString:@"it_b_pay=" options:NSCaseInsensitiveSearch];
+            NSMutableString *mutStr = [[NSMutableString alloc] initWithString:charge];
+            [mutStr insertString:@" " atIndex:(keyWordRange.length+keyWordRange.location + 12)];
+            DLog(@"%@",mutStr);
+            charge = mutStr;
+        }
+        
+        
+//        charge = [charge stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        
+//        charge =@"{ \"id\" : \"ch_5SSKS04CWjvPfj58WTP0yLqD\",\"object\" : \"charge\", \"created\" : 1457686602,\"livemode\" : true, \"paid\" : false,\"refunded\" : false,\"app\" : \"app_aD0yT4DCSiH00qn9\", \"channel\" : \"alipay\",\"order_no\" : \"4ca0bc8028c3\", \"client_ip\" : \"113.122.238.6\",\"amount\" : 2700,\"amount_settle\" : 2700,  \"currency\" : \"cny\", \"subject\" : \"Your Subject\",\"body\" : \"Your Body\",\"extra\" : {  },\"time_paid\" : null,\"time_expire\" : 1457773002,\"time_settle\" : null,\"transaction_no\" : null,\"refunds\" : {       \"object\" : \"list\",       \"url\" : \"/v1/charges/ch_5SSKS04CWjvPfj58WTP0yLqD/refunds\", \"has_more\" : false,  \"data\" : [    ] },  \"amount_refunded\" : 0, \"failure_code\" : null, \"failure_msg\" : null, \"metadata\" : {  }, \"credential\" : {  \"object\" : \"credential\",   \"alipay\" : {      \"orderInfo\" : \"service=\\\"mobile.securitypay.pay\\\"&_input_charset=\\\"utf-8\\\"&notify_url=\\\"https%3A%2F%2Fapi.pingxx.com%2Fnotify%2Fcharges%2Fch_5SSKS04CWjvPfj58WTP0yLqD\\\"&partner=\\\"2088911456459895\\\"&out_trade_no=\\\"4ca0bc8028c3\\\"&subject=\\\"Your Subject\\\"&body=\\\"Your Body\\\"&total_fee=\\\"27.00\\\"&payment_type=\\\"1\\\"&seller_id=\\\"2088911456459895\\\"&it_b_pay=\\\"2016-03-12 16:56:42\\\"&sign=\\\"VYnUO16FS8Bw6%2FagZnI5b3yHdjBhQfDa8qPNpGwz2W3%2BazIds1KmWImPoC%2BTuAHpRSRZYCsOUhEmInTEuZRhlIwIIidhD8hM2dcM68QsO%2FrFJicdm087QQCWNIeQY4Xq9Dp7SPrxbHd1sShVA98hAmTaXFsgFM2w4RzUHEGRkPE%3D\\\"&sign_type=\\\"RSA\\\"\"    } },  \"description\" : null}";
+        
+//        charge = @"{\"id\":\"ch_W9Ci5Oe9y10S5iTGiPeDGG8O\",\"object\":\"charge\",\"created\":1457919127,\"livemode\":true,\"paid\":false,\"refunded\":false,\"app\":\"app_aD0yT4DCSiH00qn9\",\"channel\":\"alipay\",\"order_no\":\"2016031400000001\",\"client_ip\":\"127.0.0.1\",\"amount\":1,\"amount_settle\":1,\"currency\":\"cny\",\"subject\":\"2\",\"body\":\"核武者测试\",\"extra\":{},\"time_paid\":null,\"time_expire\":1458005527,\"time_settle\":null,\"transaction_no\":null,\"refunds\":{\"object\":\"list\",\"url\":\"1arges_W9Ci5Oe9y10S5iTGiPeDGG8O/refunds\",\"has_more\":false,\"data\":[]},\"amount_refunded\":0,\"failure_code\":null,\"failure_msg\":null,\"metadata\":{},\"credential\":{\"object\":\"credential\",\"alipay\":{\"orderInfo\":\"service=\\\"mobile.securitypay.pay\\\"&_input_charset=\\\"utf-8\\\"&notify_url=\\\"https%3A%2F%2Fapi.pingxx.com%2Fnotify%2Fcharges%2Fch_W9Ci5Oe9y10S5iTGiPeDGG8O\\\"&partner=\\\"2088911456459895\\\"&out_trade_no=\\\"2016031400000001\\\"&subject=\\\"2\\\"&body=\\\"核武者测试\\\"&total_fee=\\\"0.01\\\"&payment_type=\\\"1\\\"&seller_id=\\\"2088911456459895\\\"&it_b_pay=\\\"2016-03-15 09:32:07\\\"&sign=\\\"PMKtlJ%2Fu71YX%2FfAqL4kEahiMT28vFGEDd2wQRVFOgUF0dV31h0NdQ6lLGOHquEdpU%2FNptwKpHhfDRmRJvbWvFzIo7Djz9xI0g%2Flsn5nJ8vrWUbHu6sQyORc1DZN5wUY00%2FoaMVdvasGvp6yXgah3AU%2Fqx1R3FKRIHlz6ebFIaM4%3D\\\"&sign_type=\\\"RSA\\\"\"}},\"description\":null}";
+        
+        
+//        @"{  \"time_settle\" : null,  \"description\" : null,  \"transaction_no\" : null,  \"time_paid\" : null,  \"extra\" : {  },  \"amount\" : 2700,  \"metadata\" : {  },  \"livemode\" : true,  \"order_no\" : \"4ca0bc8028c3\",  \"refunds\" : {    \"has_more\" : false,    \"object\" : \"list\",    \"data\" : [    ],    \"url\" : \"/v1/charges/ch_5SSKS04CWjvPfj58WTP0yLqD/refunds\"  },  \"object\" : \"charge\",  \"currency\" : \"cny\",  \"refunded\" : false,  \"channel\" : \"alipay\",  \"subject\" : \"YourSubject\",  \"amount_refunded\" : 0,  \"failure_code\" : null,  \"paid\" : false,  \"id\" : \"ch_5SSKS04CWjvPfj58WTP0yLqD\",  \"body\" : \"YourBody\",  \"amount_settle\" : 2700,  \"failure_msg\" : null,  \"time_expire\" : 1457773002,  \"client_ip\" : \"113.122.238.6\",  \"credential\" : {    \"alipay\" : {      \"orderInfo\" : \"service=\\\"mobile.securitypay.pay\\\"&_input_charset=\\\"utf-8\\\"&notify_url=\\\"https%3A%2F%2Fapi.pingxx.com%2Fnotify%2Fcharges%2Fch_5SSKS04CWjvPfj58WTP0yLqD\\\"&partner=\\\"2088911456459895\\\"&out_trade_no=\\\"4ca0bc8028c3\\\"&subject=\\\"YourSubject\\\"&body=\\\"YourBody\\\"&total_fee=\\\"27.00\\\"&payment_type=\\\"1\\\"&seller_id=\\\"2088911456459895\\\"&it_b_pay=\\\"2016-03-12 16:56:42\\\"&sign=\\\"VYnUO16FS8Bw6%2FagZnI5b3yHdjBhQfDa8qPNpGwz2W3%2BazIds1KmWImPoC%2BTuAHpRSRZYCsOUhEmInTEuZRhlIwIIidhD8hM2dcM68QsO%2FrFJicdm087QQCWNIeQY4Xq9Dp7SPrxbHd1sShVA98hAmTaXFsgFM2w4RzUHEGRkPE%3D\\\"&sign_type=\\\"RSA\\\"\"    },    \"object\" : \"credential\"  },  \"created\" : 1457686602,  \"app\" : \"app_aD0yT4DCSiH00qn9\"}";
+        
+//        charge = [charge stringByReplacingOccurrencesOfString:@" " withString:@""];
+        DLog(@"%lld",0x4ca0bc8028c3);
+        
+//        //在返回的charge中[@"credential"][@"alipay"][@"orderInfo"] 下 有个时间 日期和时间之间没有空格 在这里手动插入
+//        NSRange keyWordRange =  [charge rangeOfString:@"it_b_pay=" options:NSCaseInsensitiveSearch];
+//        NSMutableString *mutStr = [[NSMutableString alloc] initWithString:charge];
+//        [mutStr insertString:@" " atIndex:(keyWordRange.length+keyWordRange.location + 12)];
+//        DLog(@"%@",mutStr);
+//        
+//        charge = mutStr;
+//        charge2 =@"{ \"object\" : \"charge\",  \"created\":1457667801, \"livemode\": true, \"paid\" : false, \"refunded\" : false, \"app\": \"app_aD0yT4DCSiH00qn9\", \"channel\": \"alipay\", \"order_no\": \"930511011739138002\", \"client_ip\": \"113.122.238.6\", \"amount\": 290000, \"amount_settle\": 290000, \"currency\" : \"cny\", \"subject\" : \"TaoXiaoQi\", \"body\": \"PayForGoods\", \"extra\": {}, \"time_paid\": null, \"time_expire\": 1457754201, \"time_settle\": null, \"transaction_no\": null, \"refunds\": { \"object\": \"list\", \"url\": \"\/v1\/charges\/ch_nv9yH0rnHSiLXrzHC4rjT848\/refunds\", \"has_more\": false, \"data\": [] }, \"amount_refunded\": 0, \"failure_code\": null, \"failure_msg\": null, \"metadata\": {}, \"credential\": { \"object\": \"credential\", \"alipay\": { \"orderInfo\": \"service=\\\"mobile.securitypay.pay\\\"&_input_charset=\\\"utf-8\\\"&notify_url=\\\"https%3A%2F%2Fapi.pingxx.com%2Fnotify%2Fcharges%2Fch_nv9yH0rnHSiLXrzHC4rjT848\\\"&partner=\\\"2088911456459895\\\"&out_trade_no=\\\"930511011739138002\\\"&subject=\\\"TaoXiaoQi\\\"&body=\\\"PayForGoods\\\"&total_fee=\\\"2900.00\\\"&payment_type=\\\"1\\\"&seller_id=\\\"2088911456459895\\\"&it_b_pay=\\\"2016-03-12 11:43:21\\\"&sign=\\\"L1Q5NoSqD7LyGK5jXFq4U46WHpyrTyQT9rTnck1R2TEC6xKwH3RXdEqHuPtm5pMsfjQ7zaRTwbyYSRxZD812%2FusujxTAZO%2FKtahiJuod7oCSoEbyNkGW5M2%2Br3%2F%2FJsIN%2Bw3g1yIkuGBs%2F0JS82Sp6pkgEXA7GvXfuYpjXznsqDI%3D\\\"&sign_type=\\\"RSA\\\"\"}},\"id\": \"ch_nv9yH0rnHSiLXrzHC4rjT848\",\"description\": null}";
+
+//  /*ok*/      charge1 = @"{ \"id\": \"ch_nv9yH0rnHSiLXrzHC4rjT848\", \"object\": \"charge\", \"created\": 1457667801, \"livemode\": true, \"paid\": false, \"refunded\": false, \"app\": \"app_aD0yT4DCSiH00qn9\", \"channel\": \"alipay\", \"order_no\": \"930511011739138002\", \"client_ip\": \"113.122.238.6\", \"amount\": 290000, \"amount_settle\": 290000, \"currency\": \"cny\", \"subject\": \"TaoXiaoQi\", \"body\": \"PayForGoods\", \"extra\": {}, \"time_paid\": null, \"time_expire\": 1457754201, \"time_settle\": null, \"transaction_no\": null, \"refunds\": { \"object\": \"list\", \"url\": \"/v1/charges/ch_nv9yH0rnHSiLXrzHC4rjT848/refunds\", \"has_more\": false, \"data\": [] }, \"amount_refunded\": 0, \"failure_code\": null, \"failure_msg\": null, \"metadata\": {}, \"credential\": { \"object\": \"credential\", \"alipay\": { \"orderInfo\": \"service=\\\"mobile.securitypay.pay\\\"&_input_charset=\\\"utf-8\\\"&notify_url=\\\"https%3A%2F%2Fapi.pingxx.com%2Fnotify%2Fcharges%2Fch_nv9yH0rnHSiLXrzHC4rjT848\\\"&partner=\\\"2088911456459895\\\"&out_trade_no=\\\"930511011739138002\\\"&subject=\\\"TaoXiaoQi\\\"&body=\\\"PayForGoods\\\"&total_fee=\\\"2900.00\\\"&payment_type=\\\"1\\\"&seller_id=\\\"2088911456459895\\\"&it_b_pay=\\\"2016-03-12 11:43:21\\\"&sign=\\\"L1Q5NoSqD7LyGK5jXFq4U46WHpyrTyQT9rTnck1R2TEC6xKwH3RXdEqHuPtm5pMsfjQ7zaRTwbyYSRxZD812%2FusujxTAZO%2FKtahiJuod7oCSoEbyNkGW5M2%2Br3%2F%2FJsIN%2Bw3g1yIkuGBs%2F0JS82Sp6pkgEXA7GvXfuYpjXznsqDI%3D\\\"&sign_type=\\\"RSA\\\"\" } }, \"description\": null }";
+
+        
+//        charge1 = @"{ \"id\": \"ch_LiDSaLP0ajL4jTC4CGjPKWvP\", \"object\": \"charge\", \"created\": 1457599194, \"livemode\": true, \"paid\": false, \"refunded\": false, \"app\": \"app_aD0yT4DCSiH00qn9\", \"channel\": \"alipay\", \"order_no\": \"280510938483769002\", \"client_ip\": \"113.122.238.6\", \"amount\": 440000, \"amount_settle\": 440000, \"currency\": \"cny\", \"subject\": \"suibian\", \"body\": \"test\", \"extra\": {}, \"time_paid\": null, \"time_expire\": 1457685594, \"time_settle\": null, \"transaction_no\": null, \"refunds\": { \"object\": \"list\", \"url\": \"/v1/charges/ch_LiDSaLP0ajL4jTC4CGjPKWvP/refunds\", \"has_more\": false, \"data\": [] }, \"amount_refunded\": 0, \"failure_code\": null, \"failure_msg\": null, \"metadata\": {}, \"credential\": { \"object\": \"credential\", \"alipay\": { \"orderInfo\": \"service=\\\"mobile.securitypay.pay\\\"&_input_charset=\\\"utf-8\\\"&notify_url=\\\"https%3A%2F%2Fapi.pingxx.com%2Fnotify%2Fcharges%2Fch_LiDSaLP0ajL4jTC4CGjPKWvP\\\"&partner=\\\"2088911456459895\\\"&out_trade_no=\\\"280510938483769002\\\"&subject=\\\"suibian\\\"&body=\\\"test\\\"&total_fee=\\\"4400.00\\\"&payment_type=\\\"1\\\"&seller_id=\\\"2088911456459895\\\"&it_b_pay=\\\"2016-03-11 16:39:54\\\"&sign=\\\"Xj06AJPPLQih1ZGTs3KN7X6kQByPkoHrJALN1PMa%2FqGEC8ev7PehCeGKR4smB93eOOdCDshuXWL%2F04wZadHAADeQt11iyk4rQyJAHOJvKZATmdjQEof5PVyOKAyUq5E7dhuhOPWlKrJjR2jg%2Bd4OJvh%2F030eYCKT1kGWvYfWWeI%3D\\\"&sign_type=\\\"RSA\\\"\" } }, \"description\": null }";
+        
+//        charge1 =  @"{ \"id\" : \"ch_00u9y9XHSirT4G8GqTCKy9a1\",  \"object\" : \"charge\", \"created\" : 1457659840, \"livemode\" : true,\"paid\" : false,\"refunded\" : false,\"app\" : \"app_aD0yT4DCSiH00qn9\",\"channel\" : \"alipay\",\"order_no\" : \"610511003777833002\",\"client_ip\" : \"113.122.238.6\",\"amount\" : 290000,\"amount_settle\" : 290000,\"currency\" : \"cny\",\"subject\" : \"TaoXiaoQi\", \"body\" : \"PayForGoods\", \"extra\" : {  },\"time_paid\" : null,\"time_expire\" : 1457746240, \"time_settle\" : null,\"transaction_no\" : null,   \"refunds\" : {\"object\" : \"list\", \"url\" : \"/v1/charges/ch_00u9y9XHSirT4G8GqTCKy9a1/refunds\" ,\"has_more\" : false,  \"data\" : [] },\"amount_refunded\" : 0, \"failure_code\" : null, \"failure_msg\" : null,\"metadata\" : {},    \"credential\" : { \"object\" : \"credential\" , \"alipay\" : {      \"orderInfo\" : \"service=\\\"mobile.securitypay.pay\\\"&_input_charset=\\\"utf-8\\\"&notify_url=\\\"https%3A%2F%2Fapi.pingxx.com%2Fnotify%2Fcharges%2Fch_00u9y9XHSirT4G8GqTCKy9a1\\\"&partner=\\\"2088911456459895\\\"&out_trade_no=\\\"610511003777833002\\\"&subject=\\\"TaoXiaoQi\\\"&body=\\\"PayForGoods\\\"&total_fee=\\\"2900.00\\\"&payment_type=\\\"1\\\"&seller_id=\\\"2088911456459895\\\"&it_b_pay=\\\"2016-03-12 09:30:40\\\"&sign=\\\"EJSwdCs5xm5OTXMFzRmCvRDJXO7bLyWDZuspI09doZfA0ElFuOV7gQUJsrOaHozmPEF5RQhK2ZI%2FQrUBrPNR39r%2FJbCadkzEhUi26ppXivRe8SX%2BpQyksqqX5mtiTg5pDwbFlDki4OFLwvqIedIddTuoILMinK9oZXGu6%2FvB2vs%3D\\\"&sign_type=\\\"RSA\\\"\"    }},\"description\" : null }";
+        DLog(@"%@",charge);
+//
+//        NSString *charge = @"{ \"id\": \"ch_DOOOO8Ty5iHGebfDa110e5WH\", \"object\": \"charge\", \"created\": 1457591618, \"livemode\": true, \"paid\": false, \"refunded\": false, \"app\": \"app_aD0yT4DCSiH00qn9\", \"channel\": \"alipay\", \"order_no\": \"590510934126753002\", \"client_ip\": \"113.122.238.219\", \"amount\": 2370000, \"amount_settle\": 2370000, \"currency\": \"cny\", \"subject\": \"suibian\", \"body\": \"test\", \"extra\": {}, \"time_paid\": null, \"time_expire\": 1457678018, \"time_settle\": null, \"transaction_no\": null, \"refunds\": { \"object\": \"list\", \"url\": \"/v1/charges/ch_DOOOO8Ty5iHGebfDa110e5WH/refunds\", \"has_more\": false, \"data\": [] }, \"amount_refunded\": 0, \"failure_code\": null, \"failure_msg\": null, \"metadata\": {}, \"credential\": { \"object\": \"credential\", \"alipay\": { \"orderInfo\": \"service=\\\"mobile.securitypay.pay\\\"&_input_charset=\\\"utf-8\\\"&notify_url=\\\"https%3A%2F%2Fapi.pingxx.com%2Fnotify%2Fcharges%2Fch_DOOOO8Ty5iHGebfDa110e5WH\\\"&partner=\\\"2088911456459895\\\"&out_trade_no=\\\"590510934126753002\\\"&subject=\\\"suibian\\\"&body=\\\"test\\\"&total_fee=\\\"23700.00\\\"&payment_type=\\\"1\\\"&seller_id=\\\"2088911456459895\\\"&it_b_pay=\\\"2016-03-11 14:33:38\\\"&sign=\\\"R96%2BLc2%2Bk%2FsmJqvBAoeic5UG5f2XrpofC4iXiG4yFWBwIclXq6BL6I8KlzBmvb3XeW67bmOrVg%2Fobt5gzch9PZrXOdFYCeIATi47u9Seu1Ade%2F4%2FjDoXdqQJd6ixBdZMJ5%2BnE6G5gpUUZ6kLcY7cfKI2X8ekMNaZBmXJGCyWPRw%3D\\\"&sign_type=\\\"RSA\\\"\" } }, \"description\": null }";
+//        DLog(@"str_data:%@",charge);
+
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [Pingpp createPayment:charge viewController:self appURLScheme:kUrlScheme withCompletion:^(NSString *result, PingppError *error) {
+                               NSLog(@"completion block: %@", result);
+                               if (error == nil) {
+                                   NSLog(@"PingppError is nil");
+                               } else {
+                                   NSLog(@"PingppError: code=%lu msg=%@", (unsigned  long)error.code, [error getMsg]);
+                               }
+//                               [self showAlertMessage:result];
+                           }];
+                       });
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
         
     }
 }
+
 
 
 -(void)addorder:(NSDictionary *)infoDict
@@ -552,7 +727,7 @@ lblYunFei.text=[NSString stringWithFormat:@"运费:￥%@",self.strFreightPrice];
     DataProvider *dataProvider = [[DataProvider alloc] init];
     [dataProvider setFinishBlock:^(NSDictionary *resultDict){
         [SVProgressHUD dismiss];
-        NSLog(@"^^^^%@", resultDict );
+        DLog(@"^^^^%@", resultDict );
         if ([[resultDict objectForKey:@"result"]intValue]==1) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"dingdantijiaowancheng" object:nil ];
             dingDanNum=[[resultDict objectForKey:@"data"]objectForKey:@"pay_sn"];
@@ -662,60 +837,62 @@ lblYunFei.text=[NSString stringWithFormat:@"运费:￥%@",self.strFreightPrice];
 }
 
 -(void)gotoWxpay{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wxpaySuccess) name:@"wxpaySuccess" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wxpayFail) name:@"wxpayFail" object:nil];
-    
-    NSString* orderPrice;
-    //{{{
-    //本实例只是演示签名过程， 请将该过程在商户服务器上实现
-    
-    //创建支付签名对象
-    payRequsestHandler *req = [[payRequsestHandler alloc] init];
-    //初始化支付签名对象
-    [req init:APP_ID mch_id:MCH_ID];
-    //设置密钥
-    [req setKey:PARTNER_ID];
-    
-    //}}}
-    if ((totalPrice+[self.strFreightPrice floatValue])>minTotalPrice) {
-        orderPrice = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]-onLinePayDiscount];
-        
-    }
-    else{
-        orderPrice= [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]];
-    }
-    
-    orderPrice=[NSString stringWithFormat:@"%.0f"  ,  [orderPrice floatValue]*100];
-    //获取到实际调起微信支付的参数后，在app端调起支付
-    NSMutableDictionary *dict = [req sendPayWithOrderName:@"懒豆商城商品" orderPrice:orderPrice orderNo:dingDanNum];
-    
-    if(dict == nil){
-        //错误提示
-        NSString *debug = [req getDebugifo];
-        
-        [self alert:@"提示信息" msg:debug];
-        
-        NSLog(@"%@\n\n",debug);
-    }else{
-        NSLog(@"%@\n\n",[req getDebugifo]);
-        //[self alert:@"确认" msg:@"下单成功，点击OK后调起支付！"];
-        
-        NSMutableString *stamp  = [dict objectForKey:@"timestamp"];
-        
-        //调起微信支付
-        PayReq* req             = [[PayReq alloc] init];
-        req.openID              = [dict objectForKey:@"appid"];
-        req.partnerId           = [dict objectForKey:@"partnerid"];
-        req.prepayId            = [dict objectForKey:@"prepayid"];
-        req.nonceStr            = [dict objectForKey:@"noncestr"];
-        req.timeStamp           = stamp.intValue;
-        req.package             = [dict objectForKey:@"package"];
-        req.sign                = [dict objectForKey:@"sign"];
-        
-        //[WXApi safeSendReq:req];
-        [WXApi sendReq:req];
-    }
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wxpaySuccess) name:@"wxpaySuccess" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wxpayFail) name:@"wxpayFail" object:nil];
+//    
+//    NSString* orderPrice;
+//    //{{{
+//    //本实例只是演示签名过程， 请将该过程在商户服务器上实现
+//    
+//    //创建支付签名对象
+//    payRequsestHandler *req = [[payRequsestHandler alloc] init];
+//    //初始化支付签名对象
+//    [req init:APP_ID mch_id:MCH_ID];
+//    //设置密钥
+//    [req setKey:PARTNER_ID];
+//    
+//    //}}}
+//    if ((totalPrice+[self.strFreightPrice floatValue])>minTotalPrice) {
+//        orderPrice = [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]-onLinePayDiscount];
+//        
+//    }
+//    else{
+//        orderPrice= [NSString stringWithFormat:@"%.2f",totalPrice+[self.strFreightPrice floatValue]];
+//    }
+//    
+//    orderPrice=[NSString stringWithFormat:@"%.0f"  ,  [orderPrice floatValue]*100];
+//    //获取到实际调起微信支付的参数后，在app端调起支付
+//    NSMutableDictionary *dict = [req sendPayWithOrderName:@"懒豆商城商品" orderPrice:orderPrice orderNo:dingDanNum];
+//    
+//    if(dict == nil){
+//        //错误提示
+//        NSString *debug = [req getDebugifo];
+//        
+//        [self alert:@"提示信息" msg:debug];
+//        
+//        NSLog(@"%@\n\n",debug);
+//    }else{
+//        NSLog(@"%@\n\n",[req getDebugifo]);
+//        //[self alert:@"确认" msg:@"下单成功，点击OK后调起支付！"];
+//        
+//        NSMutableString *stamp  = [dict objectForKey:@"timestamp"];
+//        
+//        //调起微信支付
+//        PayReq* req             = [[PayReq alloc] init];
+//        req.openID              = [dict objectForKey:@"appid"];
+//        req.partnerId           = [dict objectForKey:@"partnerid"];
+//        req.prepayId            = [dict objectForKey:@"prepayid"];
+//        req.nonceStr            = [dict objectForKey:@"noncestr"];
+//        req.timeStamp           = stamp.intValue;
+//        req.package             = [dict objectForKey:@"package"];
+//        req.sign                = [dict objectForKey:@"sign"];
+//        
+//        //[WXApi safeSendReq:req];
+//        [WXApi sendReq:req];
+//    }
 
+    [self realPay:@"wx"];
+    
 }
 //客户端提示信息
 - (void)alert:(NSString *)title msg:(NSString *)msg
