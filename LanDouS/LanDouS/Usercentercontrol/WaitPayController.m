@@ -15,8 +15,8 @@
 #import "WaitPayCell.h"
 #import "CellView.h"
 #import <AlipaySDK/AlipaySDK.h>
-#import "Order.h"
-#import "APAuthV2Info.h"
+//#import "Order.h"
+//#import "APAuthV2Info.h"
 #import "DataSigner.h"
 #import "GoodDetailController.h"
 #import "payRequsestHandler.h"
@@ -729,7 +729,7 @@
         realpaymoney += 5;
     }
     
-    [dataProvider getPingPPChargeChannel:channel andAmount:[NSString stringWithFormat:@"%ld",(long)(realpaymoney*100)] andOrdernum:pay_sn andSubject:@"suibian" andBody:@"test"];
+    [dataProvider getPingPPChargeChannel:channel andAmount:[NSString stringWithFormat:@"%ld",(long)(realpaymoney*100)] andOrdernum:pay_sn andSubject:@"BuyGood" andBody:@"TaoXiaoQi"];
 //    [dataProvider setDelegateObject:self setBackFunctionName:@"realPayCallBack:"];
 //    [dataProvider getPingppCharge:[Toolkit getUserID]
 //                       andChannel:channel

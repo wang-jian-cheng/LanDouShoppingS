@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseNavigationController.h"
+#import "Pingpp.h"
+
 @interface ScoreListController : BaseNavigationController<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *tableScore;
@@ -15,6 +17,8 @@
     int page;
     int perpage;
     NSInteger indexId;
+    
+    NSString *relpayChannel;
     
 }
 @end
