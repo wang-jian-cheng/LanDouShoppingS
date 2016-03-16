@@ -89,10 +89,10 @@
     if (imageArray) {
         
         NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
-        [shareParams SSDKSetupShareParamsByText:[[@"淘小七商城上线啦！快来乐享" stringByAppendingString:[dicGoodsDetail objectForKey:@"goods_name"]] stringByAppendingString:strurl]
+        [shareParams SSDKSetupShareParamsByText:[[@"东方云商城上线啦！快来乐享" stringByAppendingString:[dicGoodsDetail objectForKey:@"goods_name"]] stringByAppendingString:strurl]
                                          images:imageArray
                                             url:[NSURL URLWithString:strurl]
-                                          title:@"淘小七商城"
+                                          title:@"东方云商城"
                                            type:SSDKContentTypeAuto];
         
         

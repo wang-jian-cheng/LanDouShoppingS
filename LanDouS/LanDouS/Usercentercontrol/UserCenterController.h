@@ -47,5 +47,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblSecuritymedium;
  
 @property (weak, nonatomic) IBOutlet UILabel *lblSecurityhigh;
+@property (weak, nonatomic) IBOutlet UIView *YuCunKuan;
+@property (weak, nonatomic) IBOutlet UIButton *JIFen;
+@property (weak, nonatomic) IBOutlet UIView *JIFenView;
 
 @end

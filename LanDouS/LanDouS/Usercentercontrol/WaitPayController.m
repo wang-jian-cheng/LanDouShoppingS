@@ -1001,7 +1001,7 @@
     CartStateController *CartState=[[CartStateController alloc]init];
     CartState.strPrice=[NSString stringWithFormat:@"%.2f",realpaymoney];
     CartState.strNum=pay_sn;
-    CartState.strName=@"淘小七商品";
+    CartState.strName=@"东方云商品";
     
     
     DataProvider *dataProvider = [[DataProvider alloc] init];

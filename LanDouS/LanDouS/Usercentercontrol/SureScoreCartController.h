@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseNavigationController.h"
+#import "Pingpp.h"
 @interface SureScoreCartController : BaseNavigationController
 {
     NSMutableDictionary *dicPost;
     NSString *point_orderid;
     NSString *point_orderSn;
+    NSString *relpayChannel;
 }
 @property(nonatomic,strong)NSMutableDictionary *dicScoreInfo;
 @property(assign)int num;
