@@ -15,8 +15,8 @@
 #import "WaitPayCell.h"
 #import "CellView.h"
 #import <AlipaySDK/AlipaySDK.h>
-#import "Order.h"
-#import "APAuthV2Info.h"
+//#import "Order.h"
+//#import "APAuthV2Info.h"
 #import "DataSigner.h"
 #import "GoodDetailController.h"
 #import "payRequsestHandler.h"

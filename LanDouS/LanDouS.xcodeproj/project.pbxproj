@@ -78,10 +78,6 @@
 		185CBCE31A73F1DB000EDC4A /* CellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 185CBCE21A73F1DB000EDC4A /* CellView.m */; };
 		185CBCE71A73F880000EDC4A /* WaitPayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 185CBCE51A73F880000EDC4A /* WaitPayCell.m */; };
 		185CBCE81A73F880000EDC4A /* WaitPayCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 185CBCE61A73F880000EDC4A /* WaitPayCell.xib */; };
-		185CBCEC1A7414A7000EDC4A /* AlipaySDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 185CBCEA1A7414A7000EDC4A /* AlipaySDK.bundle */; };
-		185CBCED1A7414A7000EDC4A /* AlipaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 185CBCEB1A7414A7000EDC4A /* AlipaySDK.framework */; };
-		185CBCF01A74169E000EDC4A /* Order.m in Sources */ = {isa = PBXBuildFile; fileRef = 185CBCEF1A74169E000EDC4A /* Order.m */; };
-		185CBCF31A7416A8000EDC4A /* APAuthV2Info.m in Sources */ = {isa = PBXBuildFile; fileRef = 185CBCF21A7416A8000EDC4A /* APAuthV2Info.m */; };
 		185CBE1E1A741F6A000EDC4A /* base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 185CBE0E1A741F6A000EDC4A /* base64.m */; };
 		185CBE1F1A741F6A000EDC4A /* DataSigner.m in Sources */ = {isa = PBXBuildFile; fileRef = 185CBE111A741F6A000EDC4A /* DataSigner.m */; };
 		185CBE201A741F6A000EDC4A /* DataVerifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 185CBE131A741F6A000EDC4A /* DataVerifier.m */; };
@@ -546,12 +542,6 @@
 		185CBCE41A73F880000EDC4A /* WaitPayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaitPayCell.h; sourceTree = "<group>"; };
 		185CBCE51A73F880000EDC4A /* WaitPayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaitPayCell.m; sourceTree = "<group>"; };
 		185CBCE61A73F880000EDC4A /* WaitPayCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WaitPayCell.xib; sourceTree = "<group>"; };
-		185CBCEA1A7414A7000EDC4A /* AlipaySDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AlipaySDK.bundle; path = ../AlipaySDK.bundle; sourceTree = "<group>"; };
-		185CBCEB1A7414A7000EDC4A /* AlipaySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlipaySDK.framework; path = ../AlipaySDK.framework; sourceTree = "<group>"; };
-		185CBCEE1A74169E000EDC4A /* Order.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Order.h; sourceTree = "<group>"; };
-		185CBCEF1A74169E000EDC4A /* Order.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Order.m; sourceTree = "<group>"; };
-		185CBCF11A7416A8000EDC4A /* APAuthV2Info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APAuthV2Info.h; sourceTree = "<group>"; };
-		185CBCF21A7416A8000EDC4A /* APAuthV2Info.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APAuthV2Info.m; sourceTree = "<group>"; };
 		185CBDC11A741F6A000EDC4A /* aes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aes.h; sourceTree = "<group>"; };
 		185CBDC21A741F6A000EDC4A /* asn1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asn1.h; sourceTree = "<group>"; };
 		185CBDC31A741F6A000EDC4A /* asn1_mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asn1_mac.h; sourceTree = "<group>"; };
@@ -1164,7 +1154,6 @@
 				B59E8CAF1C0D3EB300DDAB27 /* libpingpp.a in Frameworks */,
 				B58BBAD01C0C31E500246DB9 /* ShareSDKUI.framework in Frameworks */,
 				186BA2DE1A5258E000C55E25 /* AddressBook.framework in Frameworks */,
-				185CBCED1A7414A7000EDC4A /* AlipaySDK.framework in Frameworks */,
 				186BA2DF1A5258E000C55E25 /* AddressBookUI.framework in Frameworks */,
 				186BA2DB1A5258CD00C55E25 /* MessageUI.framework in Frameworks */,
 				188139C01A4946BF00EC9B2F /* CoreGraphics.framework in Frameworks */,
@@ -1224,19 +1213,6 @@
 				1855BD5A1A74DBB50078FF31 /* WriteCommentsController.xib */,
 			);
 			path = DetailForUser;
-			sourceTree = "<group>";
-		};
-		185CBCE91A74148D000EDC4A /* alipay */ = {
-			isa = PBXGroup;
-			children = (
-				185CBCF11A7416A8000EDC4A /* APAuthV2Info.h */,
-				185CBCF21A7416A8000EDC4A /* APAuthV2Info.m */,
-				185CBCEE1A74169E000EDC4A /* Order.h */,
-				185CBCEF1A74169E000EDC4A /* Order.m */,
-				185CBCEA1A7414A7000EDC4A /* AlipaySDK.bundle */,
-				185CBCEB1A7414A7000EDC4A /* AlipaySDK.framework */,
-			);
-			path = alipay;
 			sourceTree = "<group>";
 		};
 		185CBDC01A741F6A000EDC4A /* openssl */ = {
@@ -1361,7 +1337,6 @@
 				18542F391A782515000C0203 /* CustomSearchBar.h */,
 				18542F3A1A782515000C0203 /* CustomSearchBar.m */,
 				1875919B1A766FDE000C2188 /* JSBadgeView */,
-				185CBCE91A74148D000EDC4A /* alipay */,
 				186B52B71A71DEAE0002D35F /* ShareSDK */,
 				186BA2971A52548600C55E25 /* MyMD5.h */,
 				186BA2981A52548600C55E25 /* MyMD5.m */,
@@ -2377,7 +2352,7 @@
 				TargetAttributes = {
 					188138DC1A4918C200EC9B2F = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = M7YC435M3S;
+						DevelopmentTeam = 7X578356T4;
 					};
 					188138F51A4918C200EC9B2F = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -2576,7 +2551,6 @@
 				186D64E91A6DE7A5003F73B4 /* FirstScrollController.xib in Resources */,
 				8A37CD181B3006B8003E8B3A /* gerenxihua.png in Resources */,
 				188B29221A4AA7EF0057185D /* shopper_H@2x.png in Resources */,
-				185CBCEC1A7414A7000EDC4A /* AlipaySDK.bundle in Resources */,
 				180C85781A4C0C0300C7DA41 /* icon_forward_normal.png in Resources */,
 				1869AC091A665EE300E4A290 /* 58.png in Resources */,
 				1860E58C1A5B851B00234FB1 /* dackshare@2x.png in Resources */,
@@ -2681,7 +2655,6 @@
 				1891A5F71A4BAF0F00A26520 /* TypeCell.m in Sources */,
 				188139721A49370D00EC9B2F /* ASIAuthenticationDialog.m in Sources */,
 				1855BD271A74873E0078FF31 /* WaitTakeCell.m in Sources */,
-				185CBCF31A7416A8000EDC4A /* APAuthV2Info.m in Sources */,
 				1881398C1A49370D00EC9B2F /* SDWebImageDownloader.m in Sources */,
 				1855BD7A1A7511050078FF31 /* ScoreListCell.m in Sources */,
 				1875919E1A766FDE000C2188 /* JSBadgeView.m in Sources */,
@@ -2712,7 +2685,6 @@
 				18542F321A781CA1000C0203 /* MyScoreLogController.m in Sources */,
 				188DC59B1A79DE8600785A28 /* IQUIWindow+Hierarchy.m in Sources */,
 				188139931A49370D00EC9B2F /* TPKeyboardAvoidingScrollView.m in Sources */,
-				185CBCF01A74169E000EDC4A /* Order.m in Sources */,
 				187AC9381A6C9504007C52B5 /* MyScoreController.m in Sources */,
 				1855BD621A74DBB50078FF31 /* CompanyPhoneViewController.m in Sources */,
 				185CBE1E1A741F6A000EDC4A /* base64.m in Sources */,
@@ -2991,7 +2963,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zykj.taoxiaoqi;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zykj.EastShopForDistribution;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -3057,7 +3029,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zykj.taoxiaoqi;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zykj.EastShopForDistribution;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";

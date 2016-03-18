@@ -16,7 +16,7 @@
 #import <ShareSDKConnector/ShareSDKConnector.h>
 //#import <QZoneConnection/QZoneConnection.h>
 #import "WXApi.h"
-#import "WeiboSDK.h"
+//#import "WeiboSDK.h"
 #import "DataProvider.h"
 //#import <PgySDK/PgyManager.h>
 @interface AppDelegate ()
@@ -38,13 +38,13 @@
 //    [[PgyManager sharedPgyManager] startManagerWithAppId:@"38300e1864f178c57beafdc68932058c"];//蒲公英app-id
 //    [[PgyManager sharedPgyManager] checkUpdate];
     
-    [SMSSDK registerApp:SMS_APPKEY withSecret:SMS_SECRET];
+//    [SMSSDK registerApp:SMS_APPKEY withSecret:SMS_SECRET];
     
     
 
 
     [ShareSDK registerApp:SHARESDK_APPKEY
-     
+    
           activePlatforms:@[
                             @(SSDKPlatformTypeSinaWeibo),
                             @(SSDKPlatformSubTypeQZone),
@@ -64,7 +64,7 @@
                              [ShareSDKConnector connectQQ:[QQApiInterface class] tencentOAuthClass:[TencentOAuth class]];
                              break;
                          case SSDKPlatformTypeSinaWeibo:
-                             [ShareSDKConnector connectWeibo:[WeiboSDK class]];
+//                             [ShareSDKConnector connectWeibo:[WeiboSDK class]];
                              break;
                              
                          default:
