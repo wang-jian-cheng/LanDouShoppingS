@@ -137,13 +137,13 @@
 
 -(void)shareContentBuild
 {
-    NSArray* imageArray = @[[UIImage imageNamed:@"1136.png"]];
+    NSArray* imageArray = @[[UIImage imageNamed:@"120.png"]];
     if (imageArray) {
         
         NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
-        [shareParams SSDKSetupShareParamsByText:@"淘小七商城，上线啦！快来一起享受购物的乐趣吧！http://zhongyangjituan.com/zysc/shop/index.php"
+        [shareParams SSDKSetupShareParamsByText:@"淘小七商城，上线啦！快来一起享受购物的乐趣吧！http://zhongyangjituan.com/"
                                          images:imageArray
-                                            url:[NSURL URLWithString:@"http://zhongyangjituan.com/zysc/shop/index.php"]
+                                            url:[NSURL URLWithString:@"http://zhongyangjituan.com/"]
                                           title:@"淘小七商城"
                                            type:SSDKContentTypeAuto];
         

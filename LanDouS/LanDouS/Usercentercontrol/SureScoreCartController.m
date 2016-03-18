@@ -10,7 +10,7 @@
 #import "MyAdressMagController.h"
 #import "UIImageView+WebCache.h"
 #import "DataProvider.h"
-//#import <AlipaySDK/AlipaySDK.h>
+#import <AlipaySDK/AlipaySDK.h>
 //#import "Order.h"
 //#import "APAuthV2Info.h"
 #import "DataSigner.h"
@@ -188,7 +188,6 @@
 //}
 -(void)gotoAlipay
 {
-    
 //    /*============================================================================*/
 //    /*=======================需要填写商户app申请的===================================*/
 //    /*============================================================================*/
@@ -265,7 +264,113 @@
 //        
 //        
 //    }
+
+    [self realPay:@"alipay" andOrderId:point_orderSn];
 }
+
+
+
+
+- (void)realPay:(NSString *)channel andOrderId:(NSString *)pointorderid
+{
+    relpayChannel = channel;
+    
+    if(!([channel isEqualToString:@"wx"] || [channel isEqualToString:@"alipay"]))
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"支付方式错误" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        return;
+    }
+    
+    //    if(realpaymoney ==0)
+    //    {
+    //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"请选择套餐" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+    //        [alert show];
+    //        return;
+    //    }
+    
+    [SVProgressHUD showWithStatus:@"正在加载"];
+    DataProvider *dataProvider = [[DataProvider alloc] init];
+    [dataProvider setFinishBlock:^(NSDictionary *resultDict){
+        [SVProgressHUD dismiss];
+        DLog(@"%@", resultDict);
+        //        if ([[resultDict objectForKey:@"result"]intValue]==1) {
+        [self realPayCallBack:resultDict];
+        
+        
+    }];
+    
+    [dataProvider setFailedBlock:^(NSString *strError){
+        [SVProgressHUD dismiss];
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"支付失败" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        
+    }];
+    
+    //    if(realpaymoney <= 29.0){
+    //
+    //        realpaymoney += 5;
+    //    }
+    
+    [dataProvider getPingPPChargeChannel:channel andAmount:[NSString stringWithFormat:@"%ld",(long)(0.01*100)] andOrdernum:pointorderid andSubject:@"suibian" andBody:@"test"];
+    //    [dataProvider setDelegateObject:self setBackFunctionName:@"realPayCallBack:"];
+    //    [dataProvider getPingppCharge:[Toolkit getUserID]
+    //                       andChannel:channel
+    //                        andAmount:[NSString stringWithFormat:@"%d",(int)realpaymoney*100]
+    //                   andDescription:@"1"
+    //                           andFlg:@"0"];
+    
+}
+#define kUrlScheme      @"com.taoxiaoqi.app" // 这个是你定义的 URL Scheme，支付宝、微信支付和测试模式需要。
+
+
+-(void)realPayCallBack:(id)dict
+{
+    DLog(@"%@",dict);
+    
+    
+    //    if ([dict[@"code"] intValue]==200) {
+    @try {
+        
+        NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
+        NSString* charge = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"str_data:%@",charge);
+        if ([relpayChannel isEqualToString:@"alipay"]) {
+            //在返回的charge中[@"credential"][@"alipay"][@"orderInfo"] 下 有个时间 日期和时间之间没有空格 在这里手动插入
+            NSRange keyWordRange =  [charge rangeOfString:@"it_b_pay=" options:NSCaseInsensitiveSearch];
+            NSMutableString *mutStr = [[NSMutableString alloc] initWithString:charge];
+            [mutStr insertString:@" " atIndex:(keyWordRange.length+keyWordRange.location + 12)];
+            DLog(@"%@",mutStr);
+            charge = mutStr;
+        }
+        
+        
+        //            NSString* charge = [[NSString alloc] initWithData:    data encoding:NSUTF8StringEncoding];
+        //            NSLog(@"charge = %@", charge);
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [Pingpp createPayment:charge viewController:self appURLScheme:kUrlScheme withCompletion:^(NSString *result, PingppError *error) {
+                               NSLog(@"completion block: %@", result);
+                               if (error == nil) {
+                                   NSLog(@"PingppError is nil");
+                               } else {
+                                   NSLog(@"PingppError: code=%lu msg=%@", (unsigned  long)error.code, [error getMsg]);
+                               }
+                               //                               [self showAlertMessage:result];
+                               
+                               [Dialog simpleToast:result];
+                           }];
+                       });
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        
+    }
+}
+
+
 
 
 //-(NSString*)getOrderInfo
