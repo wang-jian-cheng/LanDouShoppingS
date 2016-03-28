@@ -368,7 +368,6 @@
 		8A37CD1D1B3006B8003E8B3A /* shengxianyinpin.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A37CD151B3006B8003E8B3A /* shengxianyinpin.png */; };
 		8A37CD1E1B3006B8003E8B3A /* xiuxianlingshi.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A37CD161B3006B8003E8B3A /* xiuxianlingshi.png */; };
 		8A37CD1F1B3006B8003E8B3A /* yanjiulipin.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A37CD171B3006B8003E8B3A /* yanjiulipin.png */; };
-		8A6C86AD1AD670C2003C0ED2 /* PgySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A6C86AC1AD670C2003C0ED2 /* PgySDK.framework */; };
 		8A6C86AF1AD67100003C0ED2 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A6C86AE1AD67100003C0ED2 /* OpenGLES.framework */; };
 		8A6C86B11AD6710A003C0ED2 /* SceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A6C86B01AD6710A003C0ED2 /* SceneKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8A6C86B31AD67119003C0ED2 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A6C86B21AD67119003C0ED2 /* CoreMotion.framework */; };
@@ -1041,7 +1040,6 @@
 		8A37CD151B3006B8003E8B3A /* shengxianyinpin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shengxianyinpin.png; sourceTree = "<group>"; };
 		8A37CD161B3006B8003E8B3A /* xiuxianlingshi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiuxianlingshi.png; sourceTree = "<group>"; };
 		8A37CD171B3006B8003E8B3A /* yanjiulipin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yanjiulipin.png; sourceTree = "<group>"; };
-		8A6C86AC1AD670C2003C0ED2 /* PgySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PgySDK.framework; sourceTree = "<group>"; };
 		8A6C86AE1AD67100003C0ED2 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		8A6C86B01AD6710A003C0ED2 /* SceneKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SceneKit.framework; path = System/Library/Frameworks/SceneKit.framework; sourceTree = SDKROOT; };
 		8A6C86B21AD67119003C0ED2 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -1167,7 +1165,6 @@
 				B59E8CAE1C0D3EB300DDAB27 /* libWeChatSDK.a in Frameworks */,
 				B57104AD1C059AC200A72F53 /* SMS_SDK.framework in Frameworks */,
 				B58BBACD1C0C31E500246DB9 /* ShareSDKExtension.framework in Frameworks */,
-				8A6C86AD1AD670C2003C0ED2 /* PgySDK.framework in Frameworks */,
 				B58BBAC91C0C31E500246DB9 /* MOBFoundation.framework in Frameworks */,
 				188139B41A49463100EC9B2F /* CFNetwork.framework in Frameworks */,
 			);
@@ -1768,7 +1765,6 @@
 				8A6C86B21AD67119003C0ED2 /* CoreMotion.framework */,
 				8A6C86B01AD6710A003C0ED2 /* SceneKit.framework */,
 				8A6C86AE1AD67100003C0ED2 /* OpenGLES.framework */,
-				8A6C86AC1AD670C2003C0ED2 /* PgySDK.framework */,
 				186B52B51A71DB270002D35F /* ImageIO.framework */,
 				186BA2EC1A525CEB00C55E25 /* libsqlite3.dylib */,
 				186BA2EA1A525CE100C55E25 /* libstdc++.dylib */,

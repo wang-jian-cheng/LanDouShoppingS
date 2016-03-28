@@ -38,7 +38,7 @@
 //    [[PgyManager sharedPgyManager] startManagerWithAppId:@"38300e1864f178c57beafdc68932058c"];//蒲公英app-id
 //    [[PgyManager sharedPgyManager] checkUpdate];
     
-//    [SMSSDK registerApp:SMS_APPKEY withSecret:SMS_SECRET];
+    [SMSSDK registerApp:SMS_APPKEY withSecret:SMS_SECRET];
     
     
 
