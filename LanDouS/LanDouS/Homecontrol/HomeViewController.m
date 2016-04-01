@@ -196,10 +196,9 @@
                 [SVProgressHUD showErrorWithStatus:@"您还没有登陆，不能获取通过分享获得的积分哦！"];
             }
         }
-        
-        
-        
     }];
+    
+//    [dataProvider setFailedBlock:<#(dataProviderFailedBlock()failedBlock#>]
     
     [dataProvider setFailedBlock:^(NSString *strError){
         [SVProgressHUD dismiss];
